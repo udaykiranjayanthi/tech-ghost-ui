@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.title {
+  font-size: var(--mantine-font-size-lg);
+  font-weight: 700;
+  color: var(--mantine-color-gray-7);
+}

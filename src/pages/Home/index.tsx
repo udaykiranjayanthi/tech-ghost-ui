@@ -1,6 +1,6 @@
 import type { FC } from "react";
 interface HomeProps {}
 
-export const Home: FC<HomeProps> = (props) => {
+export const Home: FC<HomeProps> = () => {
   return <div>Home</div>;
 };

@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
-import { Autocomplete, Burger, Group } from "@mantine/core";
+import { Autocomplete, Burger, Button, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
 import type { FC } from "react";
@@ -8,8 +8,6 @@ import { NavLink } from "react-router";
 const links = [
   { link: "/about", label: "Features" },
   { link: "/pricing", label: "Pricing" },
-  { link: "/learn", label: "Learn" },
-  { link: "/community", label: "Community" },
 ];
 
 export const HeaderNavbar: FC = () => {
@@ -45,8 +43,11 @@ export const HeaderNavbar: FC = () => {
             ]}
             visibleFrom="xs"
           />
-          <Group ml={50} gap={5} className={styles.links} visibleFrom="sm">
+          <Group ml={20} gap={5} className={styles.links} visibleFrom="sm">
             {items}
+          </Group>
+          <Group ml={20} gap={5} className={styles.links} visibleFrom="sm">
+            <Button>Create</Button>
           </Group>
         </Group>
       </div>

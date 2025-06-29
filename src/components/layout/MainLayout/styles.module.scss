@@ -1,0 +1,9 @@
+.container {
+  height: calc(100vh - 56px);
+  display: flex;
+}
+
+.main {
+  flex: 1;
+  padding: var(--mantine-spacing-md);
+}
