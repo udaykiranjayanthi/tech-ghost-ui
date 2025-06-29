@@ -1,11 +1,32 @@
+import { createBrowserRouter, RouterProvider } from "react-router";
 import "./App.css";
+import "@mantine/core/styles.css";
+import MainLayout from "./components/layout/MainLayout";
+import { Home } from "./pages/Home";
+import { NotFound } from "./pages/NotFound";
+import { createTheme, MantineProvider } from "@mantine/core";
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
+
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: [
+      { path: "", element: <Home /> },
+      // { path: "about", element: <About /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
+]);
 
 const App = () => {
   return (
-    <div className="content">
-      <h1>Rsbuild with React</h1>
-      <p>Start building amazing things with Rsbuild.</p>
-    </div>
+    <MantineProvider theme={theme} defaultColorScheme="dark">
+      <RouterProvider router={router} />
+    </MantineProvider>
   );
 };
 
