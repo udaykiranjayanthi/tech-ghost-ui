@@ -4,6 +4,7 @@ import "@mantine/core/styles.css";
 import MainLayout from "./components/layout/MainLayout";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
+import { Post } from "./pages/Post";
 import { createTheme, MantineProvider } from "@mantine/core";
 
 const theme = createTheme({
@@ -16,7 +17,7 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: "", element: <Home /> },
-      // { path: "about", element: <About /> },
+      { path: "post/:postId", element: <Post /> },
       { path: "*", element: <NotFound /> },
     ],
   },

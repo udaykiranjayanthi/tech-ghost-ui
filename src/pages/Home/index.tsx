@@ -4,9 +4,5 @@ import { Posts } from "../../components/Posts";
 interface HomeProps {}
 
 export const Home: FC<HomeProps> = () => {
-  return (
-    <div>
-      <Posts title="Trending Posts" />
-    </div>
-  );
+  return <Posts title="Trending Posts" />;
 };

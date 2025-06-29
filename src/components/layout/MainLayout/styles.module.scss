@@ -5,5 +5,6 @@
 
 .main {
   flex: 1;
-  padding: var(--mantine-spacing-md);
+  padding: var(--mantine-spacing-lg);
+  overflow-y: scroll;
 }

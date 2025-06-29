@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { SimpleGrid, Container, Title } from "@mantine/core";
+import { SimpleGrid, Container, Title, Paper } from "@mantine/core";
 import { PostCard } from "./PostCard";
 import styles from "./styles.module.scss";
 
@@ -79,15 +79,17 @@ const dummyPosts = [
 export const Posts: FC<PostsProps> = ({ title = "Latest Posts" }) => {
   return (
     <Container size="lg" className={styles.container}>
-      <Title order={2} className={styles.sectionTitle}>
-        {title}
-      </Title>
+      <Paper p="md">
+        <Title order={2} className={styles.sectionTitle}>
+          {title}
+        </Title>
 
-      <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
-        {dummyPosts.map((post) => (
-          <PostCard key={post.id} {...post} />
-        ))}
-      </SimpleGrid>
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
+          {dummyPosts.map((post) => (
+            <PostCard key={post.id} {...post} />
+          ))}
+        </SimpleGrid>
+      </Paper>
     </Container>
   );
 };
