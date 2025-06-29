@@ -1,6 +1,12 @@
 import type { FC } from "react";
+import { Posts } from "../../components/Posts";
+
 interface HomeProps {}
 
 export const Home: FC<HomeProps> = () => {
-  return <div>Home</div>;
+  return (
+    <div>
+      <Posts title="Trending Posts" />
+    </div>
+  );
 };

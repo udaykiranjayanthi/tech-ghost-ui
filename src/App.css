@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  color: #fff;
+  color: var(--mantine-color-text);
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   /* background: #555; */
 }
