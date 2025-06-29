@@ -47,7 +47,9 @@ export const HeaderNavbar: FC = () => {
             {items}
           </Group>
           <Group ml={20} gap={5} className={styles.links} visibleFrom="sm">
-            <Button>Create</Button>
+            <NavLink to="/create-post">
+              <Button>Create</Button>
+            </NavLink>
           </Group>
         </Group>
       </div>

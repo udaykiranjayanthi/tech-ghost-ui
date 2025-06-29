@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import "./App.css";
 import "@mantine/core/styles.css";
 import MainLayout from "./components/layout/MainLayout";
+import { CreatePost } from "./pages/CreatePost";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "", element: <Home /> },
       { path: "post/:postId", element: <Post /> },
+      { path: "create-post", element: <CreatePost /> },
       { path: "*", element: <NotFound /> },
     ],
   },

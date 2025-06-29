@@ -1,0 +1,50 @@
+.container {
+  padding: 0;
+  margin: 0 auto;
+}
+
+.backButtonContainer {
+  margin-bottom: 10px;
+}
+
+.backButton {
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-1),
+      var(--mantine-color-dark-6)
+    );
+  }
+}
+
+.formContainer {
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-7)
+  );
+}
+
+.formTitle {
+  margin-bottom: 24px;
+  color: var(--mantine-color-text);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formField {
+  margin-bottom: 16px;
+}
+
+.hashtagsPreview {
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.hashtag {
+  background-color: light-dark(
+    var(--mantine-color-gray-1),
+    var(--mantine-color-dark-5)
+  );
+}
