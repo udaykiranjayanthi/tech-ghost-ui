@@ -7,6 +7,7 @@ import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
 import { createTheme, MantineProvider } from "@mantine/core";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -26,10 +27,20 @@ export const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
+
   return (
-    <MantineProvider theme={theme} defaultColorScheme="dark">
-      <RouterProvider router={router} />
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider theme={theme} defaultColorScheme="dark">
+        <RouterProvider router={router} />
+      </MantineProvider>
+    </QueryClientProvider>
   );
 };
 

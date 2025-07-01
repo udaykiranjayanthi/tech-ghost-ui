@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { ArrowLeftIcon, ImageIcon } from "@phosphor-icons/react";
 import styles from "./styles.module.scss";
+import { useApiMutation } from "@/services/hooks";
+import ENDPOINTS from "@/common/endpoints";
 
 interface CreatePostFormProps {}
 
@@ -34,9 +36,12 @@ interface PostFormValues {
 
 export const CreatePostForm: FC<CreatePostFormProps> = () => {
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentHashtag, setCurrentHashtag] = useState("");
   const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
+  const { mutate, isPending } = useApiMutation({
+    url: ENDPOINTS.POSTS,
+    method: "post",
+  });
 
   // Sample hashtag suggestions
   const hashtagSuggestions = [
@@ -113,28 +118,16 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
   };
 
   const onFormSubmit = async (data: PostFormValues) => {
-    setIsSubmitting(true);
+    // Include hashtags in the form data
+    const formData = {
+      ...data,
+      hashtags: selectedHashtags,
+    };
 
-    try {
-      // Include hashtags in the form data
-      const formData = {
-        ...data,
-        hashtags: selectedHashtags,
-      };
-
-      // In a real app, you would submit the form data to an API
-      console.log("Submitting post:", formData);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Redirect to home page after successful submission
-      navigate("/");
-    } catch (error) {
-      console.error("Error creating post:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    mutate(formData, {
+      onSuccess: () => navigate("/"),
+      onError: () => console.log("Error creating post"),
+    });
   };
 
   const handleCancel = () => {
@@ -291,7 +284,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
             <Button variant="outline" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button loading={isSubmitting} onClick={handleSubmit(onFormSubmit)}>
+            <Button loading={isPending} onClick={handleSubmit(onFormSubmit)}>
               Create Post
             </Button>
           </Group>
