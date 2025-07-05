@@ -2,12 +2,17 @@ import type { FC } from "react";
 import { SimpleGrid, Container, Title, Paper } from "@mantine/core";
 import { PostCard } from "./PostCard";
 import styles from "./styles.module.scss";
+import { useApiQuery } from "@/services/hooks";
+import ENDPOINTS from "@/common/endpoints";
+import { RQ_KEYS } from "@/common/rqkeys";
+import type { PostData } from "@/types";
 
 interface PostsProps {
   title?: string;
 }
 
 // Sample dummy data for blog posts
+// TODO: remove
 const dummyPosts = [
   {
     id: "1",
@@ -77,6 +82,11 @@ const dummyPosts = [
 ];
 
 export const Posts: FC<PostsProps> = ({ title = "Latest Posts" }) => {
+  const { data } = useApiQuery<PostData[]>({
+    url: ENDPOINTS.POSTS,
+    queryKey: [RQ_KEYS.POSTS],
+  });
+
   return (
     <Container size="lg" className={styles.container}>
       <Paper p="md">
@@ -85,8 +95,8 @@ export const Posts: FC<PostsProps> = ({ title = "Latest Posts" }) => {
         </Title>
 
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
-          {dummyPosts.map((post) => (
-            <PostCard key={post.id} {...post} />
+          {data?.map((post) => (
+            <PostCard key={post.postId} {...post} />
           ))}
         </SimpleGrid>
       </Paper>

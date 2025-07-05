@@ -6,6 +6,7 @@ import { CreatePost } from "./pages/CreatePost";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
+import { AuthCallback } from "./pages/AuthCallback";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "", element: <Home /> },
       { path: "post/:postId", element: <Post /> },
       { path: "create-post", element: <CreatePost /> },
+      { path: "auth-callback", element: <AuthCallback /> },
       { path: "*", element: <NotFound /> },
     ],
   },

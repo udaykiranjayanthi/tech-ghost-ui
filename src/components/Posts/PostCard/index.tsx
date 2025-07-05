@@ -9,26 +9,27 @@ import {
 } from "@phosphor-icons/react";
 import { useNavigate } from "react-router";
 import styles from "./styles.module.scss";
+import { displayDate } from "@/services/utils";
 
 interface PostCardProps {
-  id: string;
+  postId: string;
   title: string;
   thumbnailUrl: string;
   upvotes: number;
   downvotes: number;
   commentsCount: number;
-  date: string;
+  createdAt: string;
   saved?: boolean;
 }
 
 export const PostCard: FC<PostCardProps> = ({
-  id,
+  postId,
   title,
   thumbnailUrl,
   upvotes,
   downvotes,
   commentsCount,
-  date,
+  createdAt,
   saved = false,
 }) => {
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ export const PostCard: FC<PostCardProps> = ({
   };
 
   const handleCardClick = () => {
-    navigate(`/post/${id}`);
+    navigate(`/post/${postId}`);
   };
 
   const handleSaveClick = (e: React.MouseEvent) => {
@@ -123,7 +124,7 @@ export const PostCard: FC<PostCardProps> = ({
       </Group>
 
       <Text size="xs" c="dimmed" className={styles.date}>
-        {date}
+        {displayDate(createdAt)}
       </Text>
     </Card>
   );

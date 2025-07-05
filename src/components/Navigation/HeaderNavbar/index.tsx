@@ -4,6 +4,7 @@ import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
 import type { FC } from "react";
 import { NavLink } from "react-router";
+import ENDPOINTS from "@/common/endpoints";
 
 const links = [
   { link: "/about", label: "Features" },
@@ -46,10 +47,14 @@ export const HeaderNavbar: FC = () => {
           <Group ml={20} gap={5} className={styles.links} visibleFrom="sm">
             {items}
           </Group>
-          <Group ml={20} gap={5} className={styles.links} visibleFrom="sm">
+          <Group ml={20} gap={10} className={styles.links} visibleFrom="sm">
             <NavLink to="/create-post">
-              <Button>Create</Button>
+              <Button variant="outline">Create</Button>
             </NavLink>
+
+            <Button onClick={() => (window.location.href = ENDPOINTS.LOGIN)}>
+              Login
+            </Button>
           </Group>
         </Group>
       </div>

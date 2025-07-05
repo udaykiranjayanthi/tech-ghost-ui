@@ -24,10 +24,16 @@ import {
 import { useNavigate, useParams } from "react-router";
 import { Comments } from "./Comments";
 import styles from "./styles.module.scss";
+import { useApiQuery } from "@/services/hooks";
+import type { PostDetailsData } from "@/types";
+import ENDPOINTS from "@/common/endpoints";
+import { RQ_KEYS } from "@/common/rqkeys";
+import { displayDate } from "@/services/utils";
 
 interface PostDetailsProps {}
 
 // Sample post data
+// TODO: remove
 const dummyPost = {
   id: "1",
   title: "Getting Started with React 18: New Features and Improvements",
@@ -82,10 +88,26 @@ export const PostDetails: FC<PostDetailsProps> = () => {
   const navigate = useNavigate();
   const { postId } = useParams<{ postId: string }>();
 
+  const { data } = useApiQuery<PostDetailsData>({
+    url: `${ENDPOINTS.POSTS}/${postId}`,
+    queryKey: [RQ_KEYS.POSTS],
+  });
+
   // In a real app, you would fetch the post data based on postId
   // For example: const post = useFetchPost(postId);
   console.log(`Viewing post with ID: ${postId}`);
-  const post = dummyPost;
+  const {
+    title,
+    thumbnailUrl,
+    upvotes,
+    downvotes,
+    commentsCount,
+    createdAt,
+    externalUrl,
+    saved,
+    tldr,
+    content,
+  } = data || {};
 
   const handleBackClick = () => {
     navigate(-1);
@@ -109,8 +131,8 @@ export const PostDetails: FC<PostDetailsProps> = () => {
   };
 
   const handleReadPostClick = () => {
-    if (post.externalUrl) {
-      window.open(post.externalUrl, "_blank");
+    if (externalUrl) {
+      window.open(externalUrl, "_blank");
     }
   };
 
@@ -129,7 +151,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
               <Text>Go back</Text>
             </Group>
           </Button>
-          {post.externalUrl && (
+          {externalUrl && (
             <Button
               variant="light"
               size="sm"
@@ -145,26 +167,21 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
       <Paper p="md" className={styles.postCard}>
         <Title order={1} className={styles.title}>
-          {post.title}
+          {title}
         </Title>
 
         <Text size="sm" c="dimmed" className={styles.date}>
-          {post.date}
+          {displayDate(createdAt)}
         </Text>
 
-        <Image
-          src={post.thumbnailUrl}
-          height={300}
-          alt={post.title}
-          radius="sm"
-        />
+        <Image src={thumbnailUrl} height={300} alt={title} radius="sm" />
 
         <Paper p="md" className={styles.tldrSection} withBorder>
           <Title order={4}>TLDR;</Title>
-          <Text className={styles.tldr}>{post.tldr}</Text>
+          <Text className={styles.tldr}>{tldr}</Text>
         </Paper>
 
-        <Text className={styles.content}>{post.content}</Text>
+        <Text className={styles.content}>{content}</Text>
 
         <Divider my="lg" />
 
@@ -180,7 +197,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
                 <ThumbsUpIcon size={20} />
               </ActionIcon>
               <Text size="sm" c="dimmed">
-                {post.upvotes - post.downvotes}
+                {upvotes && downvotes ? upvotes - downvotes : 0}
               </Text>
               <ActionIcon
                 variant="subtle"
@@ -197,7 +214,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
                 <ChatCircleIcon size={20} />
               </ActionIcon>
               <Text size="sm" c="dimmed">
-                {post.commentsCount}
+                {commentsCount}
               </Text>
             </Group>
           </Flex>
@@ -205,13 +222,13 @@ export const PostDetails: FC<PostDetailsProps> = () => {
           <Group gap="sm">
             <ActionIcon
               variant="subtle"
-              color={post.saved ? "blue" : "gray"}
+              color={saved ? "blue" : "gray"}
               size="md"
               onClick={handleSaveClick}
             >
               <BookmarkSimpleIcon
                 size={20}
-                weight={post.saved ? "fill" : "regular"}
+                weight={saved ? "fill" : "regular"}
               />
             </ActionIcon>
 
@@ -224,7 +241,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
               <LinkIcon size={20} />
             </ActionIcon>
 
-            {post.externalUrl && (
+            {externalUrl && (
               <Button
                 variant="light"
                 size="sm"
@@ -238,7 +255,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
         </Group>
       </Paper>
 
-      <Comments comments={dummyComments} postId={post.id} />
+      <Comments comments={dummyComments} postId={postId ?? ""} />
     </Container>
   );
 };

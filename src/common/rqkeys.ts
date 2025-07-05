@@ -1,1 +1,3 @@
-export const RQ_KEYS = {};
+export const RQ_KEYS = {
+  POSTS: "posts",
+};

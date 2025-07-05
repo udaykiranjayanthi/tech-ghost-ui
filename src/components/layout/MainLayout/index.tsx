@@ -7,6 +7,9 @@ import styles from "./styles.module.scss";
 const MainLayout: FC = () => {
   return (
     <div>
+      <head>
+        <title>Daily Tech</title>
+      </head>
       <HeaderNavbar />
 
       <div className={styles.container}>
