@@ -86,11 +86,11 @@ const dummyComments = [
 
 export const PostDetails: FC<PostDetailsProps> = () => {
   const navigate = useNavigate();
-  const { postId } = useParams<{ postId: string }>();
+  const { postId = "" } = useParams<{ postId: string }>();
 
   const { data } = useApiQuery<PostDetailsData>({
     url: `${ENDPOINTS.POSTS}/${postId}`,
-    queryKey: [RQ_KEYS.POSTS],
+    queryKey: [RQ_KEYS.POST_DETAILS, postId],
   });
 
   // In a real app, you would fetch the post data based on postId

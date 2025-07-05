@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import "./App.css";
 import "@mantine/core/styles.css";
-import MainLayout from "./components/layout/MainLayout";
+import MainLayout from "./components/Layout/MainLayout";
 import { CreatePost } from "./pages/CreatePost";
 import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";

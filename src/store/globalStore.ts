@@ -11,27 +11,28 @@ const ACTION_TYPES = {
 
 interface userDetails {
   userId: string;
-  userName: string;
-  displayName: string;
+  username: string;
   email: string;
-  photoUrl: string;
+  pictureUrl: string;
+  firstName: string;
+  lastName: string;
 }
 
 interface GlobalStore {
   userDetails?: userDetails;
+  setUserDetails: (payload: userDetails) => void;
   resetState: () => void;
 }
 
 const initialState = {
   userDetails: undefined,
-  resetState: () => {},
 };
 
 const useGlobalBaseStore = create<GlobalStore>()(
   devtools(
     (set, get) => {
       const actions = {
-        setUserData: (payload: userDetails) =>
+        setUserDetails: (payload: userDetails) =>
           set(
             produce((draft: GlobalStore) => {
               draft.userDetails = payload;

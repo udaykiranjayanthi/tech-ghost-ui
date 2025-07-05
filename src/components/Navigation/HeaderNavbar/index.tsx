@@ -1,10 +1,18 @@
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
-import { Autocomplete, Burger, Button, Group } from "@mantine/core";
+import {
+  Autocomplete,
+  Avatar,
+  Burger,
+  Button,
+  Group,
+  Text,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
 import type { FC } from "react";
 import { NavLink } from "react-router";
 import ENDPOINTS from "@/common/endpoints";
+import { useGlobalStore } from "@/store";
 
 const links = [
   { link: "/about", label: "Features" },
@@ -13,6 +21,7 @@ const links = [
 
 export const HeaderNavbar: FC = () => {
   const [opened, { toggle }] = useDisclosure(false);
+  const userDetails = useGlobalStore.use.userDetails?.();
 
   const items = links.map((link) => (
     <NavLink key={link.label} to={link.link} className={styles.link}>
@@ -51,10 +60,16 @@ export const HeaderNavbar: FC = () => {
             <NavLink to="/create-post">
               <Button variant="outline">Create</Button>
             </NavLink>
-
-            <Button onClick={() => (window.location.href = ENDPOINTS.LOGIN)}>
-              Login
-            </Button>
+            {userDetails ? (
+              <Group ml={10} gap={5} className={styles.links} visibleFrom="sm">
+                <Text size="sm">Hi {userDetails.firstName}!</Text>
+                <Avatar src={userDetails.pictureUrl} />
+              </Group>
+            ) : (
+              <Button onClick={() => (window.location.href = ENDPOINTS.LOGIN)}>
+                Login
+              </Button>
+            )}
           </Group>
         </Group>
       </div>
