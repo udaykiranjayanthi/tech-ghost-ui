@@ -124,10 +124,13 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
       hashtags: selectedHashtags,
     };
 
-    mutate(formData, {
-      onSuccess: () => navigate("/"),
-      onError: () => console.log("Error creating post"),
-    });
+    mutate(
+      { payload: formData },
+      {
+        onSuccess: () => navigate("/"),
+        onError: () => console.log("Error creating post"),
+      }
+    );
   };
 
   const handleCancel = () => {
