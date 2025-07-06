@@ -255,7 +255,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
         </Group>
       </Paper>
 
-      <Comments comments={dummyComments} postId={postId ?? ""} />
+      <Comments postId={postId ?? ""} />
     </Container>
   );
 };

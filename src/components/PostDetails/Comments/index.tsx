@@ -15,24 +15,39 @@ import {
 import { ThumbsUpIcon, ThumbsDownIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import styles from "./styles.module.scss";
+import { useApiMutation, useApiQuery } from "@/services/hooks";
+import ENDPOINTS from "@/common/endpoints";
+import { RQ_KEYS } from "@/common/rqkeys";
+import type { UserData } from "@/types";
+import { displayDate } from "@/services/utils";
 
 interface Comment {
   id: string;
-  author: string;
-  avatar: string;
+  author: UserData;
   content: string;
-  date: string;
-  upvotes: number;
-  downvotes: number;
+  createdAt: string;
+  upvotes?: number;
+  downvotes?: number;
 }
 
 interface CommentsProps {
-  comments: Comment[];
   postId: string;
 }
 
-export const Comments: FC<CommentsProps> = ({ comments, postId }) => {
+export const Comments: FC<CommentsProps> = ({ postId }) => {
   const [newComment, setNewComment] = useState("");
+
+  const { data } = useApiQuery<Comment[]>({
+    url: `${ENDPOINTS.POSTS}/${postId}/comments`,
+    queryKey: [RQ_KEYS.COMMENTS, postId],
+  });
+
+  const { mutate: addComment } = useApiMutation({
+    url: `${ENDPOINTS.POSTS}/${postId}/comments`,
+    method: "post",
+  });
+
+  const comments = data || [];
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewComment(event.currentTarget.value);
@@ -41,11 +56,17 @@ export const Comments: FC<CommentsProps> = ({ comments, postId }) => {
   const handleSubmitComment = () => {
     if (newComment.trim() === "") return;
 
-    // In a real app, you would submit the comment to an API
-    console.log("Submitting comment:", { postId, content: newComment });
-
-    // Clear the input field after submission
-    setNewComment("");
+    addComment(
+      { content: newComment, parentCommentId: null },
+      {
+        onSuccess: () => {
+          setNewComment("");
+        },
+        onError: (error) => {
+          console.error("Error adding comment:", error);
+        },
+      }
+    );
   };
 
   const handleUpvote = (commentId: string) => {
@@ -88,14 +109,14 @@ export const Comments: FC<CommentsProps> = ({ comments, postId }) => {
               <Group justify="space-between" align="flex-start">
                 <Group align="flex-start">
                   <Avatar
-                    src={comment.avatar}
-                    alt={comment.author}
+                    src={comment?.author?.pictureUrl}
+                    alt={comment?.author?.firstName}
                     radius="xl"
                   />
                   <div>
-                    <Text fw={500}>{comment.author}</Text>
+                    <Text fw={500}>{comment?.author?.firstName}</Text>
                     <Text size="xs" c="dimmed">
-                      {comment.date}
+                      {displayDate(comment.createdAt)}
                     </Text>
                     <Text className={styles.commentContent}>
                       {comment.content}
