@@ -32,58 +32,6 @@ import { displayDate } from "@/services/utils";
 
 interface PostDetailsProps {}
 
-// Sample post data
-// TODO: remove
-const dummyPost = {
-  id: "1",
-  title: "Getting Started with React 18: New Features and Improvements",
-  thumbnailUrl:
-    "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-  tldr: "React 18 introduces concurrent rendering, automatic batching, transitions, and suspense on the server. These features aim to improve application performance and developer experience without requiring major code changes.",
-  content:
-    "React 18 has been released with several exciting new features and improvements. The most significant change is the introduction of concurrent rendering, which allows React to prepare multiple versions of the UI simultaneously. This means that React can work on several state updates at the same time without blocking the main thread, resulting in a more responsive user interface.\n\nAutomatic batching is another notable improvement. In previous versions, React would only batch updates inside React event handlers. With React 18, batching is automatic for all updates, leading to fewer renders and better performance.\n\nTransitions are a new concept in React 18 that allow you to mark some state updates as non-urgent. This is particularly useful for expensive rendering operations that might otherwise cause UI lag.\n\nSuspense on the server is now supported, enabling you to use the same component structure for both client and server rendering. This makes it easier to build applications that render on the server and hydrate on the client.",
-  upvotes: 124,
-  downvotes: 12,
-  commentsCount: 32,
-  date: "June 28, 2025",
-  externalUrl: "https://reactjs.org",
-  saved: false,
-};
-
-// Sample comments data
-const dummyComments = [
-  {
-    id: "c1",
-    author: "Jane Doe",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    content:
-      "This is a great overview of React 18! I'm particularly excited about the concurrent rendering feature.",
-    date: "June 29, 2025",
-    upvotes: 8,
-    downvotes: 1,
-  },
-  {
-    id: "c2",
-    author: "John Smith",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    content:
-      "I've been using automatic batching in my projects and it's made a noticeable difference in performance.",
-    date: "June 28, 2025",
-    upvotes: 5,
-    downvotes: 0,
-  },
-  {
-    id: "c3",
-    author: "Alex Johnson",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    content:
-      "Has anyone tried using Suspense on the server yet? I'm curious about real-world use cases.",
-    date: "June 27, 2025",
-    upvotes: 3,
-    downvotes: 0,
-  },
-];
-
 export const PostDetails: FC<PostDetailsProps> = () => {
   const navigate = useNavigate();
   const { postId = "" } = useParams<{ postId: string }>();

@@ -1,0 +1,12 @@
+.commentWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.repliesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 40px;
+  margin-top: 8px;
+}

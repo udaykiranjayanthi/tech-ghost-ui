@@ -1,3 +1,5 @@
+import type { UserData } from "./User";
+
 export type PostData = {
   postId: string;
   title: string;
@@ -23,4 +25,16 @@ export type PostDetailsData = {
   externalUrl?: string;
   includeExternalLink: boolean;
   hashtags: string[];
+};
+
+export type Comment = {
+  commentId: string;
+  postId: string;
+  author: UserData;
+  content: string;
+  createdAt: string;
+  upvotes?: number;
+  downvotes?: number;
+  parentCommentId?: string | null;
+  replyCount: number;
 };
