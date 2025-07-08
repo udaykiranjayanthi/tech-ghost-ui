@@ -4,6 +4,7 @@ import { useApiQuery } from "@/services/hooks";
 import { displayDate } from "@/services/utils";
 import type { PostDetailsData } from "@/types";
 import {
+  Avatar,
   Box,
   Button,
   Container,
@@ -63,6 +64,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
     tldr,
     content,
     hashtags,
+    author,
   } = data || {};
 
   const handleBackClick = () => {
@@ -75,7 +77,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
     }
   };
 
-  const isAuthor = userId === data?.author?.userId;
+  const isAuthor = userId === author?.userId;
 
   return (
     <Container size="lg" className={styles.container}>
@@ -95,7 +97,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
           <Group gap="sm">
             {isAuthor && (
               <Button
-                variant="light"
+                variant="outline"
                 size="sm"
                 rightSection={<PencilIcon size={16} />}
                 onClick={() => navigate(`/post/${postId}/edit`)}
@@ -123,9 +125,18 @@ export const PostDetails: FC<PostDetailsProps> = () => {
           {title}
         </Title>
 
-        <Text size="sm" c="dimmed" className={styles.date}>
-          {displayDate(createdAt)}
-        </Text>
+        <Group gap="md" className={styles.authorInfo}>
+          <Group gap="xs">
+            <Avatar src={author?.pictureUrl} size="sm" />
+            <Text>
+              {author?.firstName} {author?.lastName}
+            </Text>
+          </Group>
+          ·
+          <Text size="sm" c="dimmed">
+            {displayDate(createdAt)}
+          </Text>
+        </Group>
 
         <Image src={thumbnailUrl} height={300} alt={title} radius="sm" />
 

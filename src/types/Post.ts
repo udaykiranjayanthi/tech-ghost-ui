@@ -10,6 +10,7 @@ export type PostData = {
   commentsCount: number;
   createdAt: string;
   saved: boolean;
+  author: UserData;
 };
 
 export type PostDetailsData = {

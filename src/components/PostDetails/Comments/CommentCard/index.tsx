@@ -1,6 +1,14 @@
 import { displayDate } from "@/services/utils";
 import type { Comment } from "@/types";
-import { ActionIcon, Avatar, Flex, Group, Paper, Text } from "@mantine/core";
+import {
+  ActionIcon,
+  Avatar,
+  Box,
+  Flex,
+  Group,
+  Paper,
+  Text,
+} from "@mantine/core";
 import { ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
@@ -22,20 +30,23 @@ const CommentCard: FC<CommentCardProps> = ({
     <>
       <Paper className={styles.commentItem} withBorder>
         <Group justify="space-between" align="flex-start">
-          <Group align="flex-start">
-            <Avatar
-              src={comment?.author?.pictureUrl}
-              alt={comment?.author?.firstName}
-              radius="xl"
-            />
-            <div>
-              <Text fw={500}>{comment?.author?.firstName}</Text>
-              <Text size="xs" c="dimmed">
-                {displayDate(comment.createdAt)}
-              </Text>
-              <Text className={styles.commentContent}>{comment.content}</Text>
-            </div>
-          </Group>
+          <Box flex={1}>
+            <Group align="center" gap="xs">
+              <Avatar
+                src={comment?.author?.pictureUrl}
+                size="md"
+                alt={comment?.author?.firstName}
+              />
+              <div>
+                <Text fw={500}>{comment?.author?.firstName}</Text>
+                <Text size="xs" c="dimmed">
+                  {displayDate(comment.createdAt)}
+                </Text>
+              </div>
+            </Group>
+
+            <Text className={styles.commentContent}>{comment.content}</Text>
+          </Box>
           <Flex gap="xs">
             <Group gap="4">
               <ActionIcon

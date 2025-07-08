@@ -2,7 +2,7 @@ import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import { useApiMutation, useApiQuery } from "@/services/hooks";
 import type { Comment } from "@/types";
-import { Box, Button, Collapse, Flex, TextInput } from "@mantine/core";
+import { Box, Button, Collapse, Divider, Flex, TextInput } from "@mantine/core";
 import { useState, type FC } from "react";
 import CommentCard from "../CommentCard";
 import styles from "./styles.module.scss";
@@ -108,7 +108,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
           handleLike={handleLike}
           handleDislike={handleDislike}
         >
-          <Flex mt="sm" gap="md" align="center">
+          <Flex mt="md" gap="xs" align="center">
             <Button
               variant="subtle"
               size="xs"

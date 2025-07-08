@@ -4,6 +4,7 @@ import PostSave from "@/components/PostSave";
 import { displayDate } from "@/services/utils";
 import {
   ActionIcon,
+  Avatar,
   Card,
   Flex,
   Group,
@@ -15,6 +16,7 @@ import { ChatCircleIcon } from "@phosphor-icons/react";
 import type { FC } from "react";
 import { NavLink, useNavigate } from "react-router";
 import styles from "./styles.module.scss";
+import type { UserData } from "@/types";
 
 interface PostCardProps {
   postId: string;
@@ -26,6 +28,7 @@ interface PostCardProps {
   commentsCount: number;
   createdAt: string;
   saved: boolean;
+  author: UserData;
 }
 
 export const PostCard: FC<PostCardProps> = ({
@@ -38,6 +41,7 @@ export const PostCard: FC<PostCardProps> = ({
   commentsCount,
   createdAt,
   saved,
+  author,
 }) => {
   const navigate = useNavigate();
 
@@ -90,9 +94,18 @@ export const PostCard: FC<PostCardProps> = ({
         </Group>
       </Group>
 
-      <Text size="xs" c="dimmed" className={styles.date}>
-        {displayDate(createdAt)}
-      </Text>
+      <Group gap="xs" justify="space-between" className={styles.authorInfo}>
+        <Group gap="xs">
+          <Avatar src={author?.pictureUrl} size="xs" />
+          <Text size="sm">
+            {author?.firstName} {author?.lastName}
+          </Text>
+        </Group>
+
+        <Text size="sm" c="dimmed">
+          {displayDate(createdAt)}
+        </Text>
+      </Group>
     </Card>
   );
 };
