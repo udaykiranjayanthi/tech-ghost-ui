@@ -19,13 +19,13 @@ import {
 import {
   ArrowLeftIcon,
   ArrowSquareOutIcon,
-  BookmarkSimpleIcon,
   ChatCircleIcon,
   LinkIcon,
 } from "@phosphor-icons/react";
 import { type FC } from "react";
 import { useNavigate, useParams } from "react-router";
-import LikeDislike from "../LikeDislike";
+import PostLikeDislike from "../PostLikeDislike";
+import PostSave from "../PostSave";
 import { Comments } from "./Comments";
 import styles from "./styles.module.scss";
 
@@ -58,10 +58,6 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
   const handleBackClick = () => {
     navigate(-1);
-  };
-
-  const handleSaveClick = () => {
-    // Add save functionality here
   };
 
   const handleCopyLinkClick = () => {
@@ -126,7 +122,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
         <Group className={styles.actionBar} justify="space-between">
           <Flex gap="md" align="center">
-            <LikeDislike
+            <PostLikeDislike
               likes={likes}
               dislikes={dislikes}
               userReaction={userReaction}
@@ -144,17 +140,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
           </Flex>
 
           <Group gap="sm">
-            <ActionIcon
-              variant="subtle"
-              color={saved ? "blue" : "gray"}
-              size="md"
-              onClick={handleSaveClick}
-            >
-              <BookmarkSimpleIcon
-                size={20}
-                weight={saved ? "fill" : "regular"}
-              />
-            </ActionIcon>
+            <PostSave postId={postId} saved={saved} />
 
             <ActionIcon
               variant="subtle"

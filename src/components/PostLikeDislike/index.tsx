@@ -5,14 +5,14 @@ import styles from "./styles.module.scss";
 import { useApiMutation } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 
-type LikeDislikeProps = {
+type PostLikeDislikeProps = {
   likes: number;
   dislikes: number;
   userReaction: "LIKE" | "DISLIKE" | null;
   postId: string;
 };
 
-const LikeDislike: FC<LikeDislikeProps> = ({
+const PostLikeDislike: FC<PostLikeDislikeProps> = ({
   likes,
   dislikes,
   userReaction,
@@ -82,7 +82,12 @@ const LikeDislike: FC<LikeDislikeProps> = ({
 
   return (
     <Group gap="8" className={styles.likesGroup}>
-      <ActionIcon variant="subtle" color="gray" size="md" onClick={handleLike}>
+      <ActionIcon
+        variant="subtle"
+        color={reaction === "LIKE" ? "blue" : "gray"}
+        size="md"
+        onClick={handleLike}
+      >
         <ThumbsUpIcon
           size={20}
           weight={reaction === "LIKE" ? "fill" : "regular"}
@@ -93,7 +98,7 @@ const LikeDislike: FC<LikeDislikeProps> = ({
       </Text>
       <ActionIcon
         variant="subtle"
-        color="gray"
+        color={reaction === "DISLIKE" ? "red" : "gray"}
         size="md"
         onClick={handleDislike}
       >
@@ -106,4 +111,4 @@ const LikeDislike: FC<LikeDislikeProps> = ({
   );
 };
 
-export default LikeDislike;
+export default PostLikeDislike;

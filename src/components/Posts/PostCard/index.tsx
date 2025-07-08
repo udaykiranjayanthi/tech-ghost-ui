@@ -1,14 +1,14 @@
-import type { FC } from "react";
-import { Card, Image, Text, Group, ActionIcon, Flex } from "@mantine/core";
+import PostLikeDislike from "@/components/PostLikeDislike";
+import PostSave from "@/components/PostSave";
+import { displayDate } from "@/services/utils";
+import { ActionIcon, Card, Flex, Group, Image, Text } from "@mantine/core";
 import {
   ChatCircleIcon,
-  BookmarkSimpleIcon,
-  LinkIcon,
+  LinkIcon
 } from "@phosphor-icons/react";
+import type { FC } from "react";
 import { useNavigate } from "react-router";
 import styles from "./styles.module.scss";
-import { displayDate } from "@/services/utils";
-import LikeDislike from "@/components/LikeDislike";
 
 interface PostCardProps {
   postId: string;
@@ -19,7 +19,7 @@ interface PostCardProps {
   userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
-  saved?: boolean;
+  saved: boolean;
 }
 
 export const PostCard: FC<PostCardProps> = ({
@@ -31,17 +31,12 @@ export const PostCard: FC<PostCardProps> = ({
   userReaction,
   commentsCount,
   createdAt,
-  saved = false,
+  saved,
 }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
     navigate(`/post/${postId}`);
-  };
-
-  const handleSaveClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Add save functionality here
   };
 
   const handleCopyLinkClick = (e: React.MouseEvent) => {
@@ -61,7 +56,7 @@ export const PostCard: FC<PostCardProps> = ({
 
       <Group className={styles.footer} justify="space-between">
         <Flex gap="md" align="center">
-          <LikeDislike
+          <PostLikeDislike
             likes={likes}
             dislikes={dislikes}
             userReaction={userReaction}
@@ -70,7 +65,7 @@ export const PostCard: FC<PostCardProps> = ({
 
           <Group gap="8">
             <ActionIcon variant="subtle" color="gray" size="sm">
-              <ChatCircleIcon size={18} />
+              <ChatCircleIcon size={20} />
             </ActionIcon>
             <Text size="sm" c="dimmed">
               {commentsCount}
@@ -79,14 +74,7 @@ export const PostCard: FC<PostCardProps> = ({
         </Flex>
 
         <Group gap="xs">
-          <ActionIcon
-            variant="subtle"
-            color={saved ? "blue" : "gray"}
-            size="sm"
-            onClick={handleSaveClick}
-          >
-            <BookmarkSimpleIcon size={18} weight={saved ? "fill" : "regular"} />
-          </ActionIcon>
+          <PostSave postId={postId} saved={saved} />
 
           <ActionIcon
             variant="subtle"
@@ -94,7 +82,7 @@ export const PostCard: FC<PostCardProps> = ({
             size="sm"
             onClick={handleCopyLinkClick}
           >
-            <LinkIcon size={18} />
+            <LinkIcon size={20} />
           </ActionIcon>
         </Group>
       </Group>

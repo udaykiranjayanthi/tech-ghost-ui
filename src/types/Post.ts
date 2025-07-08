@@ -9,7 +9,7 @@ export type PostData = {
   userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
-  saved?: boolean;
+  saved: boolean;
 };
 
 export type PostDetailsData = {
@@ -21,7 +21,7 @@ export type PostDetailsData = {
   userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
-  saved?: boolean;
+  saved: boolean;
   tldr: string;
   content: string;
   externalUrl?: string;
