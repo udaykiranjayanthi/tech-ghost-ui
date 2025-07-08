@@ -1,52 +1,22 @@
 import { displayDate } from "@/services/utils";
 import type { Comment } from "@/types";
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  Button,
-  Flex,
-  Group,
-  Paper,
-  Text,
-  TextInput,
-} from "@mantine/core";
-import {
-  ArrowBendUpLeftIcon,
-  CaretDownIcon,
-  CaretUpIcon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
-} from "@phosphor-icons/react";
+import { ActionIcon, Avatar, Flex, Group, Paper, Text } from "@mantine/core";
+import { ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
 
 type CommentCardProps = {
   comment: Comment;
-  showReplyActions: boolean;
-  handleUpvote: (commentId: string) => void;
-  handleDownvote: (commentId: string) => void;
-  showReplies?: boolean;
-  showReplyInput?: boolean;
-  replyContent?: string;
-  setReplyContent?: (content: string) => void;
-  toggleReplies?: () => void;
-  toggleReplyInput?: () => void;
-  handleSubmitReply?: () => void;
+  handleLike: (commentId: string) => void;
+  handleDislike: (commentId: string) => void;
+  children?: React.ReactNode | React.ReactNode[];
 };
 
 const CommentCard: FC<CommentCardProps> = ({
   comment,
-  showReplyActions,
-  handleUpvote,
-  handleDownvote,
-  showReplies,
-  showReplyInput,
-  replyContent,
-  setReplyContent = () => {},
-  toggleReplies = () => {},
-  toggleReplyInput = () => {},
-  handleSubmitReply = () => {},
+  handleLike,
+  handleDislike,
+  children,
 }) => {
   return (
     <>
@@ -72,12 +42,12 @@ const CommentCard: FC<CommentCardProps> = ({
                 variant="subtle"
                 color="gray"
                 size="sm"
-                onClick={() => handleUpvote(comment.commentId)}
+                onClick={() => handleLike(comment.commentId)}
               >
                 <ThumbsUpIcon size={20} />
               </ActionIcon>
               <Text size="sm" c="dimmed">
-                {comment.upvotes}
+                {comment.likes}
               </Text>
             </Group>
             <Group gap="4">
@@ -85,70 +55,18 @@ const CommentCard: FC<CommentCardProps> = ({
                 variant="subtle"
                 color="gray"
                 size="sm"
-                onClick={() => handleDownvote(comment.commentId)}
+                onClick={() => handleDislike(comment.commentId)}
               >
                 <ThumbsDownIcon size={20} />
               </ActionIcon>
               <Text size="sm" c="dimmed">
-                {comment.downvotes}
+                {comment.dislikes}
               </Text>
             </Group>
           </Flex>
         </Group>
 
-        {showReplyActions && (
-          <Flex mt="sm" gap="md" align="center">
-            <Button
-              variant="subtle"
-              size="xs"
-              leftSection={<ArrowBendUpLeftIcon size={20} />}
-              onClick={() => toggleReplyInput()}
-            >
-              Reply
-            </Button>
-
-            {comment.replyCount && comment.replyCount > 0 && (
-              <Button
-                variant="subtle"
-                size="xs"
-                rightSection={
-                  showReplies ? (
-                    <CaretUpIcon size={20} />
-                  ) : (
-                    <CaretDownIcon size={20} />
-                  )
-                }
-                onClick={() => toggleReplies()}
-              >
-                {showReplies ? "Hide" : "View"} {comment.replyCount}{" "}
-                {comment.replyCount === 1 ? "reply" : "replies"}
-              </Button>
-            )}
-          </Flex>
-        )}
-
-        {showReplyInput && (
-          <Box className={styles.replyInputContainer}>
-            <TextInput
-              placeholder="Write a reply..."
-              value={replyContent}
-              onChange={(e) => setReplyContent(e.currentTarget.value)}
-              className={styles.replyInput}
-            />
-            <Flex gap="xs">
-              <Button size="xs" onClick={() => toggleReplyInput()}>
-                Cancel
-              </Button>
-              <Button
-                size="xs"
-                onClick={() => handleSubmitReply()}
-                disabled={replyContent?.trim() === ""}
-              >
-                Reply
-              </Button>
-            </Flex>
-          </Box>
-        )}
+        {children}
       </Paper>
     </>
   );

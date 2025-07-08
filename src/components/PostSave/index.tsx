@@ -36,7 +36,7 @@ const PostSave: FC<PostSaveProps> = ({ postId, saved = false }) => {
       <ActionIcon
         variant="subtle"
         color={isSaved ? "blue" : "gray"}
-        size="sm"
+        size="md"
         onClick={handleSaveClick}
       >
         <BookmarkSimpleIcon size={20} weight={isSaved ? "fill" : "regular"} />

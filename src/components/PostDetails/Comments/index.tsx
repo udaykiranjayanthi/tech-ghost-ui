@@ -12,17 +12,15 @@ import {
   Title,
 } from "@mantine/core";
 import type { FC } from "react";
-import { useState } from "react";
 import CommentCard from "./CommentGroup";
 import styles from "./styles.module.scss";
+import { Controller, useForm } from "react-hook-form";
 interface CommentsProps {
   postId: string;
 }
 
 export const Comments: FC<CommentsProps> = ({ postId }) => {
-  const [newComment, setNewComment] = useState("");
-
-  const { data } = useApiQuery<Comment[]>({
+  const { data, refetch } = useApiQuery<Comment[]>({
     url: `${ENDPOINTS.POSTS}/${postId}/comments`,
     params: { parentCommentId: null },
     queryKey: [RQ_KEYS.COMMENTS, postId],
@@ -33,20 +31,34 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
     method: "post",
   });
 
-  const comments = data || [];
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = useForm({
+    defaultValues: {
+      content: "",
+    },
+  });
 
-  const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewComment(event.currentTarget.value);
+  const rules = {
+    content: {
+      required: "Required",
+      maxLength: { value: 1000, message: "Max 1000 characters" },
+    },
   };
 
-  const handleSubmitComment = () => {
-    if (newComment.trim() === "") return;
+  const handleSubmitComment = (data: { content: string }) => {
+    const { content } = data;
+    if (content.trim() === "") return;
 
     addComment(
-      { payload: { content: newComment, parentCommentId: null } },
+      { payload: { content, parentCommentId: null } },
       {
         onSuccess: () => {
-          setNewComment("");
+          reset();
+          refetch();
         },
         onError: (error) => {
           console.error("Error adding comment:", error);
@@ -55,6 +67,8 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
     );
   };
 
+  const comments = data || [];
+
   return (
     <Paper p="md" className={styles.commentsContainer}>
       <Title order={3} className={styles.commentsTitle}>
@@ -62,16 +76,19 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
       </Title>
 
       <Box className={styles.newCommentSection}>
-        <TextInput
-          placeholder="Add a comment..."
-          value={newComment}
-          onChange={handleCommentChange}
-          className={styles.commentInput}
+        <Controller
+          control={control}
+          name="content"
+          rules={rules.content}
+          render={({ field }) => (
+            <TextInput
+              {...field}
+              placeholder="Add a comment..."
+              className={styles.commentInput}
+            />
+          )}
         />
-        <Button
-          onClick={handleSubmitComment}
-          disabled={newComment.trim() === ""}
-        >
+        <Button onClick={handleSubmit(handleSubmitComment)} disabled={!isValid}>
           Post
         </Button>
       </Box>

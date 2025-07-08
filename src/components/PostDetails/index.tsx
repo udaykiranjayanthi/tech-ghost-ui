@@ -22,8 +22,8 @@ import {
   ChatCircleIcon,
   LinkIcon,
 } from "@phosphor-icons/react";
-import { type FC } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useEffect, useRef, type FC } from "react";
+import { useLocation, useNavigate, useParams } from "react-router";
 import PostLikeDislike from "../PostLikeDislike";
 import PostSave from "../PostSave";
 import { Comments } from "./Comments";
@@ -40,8 +40,15 @@ export const PostDetails: FC<PostDetailsProps> = () => {
     queryKey: [RQ_KEYS.POST_DETAILS, postId],
   });
 
-  // In a real app, you would fetch the post data based on postId
-  // For example: const post = useFetchPost(postId);
+  const location = useLocation();
+  const commentsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (location.hash === "#comments" && commentsRef.current) {
+      commentsRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [location]);
+
   const {
     title,
     thumbnailUrl,
@@ -165,7 +172,9 @@ export const PostDetails: FC<PostDetailsProps> = () => {
         </Group>
       </Paper>
 
-      <Comments postId={postId ?? ""} />
+      <div ref={commentsRef}>
+        <Comments postId={postId ?? ""} />
+      </div>
     </Container>
   );
 };

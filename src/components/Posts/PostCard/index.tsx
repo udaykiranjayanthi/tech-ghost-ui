@@ -2,12 +2,9 @@ import PostLikeDislike from "@/components/PostLikeDislike";
 import PostSave from "@/components/PostSave";
 import { displayDate } from "@/services/utils";
 import { ActionIcon, Card, Flex, Group, Image, Text } from "@mantine/core";
-import {
-  ChatCircleIcon,
-  LinkIcon
-} from "@phosphor-icons/react";
+import { ChatCircleIcon, LinkIcon } from "@phosphor-icons/react";
 import type { FC } from "react";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
 import styles from "./styles.module.scss";
 
 interface PostCardProps {
@@ -55,7 +52,7 @@ export const PostCard: FC<PostCardProps> = ({
       </Text>
 
       <Group className={styles.footer} justify="space-between">
-        <Flex gap="md" align="center">
+        <Flex gap="sm" align="center">
           <PostLikeDislike
             likes={likes}
             dislikes={dislikes}
@@ -63,10 +60,17 @@ export const PostCard: FC<PostCardProps> = ({
             postId={postId}
           />
 
-          <Group gap="8">
-            <ActionIcon variant="subtle" color="gray" size="sm">
-              <ChatCircleIcon size={20} />
-            </ActionIcon>
+          <Group gap="4">
+            <NavLink
+              to={`/post/${postId}#comments`}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <ActionIcon variant="subtle" color="gray" size="md">
+                <ChatCircleIcon size={20} />
+              </ActionIcon>
+            </NavLink>
             <Text size="sm" c="dimmed">
               {commentsCount}
             </Text>
@@ -79,7 +83,7 @@ export const PostCard: FC<PostCardProps> = ({
           <ActionIcon
             variant="subtle"
             color="gray"
-            size="sm"
+            size="md"
             onClick={handleCopyLinkClick}
           >
             <LinkIcon size={20} />
