@@ -20,7 +20,6 @@ import {
   ArrowLeftIcon,
   ArrowSquareOutIcon,
   ChatCircleIcon,
-  LinkIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useRef, type FC } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -28,6 +27,7 @@ import PostLikeDislike from "../PostLikeDislike";
 import PostSave from "../PostSave";
 import { Comments } from "./Comments";
 import styles from "./styles.module.scss";
+import CopyLinkButton from "../CopyLinkButton";
 
 interface PostDetailsProps {}
 
@@ -65,11 +65,6 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
   const handleBackClick = () => {
     navigate(-1);
-  };
-
-  const handleCopyLinkClick = () => {
-    navigator.clipboard.writeText(window.location.href);
-    // You could add a toast notification here
   };
 
   const handleReadPostClick = () => {
@@ -135,28 +130,12 @@ export const PostDetails: FC<PostDetailsProps> = () => {
               userReaction={userReaction}
               postId={postId}
             />
-
-            <Group gap="8">
-              <ActionIcon variant="subtle" color="gray" size="md">
-                <ChatCircleIcon size={20} />
-              </ActionIcon>
-              <Text size="sm" c="dimmed">
-                {commentsCount}
-              </Text>
-            </Group>
           </Flex>
 
           <Group gap="sm">
             <PostSave postId={postId} saved={saved} />
 
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              size="md"
-              onClick={handleCopyLinkClick}
-            >
-              <LinkIcon size={20} />
-            </ActionIcon>
+            <CopyLinkButton copyText={`http://localhost:3000/post/${postId}`} />
 
             {externalUrl && (
               <Button

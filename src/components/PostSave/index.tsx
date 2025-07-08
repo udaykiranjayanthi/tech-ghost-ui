@@ -1,6 +1,6 @@
 import ENDPOINTS from "@/common/endpoints";
 import { useApiMutation } from "@/services/hooks";
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Tooltip } from "@mantine/core";
 import { BookmarkSimpleIcon } from "@phosphor-icons/react";
 import { useEffect, useState, type FC } from "react";
 
@@ -32,7 +32,7 @@ const PostSave: FC<PostSaveProps> = ({ postId, saved = false }) => {
   };
 
   return (
-    <>
+    <Tooltip label="Save" position="top" withArrow>
       <ActionIcon
         variant="subtle"
         color={isSaved ? "blue" : "gray"}
@@ -41,7 +41,7 @@ const PostSave: FC<PostSaveProps> = ({ postId, saved = false }) => {
       >
         <BookmarkSimpleIcon size={20} weight={isSaved ? "fill" : "regular"} />
       </ActionIcon>
-    </>
+    </Tooltip>
   );
 };
 

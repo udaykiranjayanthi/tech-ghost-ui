@@ -1,8 +1,17 @@
+import CopyLinkButton from "@/components/CopyLinkButton";
 import PostLikeDislike from "@/components/PostLikeDislike";
 import PostSave from "@/components/PostSave";
 import { displayDate } from "@/services/utils";
-import { ActionIcon, Card, Flex, Group, Image, Text } from "@mantine/core";
-import { ChatCircleIcon, LinkIcon } from "@phosphor-icons/react";
+import {
+  ActionIcon,
+  Card,
+  Flex,
+  Group,
+  Image,
+  Text,
+  Tooltip,
+} from "@mantine/core";
+import { ChatCircleIcon } from "@phosphor-icons/react";
 import type { FC } from "react";
 import { NavLink, useNavigate } from "react-router";
 import styles from "./styles.module.scss";
@@ -36,11 +45,6 @@ export const PostCard: FC<PostCardProps> = ({
     navigate(`/post/${postId}`);
   };
 
-  const handleCopyLinkClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText("link");
-  };
-
   return (
     <Card className={styles.card} onClick={handleCardClick}>
       <Card.Section>
@@ -61,16 +65,18 @@ export const PostCard: FC<PostCardProps> = ({
           />
 
           <Group gap="4">
-            <NavLink
-              to={`/post/${postId}#comments`}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <ActionIcon variant="subtle" color="gray" size="md">
-                <ChatCircleIcon size={20} />
-              </ActionIcon>
-            </NavLink>
+            <Tooltip label="View Comments" position="top" withArrow>
+              <NavLink
+                to={`/post/${postId}#comments`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <ActionIcon variant="subtle" color="gray" size="md">
+                  <ChatCircleIcon size={20} />
+                </ActionIcon>
+              </NavLink>
+            </Tooltip>
             <Text size="sm" c="dimmed">
               {commentsCount}
             </Text>
@@ -80,14 +86,7 @@ export const PostCard: FC<PostCardProps> = ({
         <Group gap="xs">
           <PostSave postId={postId} saved={saved} />
 
-          <ActionIcon
-            variant="subtle"
-            color="gray"
-            size="md"
-            onClick={handleCopyLinkClick}
-          >
-            <LinkIcon size={20} />
-          </ActionIcon>
+          <CopyLinkButton copyText={`http://localhost:3000/post/${postId}`} />
         </Group>
       </Group>
 

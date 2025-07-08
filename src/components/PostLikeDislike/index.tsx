@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Text } from "@mantine/core";
+import { ActionIcon, Group, Text, Tooltip } from "@mantine/core";
 import { ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react";
 import { useEffect, useState, type FC } from "react";
 import styles from "./styles.module.scss";
@@ -82,31 +82,35 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
 
   return (
     <Group gap="8" className={styles.likesGroup}>
-      <ActionIcon
-        variant="subtle"
-        color={reaction === "LIKE" ? "blue" : "gray"}
-        size="md"
-        onClick={handleLike}
-      >
-        <ThumbsUpIcon
-          size={20}
-          weight={reaction === "LIKE" ? "fill" : "regular"}
-        />
-      </ActionIcon>
+      <Tooltip label="Like" position="top" withArrow>
+        <ActionIcon
+          variant="subtle"
+          color={reaction === "LIKE" ? "blue" : "gray"}
+          size="md"
+          onClick={handleLike}
+        >
+          <ThumbsUpIcon
+            size={20}
+            weight={reaction === "LIKE" ? "fill" : "regular"}
+          />
+        </ActionIcon>
+      </Tooltip>
       <Text size="sm" c="dimmed">
         {likesCount - dislikesCount}
       </Text>
-      <ActionIcon
-        variant="subtle"
-        color={reaction === "DISLIKE" ? "red" : "gray"}
-        size="md"
-        onClick={handleDislike}
-      >
-        <ThumbsDownIcon
-          size={20}
-          weight={reaction === "DISLIKE" ? "fill" : "regular"}
-        />
-      </ActionIcon>
+      <Tooltip label="Dislike" position="top" withArrow>
+        <ActionIcon
+          variant="subtle"
+          color={reaction === "DISLIKE" ? "red" : "gray"}
+          size="md"
+          onClick={handleDislike}
+        >
+          <ThumbsDownIcon
+            size={20}
+            weight={reaction === "DISLIKE" ? "fill" : "regular"}
+          />
+        </ActionIcon>
+      </Tooltip>
     </Group>
   );
 };
