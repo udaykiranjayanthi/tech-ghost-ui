@@ -31,28 +31,29 @@ export function useApiQuery<T, TParams = unknown>({
 
 type MutationMethod = "post" | "put" | "patch" | "delete" | "get";
 
-type Variables = {
-  payload?: any;
+type Variables<TPayload = any> = {
+  payload?: TPayload;
   params?: any;
 };
 
-interface ApiMutationParams<TData, TVariables> {
+interface ApiMutationParams<TData, TPayload> {
   url: string;
   method?: MutationMethod;
-  options?: UseMutationOptions<TData, Error, TVariables>;
+  options?: UseMutationOptions<TData, Error, Variables<TPayload>>;
 }
 
-export function useApiMutation<
-  TData,
-  TVariables extends Variables = Variables
->({ url, method = "post", options }: ApiMutationParams<TData, TVariables>) {
-  return useMutation<TData, Error, TVariables>({
-    mutationFn: async (variables: TVariables) => {
+export function useApiMutation<TData, TPayload>({
+  url,
+  method = "post",
+  options,
+}: ApiMutationParams<TData, TPayload>) {
+  return useMutation<TData, Error, Variables<TPayload>>({
+    mutationFn: async (variables?: Variables<TPayload>) => {
       const response = await axiosInstance.request<TData>({
         url,
         method,
-        params: variables.params,
-        data: variables.payload,
+        params: variables?.params,
+        data: variables?.payload,
       });
       return response.data;
     },

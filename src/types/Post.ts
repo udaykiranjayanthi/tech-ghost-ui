@@ -4,8 +4,9 @@ export type PostData = {
   postId: string;
   title: string;
   thumbnailUrl: string;
-  upvotes: number;
-  downvotes: number;
+  likes: number;
+  dislikes: number;
+  userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
   saved?: boolean;
@@ -15,8 +16,9 @@ export type PostDetailsData = {
   postId: string;
   title: string;
   thumbnailUrl: string;
-  upvotes: number;
-  downvotes: number;
+  likes: number;
+  dislikes: number;
+  userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
   saved?: boolean;
@@ -33,8 +35,9 @@ export type Comment = {
   author: UserData;
   content: string;
   createdAt: string;
-  upvotes?: number;
-  downvotes?: number;
+  likes?: number;
+  dislikes?: number;
+  userReaction?: "LIKE" | "DISLIKE" | null;
   parentCommentId?: string | null;
   replyCount: number;
 };

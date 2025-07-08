@@ -1,34 +1,33 @@
-import type { FC } from "react";
-import {
-  Image,
-  Text,
-  Group,
-  ActionIcon,
-  Flex,
-  Container,
-  Button,
-  Title,
-  Divider,
-  Paper,
-  Box,
-} from "@mantine/core";
-import {
-  ThumbsUpIcon,
-  ThumbsDownIcon,
-  ChatCircleIcon,
-  BookmarkSimpleIcon,
-  LinkIcon,
-  ArrowLeftIcon,
-  ArrowSquareOutIcon,
-} from "@phosphor-icons/react";
-import { useNavigate, useParams } from "react-router";
-import { Comments } from "./Comments";
-import styles from "./styles.module.scss";
-import { useApiQuery } from "@/services/hooks";
-import type { PostDetailsData } from "@/types";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
+import { useApiQuery } from "@/services/hooks";
 import { displayDate } from "@/services/utils";
+import type { PostDetailsData } from "@/types";
+import {
+  ActionIcon,
+  Box,
+  Button,
+  Container,
+  Divider,
+  Flex,
+  Group,
+  Image,
+  Paper,
+  Text,
+  Title,
+} from "@mantine/core";
+import {
+  ArrowLeftIcon,
+  ArrowSquareOutIcon,
+  BookmarkSimpleIcon,
+  ChatCircleIcon,
+  LinkIcon,
+} from "@phosphor-icons/react";
+import { type FC } from "react";
+import { useNavigate, useParams } from "react-router";
+import LikeDislike from "../LikeDislike";
+import { Comments } from "./Comments";
+import styles from "./styles.module.scss";
 
 interface PostDetailsProps {}
 
@@ -43,12 +42,12 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
   // In a real app, you would fetch the post data based on postId
   // For example: const post = useFetchPost(postId);
-  console.log(`Viewing post with ID: ${postId}`);
   const {
     title,
     thumbnailUrl,
-    upvotes,
-    downvotes,
+    likes = 0,
+    dislikes = 0,
+    userReaction = null,
     commentsCount,
     createdAt,
     externalUrl,
@@ -59,14 +58,6 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
   const handleBackClick = () => {
     navigate(-1);
-  };
-
-  const handleUpvote = () => {
-    // Add upvote functionality here
-  };
-
-  const handleDownvote = () => {
-    // Add downvote functionality here
   };
 
   const handleSaveClick = () => {
@@ -135,27 +126,12 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
         <Group className={styles.actionBar} justify="space-between">
           <Flex gap="md" align="center">
-            <Group gap="8" className={styles.likesGroup}>
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                size="md"
-                onClick={handleUpvote}
-              >
-                <ThumbsUpIcon size={20} />
-              </ActionIcon>
-              <Text size="sm" c="dimmed">
-                {upvotes && downvotes ? upvotes - downvotes : 0}
-              </Text>
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                size="md"
-                onClick={handleDownvote}
-              >
-                <ThumbsDownIcon size={20} />
-              </ActionIcon>
-            </Group>
+            <LikeDislike
+              likes={likes}
+              dislikes={dislikes}
+              userReaction={userReaction}
+              postId={postId}
+            />
 
             <Group gap="8">
               <ActionIcon variant="subtle" color="gray" size="md">

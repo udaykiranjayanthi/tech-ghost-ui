@@ -1,8 +1,6 @@
 import type { FC } from "react";
 import { Card, Image, Text, Group, ActionIcon, Flex } from "@mantine/core";
 import {
-  ThumbsUpIcon,
-  ThumbsDownIcon,
   ChatCircleIcon,
   BookmarkSimpleIcon,
   LinkIcon,
@@ -10,13 +8,15 @@ import {
 import { useNavigate } from "react-router";
 import styles from "./styles.module.scss";
 import { displayDate } from "@/services/utils";
+import LikeDislike from "@/components/LikeDislike";
 
 interface PostCardProps {
   postId: string;
   title: string;
   thumbnailUrl: string;
-  upvotes: number;
-  downvotes: number;
+  likes: number;
+  dislikes: number;
+  userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
   saved?: boolean;
@@ -26,23 +26,14 @@ export const PostCard: FC<PostCardProps> = ({
   postId,
   title,
   thumbnailUrl,
-  upvotes,
-  downvotes,
+  likes,
+  dislikes,
+  userReaction,
   commentsCount,
   createdAt,
   saved = false,
 }) => {
   const navigate = useNavigate();
-
-  const handleUpvote = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Add upvote functionality here
-  };
-
-  const handleDownvote = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // Add downvote functionality here
-  };
 
   const handleCardClick = () => {
     navigate(`/post/${postId}`);
@@ -70,27 +61,12 @@ export const PostCard: FC<PostCardProps> = ({
 
       <Group className={styles.footer} justify="space-between">
         <Flex gap="md" align="center">
-          <Group gap="8" className={styles.likesGroup}>
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              size="sm"
-              onClick={handleUpvote}
-            >
-              <ThumbsUpIcon size={18} />
-            </ActionIcon>
-            <Text size="sm" c="dimmed">
-              {upvotes - downvotes}
-            </Text>
-            <ActionIcon
-              variant="subtle"
-              color="gray"
-              size="sm"
-              onClick={handleDownvote}
-            >
-              <ThumbsDownIcon size={18} />
-            </ActionIcon>
-          </Group>
+          <LikeDislike
+            likes={likes}
+            dislikes={dislikes}
+            userReaction={userReaction}
+            postId={postId}
+          />
 
           <Group gap="8">
             <ActionIcon variant="subtle" color="gray" size="sm">
