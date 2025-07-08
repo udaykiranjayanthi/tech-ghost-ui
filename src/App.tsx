@@ -22,6 +22,7 @@ export const router = createBrowserRouter([
       { path: "", element: <Home /> },
       { path: "post/:postId", element: <Post /> },
       { path: "create-post", element: <CreatePost /> },
+      { path: "post/:postId/edit", element: <CreatePost /> },
       { path: "auth-callback", element: <AuthCallback /> },
       { path: "*", element: <NotFound /> },
     ],

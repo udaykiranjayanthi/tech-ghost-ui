@@ -16,11 +16,13 @@ import {
 } from "@mantine/core";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { ArrowLeftIcon, ImageIcon } from "@phosphor-icons/react";
 import styles from "./styles.module.scss";
-import { useApiMutation } from "@/services/hooks";
+import { useApiMutation, useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
+import { RQ_KEYS } from "@/common/rqkeys";
+import type { PostDetailsData } from "@/types";
 
 interface CreatePostFormProps {}
 
@@ -38,9 +40,25 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
   const navigate = useNavigate();
   const [currentHashtag, setCurrentHashtag] = useState("");
   const [selectedHashtags, setSelectedHashtags] = useState<string[]>([]);
-  const { mutate, isPending } = useApiMutation({
+  const { postId = "" } = useParams<{ postId: string }>();
+  const isCreate = !postId;
+
+  const { mutate: createPost, isPending: isCreatePending } = useApiMutation({
     url: ENDPOINTS.POSTS,
     method: "post",
+  });
+
+  const { mutate: updatePost, isPending: isUpdatePending } = useApiMutation({
+    url: `${ENDPOINTS.POSTS}/${postId}`,
+    method: "put",
+  });
+
+  const { data: postDetails } = useApiQuery<PostDetailsData>({
+    url: `${ENDPOINTS.POSTS}/${postId}`,
+    queryKey: [RQ_KEYS.POST_DETAILS, postId],
+    options: {
+      enabled: !isCreate,
+    },
   });
 
   // Sample hashtag suggestions
@@ -66,17 +84,31 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
     watch,
     control,
     formState: { errors },
+    reset,
   } = useForm<PostFormValues>({
     defaultValues: {
       title: "",
       thumbnailUrl: "",
       tldr: "",
       content: "",
+      includeExternalLink: true,
       externalUrl: "",
-      includeExternalLink: false,
-      hashtags: [],
     },
   });
+
+  useEffect(() => {
+    if (postDetails) {
+      reset({
+        title: postDetails.title,
+        thumbnailUrl: postDetails.thumbnailUrl,
+        tldr: postDetails.tldr,
+        content: postDetails.content,
+        externalUrl: postDetails.externalUrl,
+        includeExternalLink: postDetails.includeExternalLink,
+      });
+      setSelectedHashtags(postDetails.hashtags);
+    }
+  }, [postDetails]);
 
   const rules = {
     title: {
@@ -124,13 +156,23 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
       hashtags: selectedHashtags,
     };
 
-    mutate(
-      { payload: formData },
-      {
-        onSuccess: () => navigate("/"),
-        onError: () => console.log("Error creating post"),
-      }
-    );
+    if (isCreate) {
+      createPost(
+        { payload: formData },
+        {
+          onSuccess: () => navigate("/"),
+          onError: () => console.log("Error creating post"),
+        }
+      );
+    } else {
+      updatePost(
+        { payload: formData },
+        {
+          onSuccess: () => navigate("/"),
+          onError: () => console.log("Error updating post"),
+        }
+      );
+    }
   };
 
   const handleCancel = () => {
@@ -155,7 +197,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
 
       <Paper p="md" className={styles.formContainer}>
         <Title order={2} className={styles.formTitle}>
-          Create New Post
+          {isCreate ? "Create New Post" : "Edit Post"}
         </Title>
 
         <div className={styles.form}>
@@ -229,8 +271,9 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
             name="includeExternalLink"
             render={({ field }) => (
               <Switch
-                label="Include external link"
+                label={`Include external link`}
                 {...field}
+                checked={field.value}
                 value={field.value ? "1" : "0"}
                 className={styles.formField}
               />
@@ -274,6 +317,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
                   onRemove={() => {
                     handleRemoveHashtag(tag);
                   }}
+                  size="md"
                 >
                   #{tag}
                 </Pill>
@@ -287,8 +331,11 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
             <Button variant="outline" onClick={handleCancel}>
               Cancel
             </Button>
-            <Button loading={isPending} onClick={handleSubmit(onFormSubmit)}>
-              Create Post
+            <Button
+              loading={isCreatePending || isUpdatePending}
+              onClick={handleSubmit(onFormSubmit)}
+            >
+              {isCreate ? "Create Post" : "Update Post"}
             </Button>
           </Group>
         </div>

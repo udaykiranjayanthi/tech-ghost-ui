@@ -27,6 +27,7 @@ export type PostDetailsData = {
   externalUrl?: string;
   includeExternalLink: boolean;
   hashtags: string[];
+  author: UserData;
 };
 
 export type Comment = {

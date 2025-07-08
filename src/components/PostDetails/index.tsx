@@ -4,7 +4,6 @@ import { useApiQuery } from "@/services/hooks";
 import { displayDate } from "@/services/utils";
 import type { PostDetailsData } from "@/types";
 import {
-  ActionIcon,
   Box,
   Button,
   Container,
@@ -13,13 +12,14 @@ import {
   Group,
   Image,
   Paper,
+  Pill,
   Text,
   Title,
 } from "@mantine/core";
 import {
   ArrowLeftIcon,
   ArrowSquareOutIcon,
-  ChatCircleIcon,
+  PencilIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useRef, type FC } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -28,12 +28,14 @@ import PostSave from "../PostSave";
 import { Comments } from "./Comments";
 import styles from "./styles.module.scss";
 import CopyLinkButton from "../CopyLinkButton";
+import { useGlobalStore } from "@/store";
 
 interface PostDetailsProps {}
 
 export const PostDetails: FC<PostDetailsProps> = () => {
   const navigate = useNavigate();
   const { postId = "" } = useParams<{ postId: string }>();
+  const { userId } = useGlobalStore.use.userDetails?.() ?? {};
 
   const { data } = useApiQuery<PostDetailsData>({
     url: `${ENDPOINTS.POSTS}/${postId}`,
@@ -55,12 +57,12 @@ export const PostDetails: FC<PostDetailsProps> = () => {
     likes = 0,
     dislikes = 0,
     userReaction = null,
-    commentsCount,
     createdAt,
     externalUrl,
     saved,
     tldr,
     content,
+    hashtags,
   } = data || {};
 
   const handleBackClick = () => {
@@ -72,6 +74,8 @@ export const PostDetails: FC<PostDetailsProps> = () => {
       window.open(externalUrl, "_blank");
     }
   };
+
+  const isAuthor = userId === data?.author?.userId;
 
   return (
     <Container size="lg" className={styles.container}>
@@ -88,17 +92,29 @@ export const PostDetails: FC<PostDetailsProps> = () => {
               <Text>Go back</Text>
             </Group>
           </Button>
-          {externalUrl && (
-            <Button
-              variant="light"
-              size="sm"
-              mr="md"
-              rightSection={<ArrowSquareOutIcon size={16} />}
-              onClick={handleReadPostClick}
-            >
-              Read Post
-            </Button>
-          )}
+          <Group gap="sm">
+            {isAuthor && (
+              <Button
+                variant="light"
+                size="sm"
+                rightSection={<PencilIcon size={16} />}
+                onClick={() => navigate(`/post/${postId}/edit`)}
+              >
+                Edit Post
+              </Button>
+            )}
+            {externalUrl && (
+              <Button
+                variant="light"
+                size="sm"
+                mr="md"
+                rightSection={<ArrowSquareOutIcon size={16} />}
+                onClick={handleReadPostClick}
+              >
+                Read Post
+              </Button>
+            )}
+          </Group>
         </Group>
       </Box>
 
@@ -119,6 +135,14 @@ export const PostDetails: FC<PostDetailsProps> = () => {
         </Paper>
 
         <Text className={styles.content}>{content}</Text>
+
+        <Group gap="xs" className={styles.hashtagsPreview}>
+          {hashtags?.map((hashtag) => (
+            <Pill key={hashtag} className={styles.hashtag} size="md">
+              #{hashtag}
+            </Pill>
+          ))}
+        </Group>
 
         <Divider my="lg" />
 
