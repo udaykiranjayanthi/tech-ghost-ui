@@ -71,7 +71,7 @@ export const PostCard: FC<PostCardProps> = ({
           />
 
           <Group gap="4">
-            <Tooltip label="View Comments" position="top" withArrow>
+            <Tooltip label="View" position="top" withArrow>
               <NavLink
                 className={styles.commentLink}
                 to={`/post/${postId}#comments`}

@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, UserCircleIcon, SignOutIcon } from "@phosphor-icons/react";
 import {
   Autocomplete,
   Avatar,
@@ -6,6 +6,8 @@ import {
   Button,
   Group,
   Text,
+  Menu,
+  UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
@@ -61,10 +63,42 @@ export const HeaderNavbar: FC = () => {
               <Button variant="outline">Create</Button>
             </NavLink>
             {userDetails ? (
-              <Group ml={10} gap={5} className={styles.links} visibleFrom="sm">
-                <Text size="sm">Hi {userDetails.firstName}!</Text>
-                <Avatar src={userDetails.pictureUrl} />
-              </Group>
+              <Menu
+                position="bottom-end"
+                withArrow
+                width={200}
+                shadow="md"
+                transitionProps={{ transition: "pop" }}
+              >
+                <Menu.Target>
+                  <UnstyledButton className={styles.userButton}>
+                    <Group ml={10} gap={5} className={styles.links} visibleFrom="sm">
+                      <Text size="sm">Hi {userDetails.firstName}!</Text>
+                      <Avatar src={userDetails.pictureUrl} radius="xl" />
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    leftSection={<UserCircleIcon size={16} />}
+                    component={NavLink}
+                    to="/profile"
+                  >
+                    Profile
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Item
+                    leftSection={<SignOutIcon size={16} />}
+                    color="red"
+                    onClick={() => {
+                      // Handle logout
+                      console.log("Logout clicked");
+                    }}
+                  >
+                    Logout
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             ) : (
               <Button onClick={() => (window.location.href = ENDPOINTS.LOGIN)}>
                 Login

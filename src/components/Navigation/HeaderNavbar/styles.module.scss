@@ -41,3 +41,17 @@
 .search {
   width: 400px;
 }
+
+.userButton {
+  border-radius: var(--mantine-radius-sm);
+  padding: 2px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+}

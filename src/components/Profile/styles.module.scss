@@ -1,0 +1,64 @@
+.container {
+  padding-top: 32px;
+  padding-bottom: 64px;
+}
+
+.pageTitle {
+  margin-bottom: 24px;
+  color: var(--mantine-color-text);
+}
+
+.profileCard {
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-7)
+  );
+}
+
+.avatarSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  border: 4px solid
+    light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+}
+
+.editButton {
+  width: fit-content;
+}
+
+.analyticsCard {
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-7)
+  );
+}
+
+.statCard {
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-6)
+  );
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.postsSection {
+  background-color: light-dark(
+    var(--mantine-color-white),
+    var(--mantine-color-dark-7)
+  );
+}
+
+@media (max-width: 768px) {
+  .avatarSection {
+    margin-bottom: 24px;
+  }
+}
