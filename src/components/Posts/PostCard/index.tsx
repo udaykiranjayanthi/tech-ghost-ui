@@ -17,6 +17,7 @@ import type { FC } from "react";
 import { NavLink, useNavigate } from "react-router";
 import styles from "./styles.module.scss";
 import type { UserData } from "@/types";
+import ENDPOINTS from "@/common/endpoints";
 
 interface PostCardProps {
   postId: string;
@@ -65,7 +66,8 @@ export const PostCard: FC<PostCardProps> = ({
             likes={likes}
             dislikes={dislikes}
             userReaction={userReaction}
-            postId={postId}
+            likeEndpoint={`${ENDPOINTS.POSTS}/${postId}/like`}
+            dislikeEndpoint={`${ENDPOINTS.POSTS}/${postId}/dislike`}
           />
 
           <Group gap="4">

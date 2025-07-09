@@ -1,31 +1,17 @@
+import ENDPOINTS from "@/common/endpoints";
+import PostLikeDislike from "@/components/PostLikeDislike";
 import { displayDate } from "@/services/utils";
 import type { Comment } from "@/types";
-import {
-  ActionIcon,
-  Avatar,
-  Box,
-  Flex,
-  Group,
-  Paper,
-  Text,
-} from "@mantine/core";
-import { ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react";
+import { Avatar, Box, Group, Paper, Text } from "@mantine/core";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
 
 type CommentCardProps = {
   comment: Comment;
-  handleLike: (commentId: string) => void;
-  handleDislike: (commentId: string) => void;
   children?: React.ReactNode | React.ReactNode[];
 };
 
-const CommentCard: FC<CommentCardProps> = ({
-  comment,
-  handleLike,
-  handleDislike,
-  children,
-}) => {
+const CommentCard: FC<CommentCardProps> = ({ comment, children }) => {
   return (
     <>
       <Paper className={styles.commentItem} withBorder>
@@ -47,34 +33,14 @@ const CommentCard: FC<CommentCardProps> = ({
 
             <Text className={styles.commentContent}>{comment.content}</Text>
           </Box>
-          <Flex gap="xs">
-            <Group gap="4">
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                size="sm"
-                onClick={() => handleLike(comment.commentId)}
-              >
-                <ThumbsUpIcon size={20} />
-              </ActionIcon>
-              <Text size="sm" c="dimmed">
-                {comment.likes}
-              </Text>
-            </Group>
-            <Group gap="4">
-              <ActionIcon
-                variant="subtle"
-                color="gray"
-                size="sm"
-                onClick={() => handleDislike(comment.commentId)}
-              >
-                <ThumbsDownIcon size={20} />
-              </ActionIcon>
-              <Text size="sm" c="dimmed">
-                {comment.dislikes}
-              </Text>
-            </Group>
-          </Flex>
+
+          <PostLikeDislike
+            likes={comment.likes}
+            dislikes={comment.dislikes}
+            userReaction={comment.userReaction}
+            likeEndpoint={`${ENDPOINTS.POSTS}/${comment.postId}/comments/${comment.commentId}/like`}
+            dislikeEndpoint={`${ENDPOINTS.POSTS}/${comment.postId}/comments/${comment.commentId}/dislike`}
+          />
         </Group>
 
         {children}

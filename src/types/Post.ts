@@ -37,9 +37,9 @@ export type Comment = {
   author: UserData;
   content: string;
   createdAt: string;
-  likes?: number;
-  dislikes?: number;
-  userReaction?: "LIKE" | "DISLIKE" | null;
+  likes: number;
+  dislikes: number;
+  userReaction: "LIKE" | "DISLIKE" | null;
   parentCommentId?: string | null;
   replyCount: number;
 };

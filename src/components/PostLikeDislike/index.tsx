@@ -3,20 +3,21 @@ import { ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react";
 import { useEffect, useState, type FC } from "react";
 import styles from "./styles.module.scss";
 import { useApiMutation } from "@/services/hooks";
-import ENDPOINTS from "@/common/endpoints";
 
 type PostLikeDislikeProps = {
   likes: number;
   dislikes: number;
   userReaction: "LIKE" | "DISLIKE" | null;
-  postId: string;
+  likeEndpoint: string;
+  dislikeEndpoint: string;
 };
 
 const PostLikeDislike: FC<PostLikeDislikeProps> = ({
   likes,
   dislikes,
   userReaction,
-  postId,
+  likeEndpoint,
+  dislikeEndpoint,
 }) => {
   const [likesCount, setLikesCount] = useState(likes);
   const [dislikesCount, setDislikesCount] = useState(dislikes);
@@ -31,7 +32,7 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
   }, [likes, dislikes, userReaction]);
 
   const { mutate: likePost } = useApiMutation({
-    url: `${ENDPOINTS.POSTS}/${postId}/like`,
+    url: likeEndpoint,
     method: "post",
     options: {
       onSuccess: () => {
@@ -51,7 +52,7 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
   });
 
   const { mutate: dislikePost } = useApiMutation({
-    url: `${ENDPOINTS.POSTS}/${postId}/dislike`,
+    url: dislikeEndpoint,
     method: "post",
     options: {
       onSuccess: () => {

@@ -2,7 +2,7 @@ import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import { useApiMutation, useApiQuery } from "@/services/hooks";
 import type { Comment } from "@/types";
-import { Box, Button, Collapse, Divider, Flex, TextInput } from "@mantine/core";
+import { Box, Button, Collapse, Flex, TextInput } from "@mantine/core";
 import { useState, type FC } from "react";
 import CommentCard from "../CommentCard";
 import styles from "./styles.module.scss";
@@ -53,14 +53,6 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
     },
   };
 
-  const handleLike = (commentId: string) => {
-    console.log("Liking comment:", commentId);
-  };
-
-  const handleDislike = (commentId: string) => {
-    console.log("Disliking comment:", commentId);
-  };
-
   const toggleReplyInput = () => {
     if (showReplyInput) {
       setShowReplyInput(false);
@@ -103,11 +95,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
   return (
     <>
       <div key={comment.commentId} className={styles.commentWrapper}>
-        <CommentCard
-          comment={comment}
-          handleLike={handleLike}
-          handleDislike={handleDislike}
-        >
+        <CommentCard comment={comment}>
           <Flex mt="md" gap="xs" align="center">
             <Button
               variant="subtle"
@@ -170,12 +158,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
         <Collapse in={showReplies}>
           <div className={styles.repliesContainer}>
             {replies?.map((reply) => (
-              <CommentCard
-                key={reply.commentId}
-                comment={reply}
-                handleLike={handleLike}
-                handleDislike={handleDislike}
-              />
+              <CommentCard key={reply.commentId} comment={reply} />
             ))}
           </div>
         </Collapse>

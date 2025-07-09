@@ -163,7 +163,8 @@ export const PostDetails: FC<PostDetailsProps> = () => {
               likes={likes}
               dislikes={dislikes}
               userReaction={userReaction}
-              postId={postId}
+              likeEndpoint={`${ENDPOINTS.POSTS}/${postId}/like`}
+              dislikeEndpoint={`${ENDPOINTS.POSTS}/${postId}/dislike`}
             />
           </Flex>
 
