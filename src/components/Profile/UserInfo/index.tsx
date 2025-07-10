@@ -30,6 +30,7 @@ interface UserInfoProps {
 type ProfileFormValues = {
   firstName: string;
   lastName: string;
+  username: string;
 };
 
 const UserInfo: FC<UserInfoProps> = ({
@@ -56,6 +57,7 @@ const UserInfo: FC<UserInfoProps> = ({
     defaultValues: {
       firstName: firstName || "",
       lastName: lastName || "",
+      username: username || "",
     },
   });
 
@@ -64,6 +66,7 @@ const UserInfo: FC<UserInfoProps> = ({
       reset({
         firstName: firstName || "",
         lastName: lastName || "",
+        username: username || "",
       });
     }
     setIsEditing(!isEditing);
@@ -128,28 +131,45 @@ const UserInfo: FC<UserInfoProps> = ({
           {isEditing ? (
             <form onSubmit={handleSubmit(onSubmit)}>
               <Stack gap="md">
-                <Controller
-                  control={control}
-                  name="firstName"
-                  rules={{ required: "First name is required" }}
-                  render={({ field }) => (
-                    <TextInput
-                      {...field}
-                      label="First Name"
-                      error={errors.firstName?.message}
-                    />
-                  )}
-                />
+                <Group gap="md" justify="stretch">
+                  <Controller
+                    control={control}
+                    name="firstName"
+                    rules={{ required: "First name is required" }}
+                    render={({ field }) => (
+                      <TextInput
+                        {...field}
+                        label="First Name"
+                        flex={1}
+                        error={errors.firstName?.message}
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    control={control}
+                    name="lastName"
+                    rules={{ required: "Last name is required" }}
+                    render={({ field }) => (
+                      <TextInput
+                        {...field}
+                        label="Last Name"
+                        flex={1}
+                        error={errors.lastName?.message}
+                      />
+                    )}
+                  />
+                </Group>
 
                 <Controller
                   control={control}
-                  name="lastName"
-                  rules={{ required: "Last name is required" }}
+                  name="username"
+                  rules={{ required: "Username is required" }}
                   render={({ field }) => (
                     <TextInput
                       {...field}
-                      label="Last Name"
-                      error={errors.lastName?.message}
+                      label="Username"
+                      error={errors.username?.message}
                     />
                   )}
                 />

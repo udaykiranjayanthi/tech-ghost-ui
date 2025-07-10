@@ -7,7 +7,7 @@ import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
 import { AuthCallback } from "./pages/AuthCallback";
-import Profile from "./pages/Profile";
+import Profile from "./pages/ProfilePage";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
