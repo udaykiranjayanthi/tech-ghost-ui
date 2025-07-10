@@ -1,4 +1,8 @@
-import { MagnifyingGlassIcon, UserCircleIcon, SignOutIcon } from "@phosphor-icons/react";
+import {
+  MagnifyingGlassIcon,
+  UserCircleIcon,
+  SignOutIcon,
+} from "@phosphor-icons/react";
 import {
   Autocomplete,
   Avatar,
@@ -72,7 +76,12 @@ export const HeaderNavbar: FC = () => {
               >
                 <Menu.Target>
                   <UnstyledButton className={styles.userButton}>
-                    <Group ml={10} gap={5} className={styles.links} visibleFrom="sm">
+                    <Group
+                      ml={10}
+                      gap={5}
+                      className={styles.links}
+                      visibleFrom="sm"
+                    >
                       <Text size="sm">Hi {userDetails.firstName}!</Text>
                       <Avatar src={userDetails.pictureUrl} radius="xl" />
                     </Group>
@@ -82,7 +91,7 @@ export const HeaderNavbar: FC = () => {
                   <Menu.Item
                     leftSection={<UserCircleIcon size={16} />}
                     component={NavLink}
-                    to="/profile"
+                    to={`/profile/${userDetails.username}`}
                   >
                     Profile
                   </Menu.Item>

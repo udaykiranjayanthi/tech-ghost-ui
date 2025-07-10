@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { type FC } from "react";
 import {
   BellRingingIcon,
   ChatsCircleIcon,
@@ -9,7 +9,7 @@ import {
   SquaresFourIcon,
 } from "@phosphor-icons/react";
 import styles from "./styles.module.scss";
-import { NavLink } from "react-router";
+import { NavLink, useLocation } from "react-router";
 
 const linksData = [
   { link: "", label: "Feed", icon: SquaresFourIcon },
@@ -25,17 +25,15 @@ const bottomLinksData = [
 ];
 
 export const SideNavbar: FC = () => {
-  const [active, setActive] = useState("Feed");
+  const pathname = useLocation().pathname;
+  const activeLink = pathname.split("/")[1];
 
   const links = linksData.map((item) => (
     <NavLink
       className={styles.link}
-      data-active={item.label === active || undefined}
+      data-active={item.link === activeLink || undefined}
       to={item.link}
       key={item.label}
-      onClick={() => {
-        setActive(item.label);
-      }}
     >
       <item.icon className={styles.linkIcon} />
       <span>{item.label}</span>
@@ -45,12 +43,9 @@ export const SideNavbar: FC = () => {
   const bottomLinks = bottomLinksData.map((item) => (
     <NavLink
       className={styles.link}
-      data-active={item.label === active || undefined}
+      data-active={item.link === activeLink || undefined}
       to={item.link}
       key={item.label}
-      onClick={() => {
-        setActive(item.label);
-      }}
     >
       <item.icon className={styles.linkIcon} />
       <span>{item.label}</span>
