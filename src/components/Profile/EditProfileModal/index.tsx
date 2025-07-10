@@ -11,14 +11,14 @@ import {
 import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, type FC } from "react";
-import type { UserData } from "@/types";
 import { useQueryClient } from "@tanstack/react-query";
 import { RQ_KEYS } from "@/common/rqkeys";
+import type { UserDetailsData } from "@/types";
 
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  userData: Partial<UserData>;
+  userDetails?: UserDetailsData;
 }
 
 type ProfileFormValues = {
@@ -33,11 +33,11 @@ type ProfileFormValues = {
 const EditProfileModal: FC<EditProfileModalProps> = ({
   isOpen,
   onClose,
-  userData,
+  userDetails,
 }) => {
   // Update user profile
   const { mutate: updateProfile, isPending: isUpdating } = useApiMutation({
-    url: `${ENDPOINTS.USERS}/${userData.userId}`,
+    url: `${ENDPOINTS.USERS}/${userDetails?.userId}`,
     method: "put",
   });
 
@@ -50,37 +50,30 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
     formState: { errors },
   } = useForm<ProfileFormValues>({
     defaultValues: {
-      firstName: userData.firstName || "",
-      lastName: userData.lastName || "",
-      username: userData.username || "",
-      headline: userData.headline || "",
-      location: userData.location || "",
-      bio: userData.bio || "",
+      firstName: "",
+      lastName: "",
+      username: "",
+      headline: "",
+      location: "",
+      bio: "",
     },
   });
 
   useEffect(() => {
-    if (!isOpen && userData) {
+    if (!isOpen && userDetails) {
       reset({
-        firstName: userData.firstName || "",
-        lastName: userData.lastName || "",
-        username: userData.username || "",
-        headline: userData.headline || "",
-        location: userData.location || "",
-        bio: userData.bio || "",
+        firstName: userDetails.firstName || "",
+        lastName: userDetails.lastName || "",
+        username: userDetails.username || "",
+        headline: userDetails.headline || "",
+        location: userDetails.location || "",
+        bio: userDetails.bio || "",
       });
     }
-  }, [isOpen, userData]);
+  }, [isOpen, userDetails]);
 
   const handleCancel = () => {
-    reset({
-      firstName: userData.firstName || "",
-      lastName: userData.lastName || "",
-      username: userData.username || "",
-      headline: userData.headline || "",
-      location: userData.location || "",
-      bio: userData.bio || "",
-    });
+    reset();
     onClose();
   };
 
@@ -99,7 +92,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
         onSuccess: () => {
           // Update global store with new user data
           queryClient.invalidateQueries({
-            queryKey: [RQ_KEYS.USER_DETAILS, userData?.username],
+            queryKey: [RQ_KEYS.USER_DETAILS, userDetails?.username],
           });
 
           onClose();

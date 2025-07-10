@@ -1,15 +1,15 @@
 import { useGlobalStore } from "@/store";
 import { Container, Title, Loader, Center } from "@mantine/core";
 import { type FC } from "react";
-import UserActivity from "./UserActivity";
 import UserInfo from "./UserInfo";
 import UserPosts from "./UserPosts";
 import styles from "./styles.module.scss";
-import type { UserData } from "@/types";
+import type { UserData, UserDetailsData } from "@/types";
 import { useParams } from "react-router";
 import { useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
+import UserMetrics from "./UserMetrics";
 
 interface ProfileProps {}
 
@@ -22,7 +22,7 @@ const Profile: FC<ProfileProps> = () => {
   const isCurrentUser = username === currentUserDetails.username;
 
   // If it's not the current user, fetch the user data
-  const { data: userData, isLoading } = useApiQuery<UserData>({
+  const { data: userDetails, isLoading } = useApiQuery<UserDetailsData>({
     queryKey: [RQ_KEYS.USER_DETAILS, username],
     url: `${ENDPOINTS.USERS}/${username}`,
   });
@@ -39,7 +39,7 @@ const Profile: FC<ProfileProps> = () => {
     );
   }
 
-  if (!isCurrentUser && !userData) {
+  if (!isCurrentUser && !userDetails) {
     return (
       <Container size="lg" className={styles.container}>
         <Title order={1} className={styles.pageTitle}>
@@ -52,15 +52,15 @@ const Profile: FC<ProfileProps> = () => {
   return (
     <Container size="lg" className={styles.container}>
       <Title order={1} className={styles.pageTitle}>
-        {isCurrentUser ? "My Profile" : `${userData?.firstName}'s Profile`}
+        {isCurrentUser ? "My Profile" : `${userDetails?.firstName}'s Profile`}
       </Title>
 
-      <UserInfo userData={userData || {}} isCurrentUser={isCurrentUser} />
+      <UserInfo userDetails={userDetails} isCurrentUser={isCurrentUser} />
 
-      <UserActivity userId={userData?.userId || ""} />
+      <UserMetrics userDetails={userDetails} isLoading={isLoading} />
 
       <UserPosts
-        userId={userData?.userId || ""}
+        userId={userDetails?.userId || ""}
         isCurrentUser={isCurrentUser}
       />
     </Container>

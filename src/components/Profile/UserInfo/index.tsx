@@ -1,4 +1,4 @@
-import type { UserData } from "@/types";
+import type { UserDetailsData } from "@/types";
 import {
   Avatar,
   Box,
@@ -16,17 +16,25 @@ import EditProfileModal from "../EditProfileModal";
 import FollowButton from "../FollowButton";
 
 interface UserInfoProps {
-  userData: Partial<UserData>;
+  userDetails: UserDetailsData | undefined;
   isCurrentUser: boolean;
 }
 
-const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
+const UserInfo: FC<UserInfoProps> = ({ userDetails, isCurrentUser }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(userData.isFollowing || false);
 
-  const handleFollowStatusChange = (newFollowingStatus: boolean) => {
-    setIsFollowing(newFollowingStatus);
-  };
+  const {
+    userId,
+    email,
+    firstName,
+    lastName,
+    username,
+    headline,
+    location,
+    bio,
+    pictureUrl,
+    following = false,
+  } = userDetails || {};
 
   return (
     <Paper p="lg" className={styles.profileCard} withBorder>
@@ -38,7 +46,7 @@ const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Box className={styles.avatarSection}>
             <Avatar
-              src={userData.pictureUrl}
+              src={pictureUrl}
               size={120}
               radius={120}
               className={styles.avatar}
@@ -53,11 +61,7 @@ const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
                 Edit Profile
               </Button>
             ) : (
-              <FollowButton
-                userId={userData.userId || ""}
-                isFollowing={isFollowing}
-                onFollowStatusChange={handleFollowStatusChange}
-              />
+              <FollowButton userId={userId || ""} following={following} />
             )}
           </Box>
         </Grid.Col>
@@ -69,25 +73,25 @@ const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
                 Name
               </Text>
               <Text size="lg" fw={700}>
-                {userData.firstName} {userData.lastName}
+                {firstName} {lastName}
               </Text>
             </div>
 
-            {userData.headline && (
+            {headline && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
                   Headline
                 </Text>
-                <Text size="lg">{userData.headline}</Text>
+                <Text size="lg">{headline}</Text>
               </div>
             )}
 
-            {userData.location && (
+            {location && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
                   Location
                 </Text>
-                <Text size="lg">{userData.location}</Text>
+                <Text size="lg">{location}</Text>
               </div>
             )}
 
@@ -95,24 +99,24 @@ const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
               <Text size="sm" fw={500} c="dimmed">
                 Username
               </Text>
-              <Text size="lg">@{userData.username}</Text>
+              <Text size="lg">@{username}</Text>
             </div>
 
-            {isCurrentUser && userData.email && (
+            {isCurrentUser && email && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
                   Email
                 </Text>
-                <Text size="lg">{userData.email}</Text>
+                <Text size="lg">{email}</Text>
               </div>
             )}
 
-            {userData.bio && (
+            {bio && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
                   Bio
                 </Text>
-                <Text size="md">{userData.bio}</Text>
+                <Text size="md">{bio}</Text>
               </div>
             )}
           </Stack>
@@ -123,7 +127,7 @@ const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
         <EditProfileModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          userData={userData}
+          userDetails={userDetails}
         />
       )}
     </Paper>
