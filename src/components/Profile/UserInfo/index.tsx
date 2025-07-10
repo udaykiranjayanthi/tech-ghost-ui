@@ -1,102 +1,31 @@
-import ENDPOINTS from "@/common/endpoints";
-import { useApiMutation } from "@/services/hooks";
-import { useGlobalStore } from "@/store";
+import type { UserData } from "@/types";
 import {
   Avatar,
   Box,
   Button,
   Grid,
-  Group,
   Paper,
   Stack,
   Text,
-  TextInput,
   Title,
 } from "@mantine/core";
-import { PencilIcon, CheckIcon, XIcon } from "@phosphor-icons/react";
+import { PencilIcon } from "@phosphor-icons/react";
 import { useState, type FC } from "react";
-import { Controller, useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
+import EditProfileModal from "../EditProfileModal";
+import FollowButton from "../FollowButton";
 
 interface UserInfoProps {
-  userId?: string;
-  username?: string;
-  email?: string;
-  pictureUrl?: string;
-  firstName?: string;
-  lastName?: string;
+  userData: Partial<UserData>;
+  isCurrentUser: boolean;
 }
 
-type ProfileFormValues = {
-  firstName: string;
-  lastName: string;
-  username: string;
-};
+const UserInfo: FC<UserInfoProps> = ({ userData, isCurrentUser }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(userData.isFollowing || false);
 
-const UserInfo: FC<UserInfoProps> = ({
-  username,
-  email,
-  pictureUrl,
-  firstName,
-  lastName,
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-
-  // Update user profile
-  const { mutate: updateProfile, isPending: isUpdating } = useApiMutation({
-    url: ENDPOINTS.CURRENT_USER,
-    method: "put",
-  });
-
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ProfileFormValues>({
-    defaultValues: {
-      firstName: firstName || "",
-      lastName: lastName || "",
-      username: username || "",
-    },
-  });
-
-  const handleEditToggle = () => {
-    if (isEditing) {
-      reset({
-        firstName: firstName || "",
-        lastName: lastName || "",
-        username: username || "",
-      });
-    }
-    setIsEditing(!isEditing);
-  };
-
-  const onSubmit = (data: ProfileFormValues) => {
-    updateProfile(
-      {
-        payload: {
-          firstName: data.firstName,
-          lastName: data.lastName,
-        },
-      },
-      {
-        onSuccess: () => {
-          setIsEditing(false);
-          // Update global store with new user data
-          useGlobalStore.setState((state) => ({
-            userDetails: {
-              ...state.userDetails!,
-              firstName: data.firstName,
-              lastName: data.lastName,
-            },
-          }));
-        },
-        onError: (error) => {
-          console.error("Error updating profile:", error);
-        },
-      }
-    );
+  const handleFollowStatusChange = (newFollowingStatus: boolean) => {
+    setIsFollowing(newFollowingStatus);
   };
 
   return (
@@ -109,118 +38,94 @@ const UserInfo: FC<UserInfoProps> = ({
         <Grid.Col span={{ base: 12, md: 4 }}>
           <Box className={styles.avatarSection}>
             <Avatar
-              src={pictureUrl}
+              src={userData.pictureUrl}
               size={120}
               radius={120}
               className={styles.avatar}
             />
-            {!isEditing && (
+            {isCurrentUser ? (
               <Button
                 variant="light"
                 leftSection={<PencilIcon size={16} />}
-                onClick={handleEditToggle}
+                onClick={() => setIsEditModalOpen(true)}
                 className={styles.editButton}
               >
                 Edit Profile
               </Button>
+            ) : (
+              <FollowButton
+                userId={userData.userId || ""}
+                isFollowing={isFollowing}
+                onFollowStatusChange={handleFollowStatusChange}
+              />
             )}
           </Box>
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, md: 8 }}>
-          {isEditing ? (
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Stack gap="md">
-                <Group gap="md" justify="stretch">
-                  <Controller
-                    control={control}
-                    name="firstName"
-                    rules={{ required: "First name is required" }}
-                    render={({ field }) => (
-                      <TextInput
-                        {...field}
-                        label="First Name"
-                        flex={1}
-                        error={errors.firstName?.message}
-                      />
-                    )}
-                  />
+          <Stack gap="md">
+            <div>
+              <Text size="sm" fw={500} c="dimmed">
+                Name
+              </Text>
+              <Text size="lg" fw={700}>
+                {userData.firstName} {userData.lastName}
+              </Text>
+            </div>
 
-                  <Controller
-                    control={control}
-                    name="lastName"
-                    rules={{ required: "Last name is required" }}
-                    render={({ field }) => (
-                      <TextInput
-                        {...field}
-                        label="Last Name"
-                        flex={1}
-                        error={errors.lastName?.message}
-                      />
-                    )}
-                  />
-                </Group>
-
-                <Controller
-                  control={control}
-                  name="username"
-                  rules={{ required: "Username is required" }}
-                  render={({ field }) => (
-                    <TextInput
-                      {...field}
-                      label="Username"
-                      error={errors.username?.message}
-                    />
-                  )}
-                />
-
-                <Group justify="flex-end" mt="md">
-                  <Button
-                    variant="outline"
-                    color="gray"
-                    onClick={handleEditToggle}
-                    leftSection={<XIcon size={16} />}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    type="submit"
-                    loading={isUpdating}
-                    leftSection={<CheckIcon size={16} />}
-                  >
-                    Save Changes
-                  </Button>
-                </Group>
-              </Stack>
-            </form>
-          ) : (
-            <Stack gap="md">
+            {userData.headline && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
-                  Name
+                  Headline
                 </Text>
-                <Text size="lg" fw={700}>
-                  {firstName} {lastName}
-                </Text>
+                <Text size="lg">{userData.headline}</Text>
               </div>
+            )}
 
+            {userData.location && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
-                  Username
+                  Location
                 </Text>
-                <Text size="lg">{username}</Text>
+                <Text size="lg">{userData.location}</Text>
               </div>
+            )}
 
+            <div>
+              <Text size="sm" fw={500} c="dimmed">
+                Username
+              </Text>
+              <Text size="lg">@{userData.username}</Text>
+            </div>
+
+            {isCurrentUser && userData.email && (
               <div>
                 <Text size="sm" fw={500} c="dimmed">
                   Email
                 </Text>
-                <Text size="lg">{email}</Text>
+                <Text size="lg">{userData.email}</Text>
               </div>
-            </Stack>
-          )}
+            )}
+
+            {userData.bio && (
+              <div>
+                <Text size="sm" fw={500} c="dimmed">
+                  Bio
+                </Text>
+                <Text size="md">{userData.bio}</Text>
+              </div>
+            )}
+          </Stack>
         </Grid.Col>
       </Grid>
+
+      {isCurrentUser && (
+        <EditProfileModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          userData={userData}
+        />
+      )}
     </Paper>
   );
 };

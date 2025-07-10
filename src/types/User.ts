@@ -5,4 +5,8 @@ export type UserData = {
   pictureUrl: string;
   firstName: string;
   lastName: string;
+  headline?: string;
+  location?: string;
+  bio?: string;
+  isFollowing?: boolean;
 };

@@ -24,7 +24,7 @@ export const router = createBrowserRouter([
       { path: "post/:postId", element: <Post /> },
       { path: "create-post", element: <CreatePost /> },
       { path: "post/:postId/edit", element: <CreatePost /> },
-      { path: "profile", element: <Profile /> },
+      { path: "profile/:username", element: <Profile /> },
       { path: "auth-callback", element: <AuthCallback /> },
       { path: "*", element: <NotFound /> },
     ],
