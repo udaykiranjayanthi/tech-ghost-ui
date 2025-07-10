@@ -9,28 +9,25 @@ import type { UserData } from "@/types";
 import { useParams } from "react-router";
 import { useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
+import { RQ_KEYS } from "@/common/rqkeys";
 
 interface ProfileProps {}
 
 const Profile: FC<ProfileProps> = () => {
-  const { username } = useParams<{ username?: string }>();
+  const { username = "" } = useParams<{ username?: string }>();
   const currentUserDetails =
     useGlobalStore.use.userDetails?.() ?? ({} as UserData);
 
   // If no username is provided in the URL, show the current user's profile
-  const isCurrentUser = !username || username === currentUserDetails.username;
+  const isCurrentUser = username === currentUserDetails.username;
 
   // If it's not the current user, fetch the user data
-  const { data: profileUser, isLoading } = useApiQuery<UserData>({
-    queryKey: ["user", username || ""],
-    url: isCurrentUser ? "" : `${ENDPOINTS.USERS}/${username}`,
-    options: {
-      enabled: !isCurrentUser,
-    },
+  const { data: userData, isLoading } = useApiQuery<UserData>({
+    queryKey: [RQ_KEYS.USER_DETAILS, username],
+    url: `${ENDPOINTS.USERS}/${username}`,
   });
 
   // Use current user data if it's the current user, otherwise use fetched data
-  const userData = isCurrentUser ? currentUserDetails : profileUser;
 
   if (!isCurrentUser && isLoading) {
     return (
@@ -62,7 +59,10 @@ const Profile: FC<ProfileProps> = () => {
 
       <UserActivity userId={userData?.userId || ""} />
 
-      <UserPosts userId={userData?.userId || ""} />
+      <UserPosts
+        userId={userData?.userId || ""}
+        isCurrentUser={isCurrentUser}
+      />
     </Container>
   );
 };

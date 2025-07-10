@@ -15,7 +15,6 @@ import styles from "./styles.module.scss";
 
 interface UserActivityProps {
   userId: string | undefined;
-  postsCount?: number;
 }
 
 export interface UserAnalytics {
@@ -26,7 +25,7 @@ export interface UserAnalytics {
   totalSaves: number;
 }
 
-const UserActivity: FC<UserActivityProps> = ({ userId, postsCount = 0 }) => {
+const UserActivity: FC<UserActivityProps> = ({ userId }) => {
   // Fetch user analytics
   const { data: userAnalytics, isLoading: isLoadingAnalytics } =
     useApiQuery<UserAnalytics>({
@@ -39,7 +38,7 @@ const UserActivity: FC<UserActivityProps> = ({ userId, postsCount = 0 }) => {
 
   // Placeholder data for analytics if API doesn't return it yet
   const analytics = userAnalytics || {
-    totalPosts: postsCount,
+    totalPosts: 0,
     totalLikes: 0,
     totalDislikes: 0,
     totalComments: 0,
@@ -72,25 +71,32 @@ const UserActivity: FC<UserActivityProps> = ({ userId, postsCount = 0 }) => {
   return (
     <Paper p="lg" className={styles.analyticsCard} withBorder>
       <Title order={3} mb="md">
-        Your Activity
+        User Activity
       </Title>
 
       <SimpleGrid cols={{ base: 2, sm: 3, md: 5 }}>
         {statCards.map((stat) => (
-          <Card p="md" className={styles.statCard} withBorder key={stat.title}>
-            <Group justify="center">
-              {isLoadingAnalytics ? (
-                <Skeleton height={33} width={60} />
-              ) : (
-                <Text size="xl" fw={700} ta="center">
-                  {stat.value}
+          <>
+            {isLoadingAnalytics ? (
+              <Skeleton height={87} width="100%" />
+            ) : (
+              <Card
+                p="md"
+                className={styles.statCard}
+                withBorder
+                key={stat.title}
+              >
+                <Group justify="center">
+                  <Text size="xl" fw={700} ta="center">
+                    {stat.value}
+                  </Text>
+                </Group>
+                <Text size="sm" c="dimmed" ta="center">
+                  {stat.title}
                 </Text>
-              )}
-            </Group>
-            <Text size="sm" c="dimmed" ta="center">
-              {stat.title}
-            </Text>
-          </Card>
+              </Card>
+            )}
+          </>
         ))}
       </SimpleGrid>
     </Paper>

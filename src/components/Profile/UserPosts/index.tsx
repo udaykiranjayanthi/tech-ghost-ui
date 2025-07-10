@@ -6,13 +6,14 @@ import type { PostData } from "@/types";
 import { Box, Button, SimpleGrid, Skeleton, Tabs, Text } from "@mantine/core";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
-import { GridFourIcon } from "@phosphor-icons/react";
+import { SquaresFourIcon } from "@phosphor-icons/react";
 
 interface UserPostsProps {
   userId: string | undefined;
+  isCurrentUser: boolean;
 }
 
-const UserPosts: FC<UserPostsProps> = ({ userId }) => {
+const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
   // Fetch user's posts
   const { data: userPosts, isLoading: isLoadingPosts } = useApiQuery<
     PostData[]
@@ -24,22 +25,30 @@ const UserPosts: FC<UserPostsProps> = ({ userId }) => {
     },
   });
 
+  const showLoader = isLoadingPosts;
+  const showPosts = !isLoadingPosts && userPosts && userPosts.length > 0;
+  const showNoPosts =
+    !isLoadingPosts && userPosts?.length === 0 && !isCurrentUser;
+  const showNoPostsCreatePost =
+    !isLoadingPosts && userPosts?.length === 0 && isCurrentUser;
+
   return (
     <Tabs defaultValue="posts" className={styles.postsSection}>
       <Tabs.List>
-        <Tabs.Tab value="posts" leftSection={<GridFourIcon size={20} />}>
-          <Text>Your Posts</Text>
+        <Tabs.Tab value="posts" leftSection={<SquaresFourIcon size={20} />}>
+          <Text>User Posts</Text>
         </Tabs.Tab>
       </Tabs.List>
 
       <Tabs.Panel value="posts" pt="md" pb="md">
-        {isLoadingPosts ? (
+        {showLoader && (
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
             {[1, 2, 3].map((i) => (
               <Skeleton key={i} height={322} radius="md" />
             ))}
           </SimpleGrid>
-        ) : userPosts && userPosts.length > 0 ? (
+        )}
+        {showPosts && (
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
             {userPosts.map((post) => (
               <PostCard
@@ -57,7 +66,15 @@ const UserPosts: FC<UserPostsProps> = ({ userId }) => {
               />
             ))}
           </SimpleGrid>
-        ) : (
+        )}
+        {showNoPosts && (
+          <Box py="xl" ta="center">
+            <Text size="lg" c="dimmed">
+              No posts.
+            </Text>
+          </Box>
+        )}
+        {showNoPostsCreatePost && (
           <Box py="xl" ta="center">
             <Text size="lg" c="dimmed">
               You haven't created any posts yet.

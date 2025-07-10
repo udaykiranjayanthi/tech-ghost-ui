@@ -1,6 +1,5 @@
 import ENDPOINTS from "@/common/endpoints";
 import { useApiMutation } from "@/services/hooks";
-import { useGlobalStore } from "@/store";
 import {
   Button,
   Group,
@@ -13,6 +12,8 @@ import { CheckIcon, XIcon } from "@phosphor-icons/react";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, type FC } from "react";
 import type { UserData } from "@/types";
+import { useQueryClient } from "@tanstack/react-query";
+import { RQ_KEYS } from "@/common/rqkeys";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -36,9 +37,11 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
 }) => {
   // Update user profile
   const { mutate: updateProfile, isPending: isUpdating } = useApiMutation({
-    url: ENDPOINTS.CURRENT_USER,
+    url: `${ENDPOINTS.USERS}/${userData.userId}`,
     method: "put",
   });
+
+  const queryClient = useQueryClient();
 
   const {
     control,
@@ -95,16 +98,10 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
       {
         onSuccess: () => {
           // Update global store with new user data
-          useGlobalStore.setState((state) => ({
-            userDetails: {
-              ...state.userDetails!,
-              firstName: data.firstName,
-              lastName: data.lastName,
-              headline: data.headline,
-              location: data.location,
-              bio: data.bio,
-            },
-          }));
+          queryClient.invalidateQueries({
+            queryKey: [RQ_KEYS.USER_DETAILS, userData?.username],
+          });
+
           onClose();
         },
         onError: (error) => {
