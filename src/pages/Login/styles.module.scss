@@ -1,0 +1,101 @@
+.loginContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #151719;
+}
+
+.contentContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  max-width: 500px;
+
+  @media (max-width: 768px) {
+    align-items: center;
+    max-width: 100%;
+  }
+}
+
+.rightSection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    order: -1; // Move graphic to top on mobile
+    margin-bottom: 2rem;
+  }
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    text-align: center;
+    font-size: 2.5rem;
+  }
+}
+
+.caption {
+  font-size: 1.5rem;
+  color: #cfd4d9;
+  line-height: 1.5;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    text-align: center;
+    font-size: 1.2rem;
+  }
+}
+
+.content {
+  text-wrap: balance;
+}
+
+.gradientText {
+  background: linear-gradient(85deg, #73e5bf, #a37af5);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+.graphic {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+
+  @media (max-width: 768px) {
+    max-width: 400px;
+  }
+}

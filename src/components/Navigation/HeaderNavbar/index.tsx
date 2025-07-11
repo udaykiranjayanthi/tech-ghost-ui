@@ -16,8 +16,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
 import type { FC } from "react";
-import { NavLink } from "react-router";
-import ENDPOINTS from "@/common/endpoints";
+import { NavLink, useNavigate } from "react-router";
 import { useGlobalStore } from "@/store";
 
 const links = [
@@ -29,11 +28,18 @@ export const HeaderNavbar: FC = () => {
   const [opened, { toggle }] = useDisclosure(false);
   const userDetails = useGlobalStore.use.userDetails?.();
 
+  const navigate = useNavigate();
+
   const items = links.map((link) => (
     <NavLink key={link.label} to={link.link} className={styles.link}>
       {link.label}
     </NavLink>
   ));
+
+  const logout = () => {
+    localStorage.removeItem("auth_token");
+    navigate("/login");
+  };
 
   return (
     <header className={styles.header}>
@@ -66,58 +72,49 @@ export const HeaderNavbar: FC = () => {
             <NavLink to="/create-post">
               <Button variant="outline">Create</Button>
             </NavLink>
-            {userDetails ? (
-              <Menu
-                position="bottom-end"
-                withArrow
-                width={200}
-                shadow="md"
-                transitionProps={{ transition: "pop" }}
-              >
-                <Menu.Target>
-                  <UnstyledButton className={styles.userButton}>
-                    <Group
-                      ml={10}
-                      gap={5}
-                      className={styles.links}
-                      visibleFrom="sm"
-                    >
-                      <Text size="sm">Hi {userDetails.firstName}!</Text>
-                      <Avatar
-                        src={userDetails.pictureUrl}
-                        name={
-                          userDetails.firstName + " " + userDetails.lastName
-                        }
-                        color="initials"
-                      />
-                    </Group>
-                  </UnstyledButton>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<UserCircleIcon size={16} />}
-                    component={NavLink}
-                    to={`/profile/${userDetails.username}`}
+            <Menu
+              position="bottom-end"
+              withArrow
+              width={200}
+              shadow="md"
+              transitionProps={{ transition: "pop" }}
+            >
+              <Menu.Target>
+                <UnstyledButton className={styles.userButton}>
+                  <Group
+                    ml={10}
+                    gap={5}
+                    className={styles.links}
+                    visibleFrom="sm"
                   >
-                    Profile
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Item
-                    leftSection={<SignOutIcon size={16} />}
-                    onClick={() => {
-                      // Handle logout
-                      console.log("Logout clicked");
-                    }}
-                  >
-                    Logout
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            ) : (
-              <Button onClick={() => (window.location.href = ENDPOINTS.LOGIN)}>
-                Login
-              </Button>
-            )}
+                    <Text size="sm">Hi {userDetails?.firstName}!</Text>
+                    <Avatar
+                      src={userDetails?.pictureUrl}
+                      name={
+                        userDetails?.firstName + " " + userDetails?.lastName
+                      }
+                      color="initials"
+                    />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  leftSection={<UserCircleIcon size={16} />}
+                  component={NavLink}
+                  to={`/profile/${userDetails?.username}`}
+                >
+                  Profile
+                </Menu.Item>
+                <Menu.Divider />
+                <Menu.Item
+                  leftSection={<SignOutIcon size={16} />}
+                  onClick={logout}
+                >
+                  Logout
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
           </Group>
         </Group>
       </div>

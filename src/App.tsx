@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router";
 import "./App.scss";
 import "@mantine/core/styles.css";
 import MainLayout from "./components/Layout/MainLayout";
@@ -7,9 +7,11 @@ import { Home } from "./pages/Home";
 import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
 import { AuthCallback } from "./pages/AuthCallback";
+import { Login } from "./pages/Login";
 import Profile from "./pages/ProfilePage";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
 export const theme = createTheme({
   primaryColor: "primary",
@@ -92,17 +94,37 @@ export const theme = createTheme({
   defaultRadius: "md",
 });
 
+// Auth guard component to check for session
+const RequireAuth = ({ children }: { children: ReactNode }) => {
+  const token = localStorage.getItem("auth_token");
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 export const router = createBrowserRouter([
   {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/auth-callback",
+    element: <AuthCallback />,
+  },
+  {
     path: "/",
-    element: <MainLayout />,
+    element: (
+      <RequireAuth>
+        <MainLayout />
+      </RequireAuth>
+    ),
     children: [
       { path: "", element: <Home /> },
       { path: "post/:postId", element: <Post /> },
       { path: "create-post", element: <CreatePost /> },
       { path: "post/:postId/edit", element: <CreatePost /> },
       { path: "profile/:username", element: <Profile /> },
-      { path: "auth-callback", element: <AuthCallback /> },
       { path: "*", element: <NotFound /> },
     ],
   },
