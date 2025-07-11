@@ -127,7 +127,12 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
         <Group gap="md" className={styles.authorInfo}>
           <Group gap="xs">
-            <Avatar src={author?.pictureUrl} size="sm" />
+            <Avatar
+              src={author?.pictureUrl}
+              size="sm"
+              name={author?.firstName + " " + author?.lastName}
+              color="initials"
+            />
             <Text>
               {author?.firstName} {author?.lastName}
             </Text>

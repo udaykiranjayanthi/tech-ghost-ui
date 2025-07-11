@@ -50,6 +50,8 @@ const UserInfo: FC<UserInfoProps> = ({ userDetails, isCurrentUser }) => {
               size={120}
               radius={120}
               className={styles.avatar}
+              name={firstName + " " + lastName}
+              color="initials"
             />
             {isCurrentUser ? (
               <Button

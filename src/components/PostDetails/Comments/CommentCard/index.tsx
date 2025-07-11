@@ -21,7 +21,10 @@ const CommentCard: FC<CommentCardProps> = ({ comment, children }) => {
               <Avatar
                 src={comment?.author?.pictureUrl}
                 size="md"
-                alt={comment?.author?.firstName}
+                name={
+                  comment?.author?.firstName + " " + comment?.author?.lastName
+                }
+                color="initials"
               />
               <div>
                 <Text fw={500}>{comment?.author?.firstName}</Text>

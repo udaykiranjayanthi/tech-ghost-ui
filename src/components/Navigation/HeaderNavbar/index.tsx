@@ -83,7 +83,13 @@ export const HeaderNavbar: FC = () => {
                       visibleFrom="sm"
                     >
                       <Text size="sm">Hi {userDetails.firstName}!</Text>
-                      <Avatar src={userDetails.pictureUrl} radius="xl" />
+                      <Avatar
+                        src={userDetails.pictureUrl}
+                        name={
+                          userDetails.firstName + " " + userDetails.lastName
+                        }
+                        color="initials"
+                      />
                     </Group>
                   </UnstyledButton>
                 </Menu.Target>

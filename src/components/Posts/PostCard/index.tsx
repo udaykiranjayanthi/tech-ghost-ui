@@ -99,7 +99,12 @@ export const PostCard: FC<PostCardProps> = ({
 
       <Group gap="xs" justify="space-between" className={styles.authorInfo}>
         <Group gap="xs">
-          <Avatar src={author?.pictureUrl} size="xs" />
+          <Avatar
+            src={author?.pictureUrl}
+            size="xs"
+            name={author?.firstName + " " + author?.lastName}
+            color="initials"
+          />
           <Text size="sm">
             {author?.firstName} {author?.lastName}
           </Text>
