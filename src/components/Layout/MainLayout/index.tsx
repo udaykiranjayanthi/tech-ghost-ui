@@ -9,9 +9,10 @@ import { RQ_KEYS } from "@/common/rqkeys";
 import type { UserData } from "@/types";
 
 import { useGlobalStore } from "@/store";
+import { Center, Loader } from "@mantine/core";
 
 const MainLayout: FC = () => {
-  const { data } = useApiQuery<UserData>({
+  const { data, isLoading } = useApiQuery<UserData>({
     url: ENDPOINTS.CURRENT_USER,
     queryKey: [RQ_KEYS.CURRENT_USER],
   });
@@ -23,6 +24,14 @@ const MainLayout: FC = () => {
       setUserDetails(data);
     }
   }, [data, setUserDetails]);
+
+  if (isLoading) {
+    return (
+      <Center h="100vh">
+        <Loader />
+      </Center>
+    );
+  }
 
   return (
     <div>
