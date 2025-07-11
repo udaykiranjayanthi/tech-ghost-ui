@@ -5,6 +5,7 @@ import type { Comment } from "@/types";
 import { Avatar, Box, Group, Paper, Text } from "@mantine/core";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
+import { NavLink } from "react-router";
 
 type CommentCardProps = {
   comment: Comment;
@@ -18,16 +19,24 @@ const CommentCard: FC<CommentCardProps> = ({ comment, children }) => {
         <Group justify="space-between" align="flex-start">
           <Box flex={1}>
             <Group align="center" gap="xs">
-              <Avatar
-                src={comment?.author?.pictureUrl}
-                size="md"
-                name={
-                  comment?.author?.firstName + " " + comment?.author?.lastName
-                }
-                color="initials"
-              />
+              <NavLink to={`/profile/${comment?.author?.username}`}>
+                <Avatar
+                  src={comment?.author?.pictureUrl}
+                  size="md"
+                  name={
+                    comment?.author?.firstName + " " + comment?.author?.lastName
+                  }
+                  color="initials"
+                />
+              </NavLink>
               <div>
-                <Text fw={500}>{comment?.author?.firstName}</Text>
+                <NavLink to={`/profile/${comment?.author?.username}`}>
+                  <Text fw={500}>
+                    {comment?.author?.firstName +
+                      " " +
+                      comment?.author?.lastName}
+                  </Text>
+                </NavLink>
                 <Text size="xs" c="dimmed">
                   {displayDate(comment.createdAt)}
                 </Text>

@@ -2,7 +2,6 @@ import { type FC } from "react";
 import {
   BellRingingIcon,
   ChatsCircleIcon,
-  SignOutIcon,
   GearSixIcon,
   BookmarkIcon,
   UserCircleIcon,
@@ -21,7 +20,6 @@ const linksData = [
 
 const bottomLinksData = [
   { link: "settings", label: "Settings", icon: GearSixIcon },
-  { link: "logout", label: "Logout", icon: SignOutIcon },
 ];
 
 export const SideNavbar: FC = () => {

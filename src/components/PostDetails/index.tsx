@@ -23,7 +23,7 @@ import {
   PencilIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useRef, type FC } from "react";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { NavLink, useLocation, useNavigate, useParams } from "react-router";
 import PostLikeDislike from "../PostLikeDislike";
 import PostSave from "../PostSave";
 import { Comments } from "./Comments";
@@ -127,15 +127,20 @@ export const PostDetails: FC<PostDetailsProps> = () => {
 
         <Group gap="md" className={styles.authorInfo}>
           <Group gap="xs">
-            <Avatar
-              src={author?.pictureUrl}
-              size="sm"
-              name={author?.firstName + " " + author?.lastName}
-              color="initials"
-            />
-            <Text>
-              {author?.firstName} {author?.lastName}
-            </Text>
+            <NavLink
+              to={`/profile/${author?.username}`}
+              className={styles.author}
+            >
+              <Avatar
+                src={author?.pictureUrl}
+                size="sm"
+                name={author?.firstName + " " + author?.lastName}
+                color="initials"
+              />
+              <Text fw={500}>
+                {author?.firstName} {author?.lastName}
+              </Text>
+            </NavLink>
           </Group>
           ·
           <Text size="sm" c="dimmed">

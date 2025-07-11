@@ -32,6 +32,11 @@
   margin-bottom: 24px;
 }
 
+.author {
+  display: flex;
+  gap: var(--mantine-spacing-xs);
+}
+
 .tldrSection {
   margin: 24px 0;
   background-color: light-dark(

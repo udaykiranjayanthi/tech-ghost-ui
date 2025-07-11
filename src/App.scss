@@ -4,3 +4,8 @@ body {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
   /* background: #555; */
 }
+
+a {
+  color: var(--mantine-color-text);
+  text-decoration: none;
+}
