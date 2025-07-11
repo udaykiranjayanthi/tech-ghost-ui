@@ -1,5 +1,5 @@
 import { useGlobalStore } from "@/store";
-import { Container, Title, Loader, Center } from "@mantine/core";
+import { Container, Title } from "@mantine/core";
 import { type FC } from "react";
 import UserInfo from "./UserInfo";
 import UserPosts from "./UserPosts";
@@ -27,19 +27,7 @@ const Profile: FC<ProfileProps> = () => {
     url: `${ENDPOINTS.USERS}/${username}`,
   });
 
-  // Use current user data if it's the current user, otherwise use fetched data
-
-  if (!isCurrentUser && isLoading) {
-    return (
-      <Container size="lg" className={styles.container}>
-        <Center style={{ height: 200 }}>
-          <Loader size="lg" />
-        </Center>
-      </Container>
-    );
-  }
-
-  if (!isCurrentUser && !userDetails) {
+  if (!isLoading && !userDetails) {
     return (
       <Container size="lg" className={styles.container}>
         <Title order={1} className={styles.pageTitle}>
@@ -55,7 +43,11 @@ const Profile: FC<ProfileProps> = () => {
         {isCurrentUser ? "My Profile" : `${userDetails?.firstName}'s Profile`}
       </Title>
 
-      <UserInfo userDetails={userDetails} isCurrentUser={isCurrentUser} />
+      <UserInfo
+        userDetails={userDetails}
+        isCurrentUser={isCurrentUser}
+        isLoading={isLoading}
+      />
 
       <UserMetrics userDetails={userDetails} isLoading={isLoading} />
 
