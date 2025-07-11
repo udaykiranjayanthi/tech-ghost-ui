@@ -86,7 +86,7 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
       <Tooltip label="Like" position="top" withArrow>
         <ActionIcon
           variant="subtle"
-          color={reaction === "LIKE" ? "blue" : "gray"}
+          color={reaction === "LIKE" ? "green" : "gray"}
           size="md"
           onClick={handleLike}
         >

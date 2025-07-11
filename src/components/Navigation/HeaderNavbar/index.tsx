@@ -104,7 +104,6 @@ export const HeaderNavbar: FC = () => {
                   <Menu.Divider />
                   <Menu.Item
                     leftSection={<SignOutIcon size={16} />}
-                    color="red"
                     onClick={() => {
                       // Handle logout
                       console.log("Logout clicked");

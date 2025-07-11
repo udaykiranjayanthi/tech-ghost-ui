@@ -35,7 +35,7 @@ const PostSave: FC<PostSaveProps> = ({ postId, saved = false }) => {
     <Tooltip label={isSaved ? "Saved!" : "Save"} position="top" withArrow>
       <ActionIcon
         variant="subtle"
-        color={isSaved ? "blue" : "gray"}
+        color="gray"
         size="md"
         onClick={handleSaveClick}
       >
