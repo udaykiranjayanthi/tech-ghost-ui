@@ -3,7 +3,7 @@ import {
   BellRingingIcon,
   ChatsCircleIcon,
   GearSixIcon,
-  BookmarkIcon,
+  BookmarksIcon,
   UserCircleIcon,
   SquaresFourIcon,
 } from "@phosphor-icons/react";
@@ -14,7 +14,7 @@ const linksData = [
   { link: "", label: "Feed", icon: SquaresFourIcon },
   { link: "messages", label: "Messages", icon: ChatsCircleIcon },
   { link: "notifications", label: "Notifications", icon: BellRingingIcon },
-  { link: "saved", label: "Saved", icon: BookmarkIcon },
+  { link: "saved", label: "Saved", icon: BookmarksIcon },
   { link: "account", label: "Account", icon: UserCircleIcon },
 ];
 

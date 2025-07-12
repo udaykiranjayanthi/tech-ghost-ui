@@ -11,6 +11,7 @@
     var(--mantine-color-gray-0),
     var(--mantine-color-dark-6)
   );
+  cursor: pointer;
   transition: transform 0.2s ease;
 
   &:hover {

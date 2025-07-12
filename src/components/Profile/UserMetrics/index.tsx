@@ -8,8 +8,9 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import styles from "./styles.module.scss";
+import ConnectionsModal, { type ConnectionType } from "../ConnectionsModal";
 
 interface UserMetricsProps {
   userDetails: UserDetailsData | undefined;
@@ -25,18 +26,23 @@ export interface UserAnalytics {
 }
 
 const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
+  const [modalType, setModalType] = useState<ConnectionType>(null);
+
   const statCards = [
     {
       title: "Followers",
       value: userDetails?.followersCount || 0,
+      onClick: () => setModalType("followers"),
     },
     {
       title: "Following",
       value: userDetails?.followingCount || 0,
+      onClick: () => setModalType("following"),
     },
     {
       title: "Posts",
       value: userDetails?.postsCount || 0,
+      onClick: () => "",
     },
   ];
 
@@ -48,7 +54,7 @@ const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
 
       <SimpleGrid cols={{ base: 3 }}>
         {statCards.map((stat) => (
-          <>
+          <div key={stat.title}>
             {isLoading ? (
               <Skeleton height={87} width="100%" />
             ) : (
@@ -56,7 +62,7 @@ const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
                 p="md"
                 className={styles.statCard}
                 withBorder
-                key={stat.title}
+                onClick={stat.onClick}
               >
                 <Group justify="center">
                   <Text size="xl" fw={700} ta="center">
@@ -68,9 +74,18 @@ const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
                 </Text>
               </Card>
             )}
-          </>
+          </div>
         ))}
       </SimpleGrid>
+
+      {userDetails && (
+        <ConnectionsModal
+          opened={modalType !== null}
+          onClose={() => setModalType(null)}
+          userId={userDetails.userId}
+          type={modalType}
+        />
+      )}
     </Paper>
   );
 };
