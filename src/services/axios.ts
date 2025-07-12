@@ -7,11 +7,28 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
+  console.log("requst");
+
   const token = localStorage.getItem("auth_token");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 });
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    // If the response is successful (status 2xx), simply return it
+    return response;
+  },
+  async (error) => {
+    console.log(error.response?.status);
+    if (error.response?.status === 401) {
+      localStorage.removeItem("auth_token");
+      window.location.href = "/login";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInstance;
