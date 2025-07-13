@@ -8,10 +8,11 @@ import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
 import { AuthCallback } from "./pages/AuthCallback";
 import { Login } from "./pages/Login";
-import Profile from "./pages/ProfilePage";
+import ProfilePage from "./pages/ProfilePage";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
+import SavedPage from "./pages/SavedPage";
 
 export const theme = createTheme({
   primaryColor: "primary",
@@ -124,7 +125,8 @@ export const router = createBrowserRouter([
       { path: "post/:postId", element: <Post /> },
       { path: "create-post", element: <CreatePost /> },
       { path: "post/:postId/edit", element: <CreatePost /> },
-      { path: "profile/:username", element: <Profile /> },
+      { path: "profile/:username", element: <ProfilePage /> },
+      { path: "saved", element: <SavedPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },

@@ -8,4 +8,5 @@ export const RQ_KEYS = {
   USER_ANALYTICS: "user_analytics",
   USER_FOLLOWERS: "user_followers",
   USER_FOLLOWING: "user_following",
+  SAVED_POSTS: "saved_posts",
 };

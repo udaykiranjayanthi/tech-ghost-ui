@@ -18,8 +18,11 @@ const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
   const { data: userPosts, isLoading: isLoadingPosts } = useApiQuery<
     PostData[]
   >({
-    url: `${ENDPOINTS.POSTS}?userId=${userId || ""}`,
+    url: `${ENDPOINTS.POSTS}`,
     queryKey: [RQ_KEYS.USER_POSTS, userId || ""],
+    params: {
+      authorId: userId,
+    },
     options: {
       enabled: !!userId,
     },
