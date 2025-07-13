@@ -23,8 +23,8 @@ interface PostCardProps {
   postId: string;
   title: string;
   thumbnailUrl: string;
-  likes: number;
-  dislikes: number;
+  likesCount: number;
+  dislikesCount: number;
   userReaction: "LIKE" | "DISLIKE" | null;
   commentsCount: number;
   createdAt: string;
@@ -36,8 +36,8 @@ export const PostCard: FC<PostCardProps> = ({
   postId,
   title,
   thumbnailUrl,
-  likes,
-  dislikes,
+  likesCount,
+  dislikesCount,
   userReaction,
   commentsCount,
   createdAt,
@@ -63,8 +63,8 @@ export const PostCard: FC<PostCardProps> = ({
       <Group className={styles.footer} justify="space-between">
         <Flex gap="sm" align="center">
           <PostLikeDislike
-            likes={likes}
-            dislikes={dislikes}
+            likesCount={likesCount}
+            dislikesCount={dislikesCount}
             userReaction={userReaction}
             likeEndpoint={`${ENDPOINTS.POSTS}/${postId}/like`}
             dislikeEndpoint={`${ENDPOINTS.POSTS}/${postId}/dislike`}

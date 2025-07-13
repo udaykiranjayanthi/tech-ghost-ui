@@ -47,8 +47,8 @@ const CommentCard: FC<CommentCardProps> = ({ comment, children }) => {
           </Box>
 
           <PostLikeDislike
-            likes={comment.likes}
-            dislikes={comment.dislikes}
+            likesCount={comment.likesCount}
+            dislikesCount={comment.dislikesCount}
             userReaction={comment.userReaction}
             likeEndpoint={`${ENDPOINTS.POSTS}/${comment.postId}/comments/${comment.commentId}/like`}
             dislikeEndpoint={`${ENDPOINTS.POSTS}/${comment.postId}/comments/${comment.commentId}/dislike`}

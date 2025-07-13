@@ -92,7 +92,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
     );
   };
 
-  const replyCount = replies?.length || comment.replyCount;
+  const repliesCount = replies?.length || comment.repliesCount;
 
   return (
     <>
@@ -108,7 +108,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
               Reply
             </Button>
 
-            {replyCount > 0 && (
+            {repliesCount > 0 && (
               <Button
                 variant="subtle"
                 size="xs"
@@ -121,8 +121,8 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
                 }
                 onClick={() => toggleReplies()}
               >
-                {showReplies ? "Hide" : "View"} {replyCount}{" "}
-                {replyCount === 1 ? "reply" : "replies"}
+                {showReplies ? "Hide" : "View"} {repliesCount}{" "}
+                {repliesCount === 1 ? "reply" : "replies"}
               </Button>
             )}
           </Flex>

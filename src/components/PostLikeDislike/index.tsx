@@ -5,31 +5,31 @@ import styles from "./styles.module.scss";
 import { useApiMutation } from "@/services/hooks";
 
 type PostLikeDislikeProps = {
-  likes: number;
-  dislikes: number;
+  likesCount: number;
+  dislikesCount: number;
   userReaction: "LIKE" | "DISLIKE" | null;
   likeEndpoint: string;
   dislikeEndpoint: string;
 };
 
 const PostLikeDislike: FC<PostLikeDislikeProps> = ({
-  likes,
-  dislikes,
+  likesCount,
+  dislikesCount,
   userReaction,
   likeEndpoint,
   dislikeEndpoint,
 }) => {
-  const [likesCount, setLikesCount] = useState(likes);
-  const [dislikesCount, setDislikesCount] = useState(dislikes);
+  const [likes, setLikes] = useState(likesCount);
+  const [dislikes, setDislikes] = useState(dislikesCount);
   const [reaction, setReaction] = useState<"LIKE" | "DISLIKE" | null>(
     userReaction
   );
 
   useEffect(() => {
-    setLikesCount(likes);
-    setDislikesCount(dislikes);
+    setLikes(likesCount);
+    setDislikes(dislikesCount);
     setReaction(userReaction);
-  }, [likes, dislikes, userReaction]);
+  }, [likesCount, dislikesCount, userReaction]);
 
   const { mutate: likePost } = useApiMutation({
     url: likeEndpoint,
@@ -37,14 +37,14 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
     options: {
       onSuccess: () => {
         if (reaction === "DISLIKE") {
-          setDislikesCount((prev) => prev - 1);
-          setLikesCount((prev) => prev + 1);
+          setDislikes((prev) => prev - 1);
+          setLikes((prev) => prev + 1);
           setReaction("LIKE");
         } else if (reaction === "LIKE") {
-          setLikesCount((prev) => prev - 1);
+          setLikes((prev) => prev - 1);
           setReaction(null);
         } else {
-          setLikesCount((prev) => prev + 1);
+          setLikes((prev) => prev + 1);
           setReaction("LIKE");
         }
       },
@@ -57,14 +57,14 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
     options: {
       onSuccess: () => {
         if (reaction === "LIKE") {
-          setLikesCount((prev) => prev - 1);
-          setDislikesCount((prev) => prev + 1);
+          setLikes((prev) => prev - 1);
+          setDislikes((prev) => prev + 1);
           setReaction("DISLIKE");
         } else if (reaction === "DISLIKE") {
-          setDislikesCount((prev) => prev - 1);
+          setDislikes((prev) => prev - 1);
           setReaction(null);
         } else {
-          setDislikesCount((prev) => prev + 1);
+          setDislikes((prev) => prev + 1);
           setReaction("DISLIKE");
         }
       },
@@ -97,7 +97,7 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
         </ActionIcon>
       </Tooltip>
       <Text size="sm" c="dimmed">
-        {likesCount - dislikesCount}
+        {likes - dislikes}
       </Text>
       <Tooltip label="Dislike" position="top" withArrow>
         <ActionIcon

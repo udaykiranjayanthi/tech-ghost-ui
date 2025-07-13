@@ -55,8 +55,8 @@ export const PostDetails: FC<PostDetailsProps> = () => {
   const {
     title,
     thumbnailUrl,
-    likes = 0,
-    dislikes = 0,
+    likesCount = 0,
+    dislikesCount = 0,
     userReaction = null,
     createdAt,
     externalUrl,
@@ -170,8 +170,8 @@ export const PostDetails: FC<PostDetailsProps> = () => {
         <Group className={styles.actionBar} justify="space-between">
           <Flex gap="md" align="center">
             <PostLikeDislike
-              likes={likes}
-              dislikes={dislikes}
+              likesCount={likesCount}
+              dislikesCount={dislikesCount}
               userReaction={userReaction}
               likeEndpoint={`${ENDPOINTS.POSTS}/${postId}/like`}
               dislikeEndpoint={`${ENDPOINTS.POSTS}/${postId}/dislike`}

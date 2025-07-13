@@ -59,8 +59,8 @@ const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
                 postId={post.postId}
                 title={post.title}
                 thumbnailUrl={post.thumbnailUrl}
-                likes={post.likes}
-                dislikes={post.dislikes}
+                likesCount={post.likesCount}
+                dislikesCount={post.dislikesCount}
                 userReaction={post.userReaction}
                 commentsCount={post.commentsCount}
                 createdAt={post.createdAt}
