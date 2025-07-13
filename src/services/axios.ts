@@ -7,8 +7,6 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use((config) => {
-  console.log("requst");
-
   const token = localStorage.getItem("auth_token");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
@@ -22,7 +20,6 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(error.response?.status);
     if (error.response?.status === 401) {
       localStorage.removeItem("auth_token");
       window.location.href = "/login";

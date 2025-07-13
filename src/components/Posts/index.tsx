@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { SimpleGrid, Container, Title, Paper, Skeleton } from "@mantine/core";
+import { SimpleGrid, Container, Paper, Skeleton } from "@mantine/core";
 import { PostCard } from "./PostCard";
 import styles from "./styles.module.scss";
 import { useApiQuery } from "@/services/hooks";
@@ -20,10 +20,6 @@ export const Posts: FC<PostsProps> = ({ title = "Latest Posts" }) => {
   return (
     <Container size="lg" className={styles.container}>
       <Paper p="md">
-        <Title order={2} className={styles.sectionTitle}>
-          {title}
-        </Title>
-
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
           {isLoading
             ? [1, 2, 3].map((i) => (

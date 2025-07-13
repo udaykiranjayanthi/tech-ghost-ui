@@ -3,7 +3,7 @@ import "./App.scss";
 import "@mantine/core/styles.css";
 import MainLayout from "./components/Layout/MainLayout";
 import { CreatePost } from "./pages/CreatePost";
-import { Home } from "./pages/Home";
+import { HomePage } from "./pages/HomePage";
 import { NotFound } from "./pages/NotFound";
 import { Post } from "./pages/Post";
 import { AuthCallback } from "./pages/AuthCallback";
@@ -121,7 +121,7 @@ export const router = createBrowserRouter([
       </RequireAuth>
     ),
     children: [
-      { path: "", element: <Home /> },
+      { path: "", element: <HomePage /> },
       { path: "post/:postId", element: <Post /> },
       { path: "create-post", element: <CreatePost /> },
       { path: "post/:postId/edit", element: <CreatePost /> },

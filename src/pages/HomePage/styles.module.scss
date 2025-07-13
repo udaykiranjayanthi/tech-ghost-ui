@@ -1,0 +1,22 @@
+.list {
+  position: relative;
+  margin-bottom: var(--mantine-spacing-xs);
+  padding: 0 var(--mantine-spacing-md);
+}
+
+.indicator {
+  border-radius: var(--mantine-radius-md);
+  box-shadow: var(--mantine-shadow-sm);
+  background-color: var(--mantine-primary-color-light-hover);
+}
+
+.tab {
+  z-index: 1;
+  font-weight: 500;
+  transition: color 100ms ease;
+  color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+
+  &[data-active] {
+    color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-0));
+  }
+}

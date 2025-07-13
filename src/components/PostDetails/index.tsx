@@ -16,6 +16,7 @@ import {
   Pill,
   Text,
   Title,
+  Skeleton,
 } from "@mantine/core";
 import {
   ArrowLeftIcon,
@@ -38,7 +39,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
   const { postId = "" } = useParams<{ postId: string }>();
   const { userId } = useGlobalStore.use.userDetails?.() ?? {};
 
-  const { data } = useApiQuery<PostDetailsData>({
+  const { data, isLoading } = useApiQuery<PostDetailsData>({
     url: `${ENDPOINTS.POSTS}/${postId}`,
     queryKey: [RQ_KEYS.POST_DETAILS, postId],
   });
@@ -95,110 +96,181 @@ export const PostDetails: FC<PostDetailsProps> = () => {
             </Group>
           </Button>
           <Group gap="sm">
-            {isAuthor && (
-              <Button
-                variant="outline"
-                size="sm"
-                rightSection={<PencilIcon size={16} />}
-                onClick={() => navigate(`/post/${postId}/edit`)}
-              >
-                Edit Post
-              </Button>
-            )}
-            {externalUrl && (
-              <Button
-                variant="light"
-                size="sm"
-                mr="md"
-                rightSection={<ArrowSquareOutIcon size={16} />}
-                onClick={handleReadPostClick}
-              >
-                Read Post
-              </Button>
+            {isLoading ? (
+              <Skeleton height={36} width={100} radius="md" />
+            ) : (
+              <>
+                {isAuthor && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    rightSection={<PencilIcon size={16} />}
+                    onClick={() => navigate(`/post/${postId}/edit`)}
+                  >
+                    Edit Post
+                  </Button>
+                )}
+                {externalUrl && (
+                  <Button
+                    variant="light"
+                    size="sm"
+                    mr="md"
+                    rightSection={<ArrowSquareOutIcon size={16} />}
+                    onClick={handleReadPostClick}
+                  >
+                    Read Post
+                  </Button>
+                )}
+              </>
             )}
           </Group>
         </Group>
       </Box>
 
       <Paper p="md" className={styles.postCard}>
-        <Title order={1} className={styles.title}>
-          {title}
-        </Title>
+        {isLoading ? (
+          <>
+            {/* Title skeleton */}
+            <Skeleton height={40} width="80%" mb="md" />
 
-        <Group gap="md" className={styles.authorInfo}>
-          <Group gap="xs">
-            <NavLink
-              to={`/profile/${author?.username}`}
-              className={styles.author}
-            >
-              <Avatar
-                src={author?.pictureUrl}
-                size="sm"
-                name={author?.firstName + " " + author?.lastName}
-                color="initials"
-              />
-              <Text fw={500}>
-                {author?.firstName} {author?.lastName}
+            {/* Author info skeleton */}
+            <Group gap="md" className={styles.authorInfo} mb="lg">
+              <Group gap="xs">
+                <Skeleton height={32} width={32} radius="xl" />
+                <Skeleton height={20} width={120} />
+              </Group>
+              <Skeleton height={18} width={80} />
+            </Group>
+
+            {/* Image skeleton */}
+            <Skeleton height={300} width="100%" radius="sm" mb="lg" />
+
+            {/* TLDR skeleton */}
+            <Paper p="md" className={styles.tldrSection} withBorder mb="lg">
+              <Title order={4}>TLDR;</Title>
+              <Skeleton height={20} mt="sm" />
+              <Skeleton height={20} mt="sm" width="90%" />
+            </Paper>
+
+            {/* Content skeleton */}
+            <Box mb="lg">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <Skeleton key={i} height={20} mb="sm" />
+              ))}
+            </Box>
+
+            {/* Hashtags skeleton */}
+            <Group gap="xs" mb="lg">
+              <Skeleton height={28} width={80} radius="xl" />
+              <Skeleton height={28} width={100} radius="xl" />
+              <Skeleton height={28} width={90} radius="xl" />
+            </Group>
+
+            <Divider my="lg" />
+
+            {/* Action bar skeleton */}
+            <Group className={styles.actionBar} justify="space-between">
+              <Skeleton height={36} width={120} />
+              <Group gap="sm">
+                <Skeleton height={36} width={36} radius="md" />
+                <Skeleton height={36} width={36} radius="md" />
+                <Skeleton height={36} width={100} radius="md" />
+              </Group>
+            </Group>
+          </>
+        ) : (
+          <>
+            <Title order={1} className={styles.title}>
+              {title}
+            </Title>
+
+            <Group gap="md" className={styles.authorInfo}>
+              <Group gap="xs">
+                <NavLink
+                  to={`/profile/${author?.username}`}
+                  className={styles.author}
+                >
+                  <Avatar
+                    src={author?.pictureUrl}
+                    size="sm"
+                    name={author?.firstName + " " + author?.lastName}
+                    color="initials"
+                  />
+                  <Text fw={500}>
+                    {author?.firstName} {author?.lastName}
+                  </Text>
+                </NavLink>
+              </Group>
+              ·
+              <Text size="sm" c="dimmed">
+                {displayDate(createdAt)}
               </Text>
-            </NavLink>
-          </Group>
-          ·
-          <Text size="sm" c="dimmed">
-            {displayDate(createdAt)}
-          </Text>
-        </Group>
+            </Group>
 
-        <Image src={thumbnailUrl} height={300} alt={title} radius="sm" />
+            <Image src={thumbnailUrl} height={300} alt={title} radius="sm" />
 
-        <Paper p="md" className={styles.tldrSection} withBorder>
-          <Title order={4}>TLDR;</Title>
-          <Text className={styles.tldr}>{tldr}</Text>
-        </Paper>
+            <Paper p="md" className={styles.tldrSection} withBorder>
+              <Title order={4}>TLDR;</Title>
+              <Text className={styles.tldr}>{tldr}</Text>
+            </Paper>
 
-        <Text className={styles.content}>{content}</Text>
+            <Text className={styles.content}>{content}</Text>
 
-        <Group gap="xs" className={styles.hashtagsPreview}>
-          {hashtags?.map((hashtag) => (
-            <Pill key={hashtag} className={styles.hashtag} size="md">
-              #{hashtag}
-            </Pill>
-          ))}
-        </Group>
+            <Group gap="xs" className={styles.hashtagsPreview}>
+              {hashtags?.map((hashtag) => (
+                <Pill key={hashtag} className={styles.hashtag} size="md">
+                  #{hashtag}
+                </Pill>
+              ))}
+            </Group>
 
-        <Divider my="lg" />
+            <Divider my="lg" />
 
-        <Group className={styles.actionBar} justify="space-between">
-          <Flex gap="md" align="center">
-            <PostLikeDislike
-              likesCount={likesCount}
-              dislikesCount={dislikesCount}
-              userReaction={userReaction}
-              likeEndpoint={`${ENDPOINTS.POSTS}/${postId}/like`}
-              dislikeEndpoint={`${ENDPOINTS.POSTS}/${postId}/dislike`}
-            />
-          </Flex>
+            <Group className={styles.actionBar} justify="space-between">
+              <Flex gap="md" align="center">
+                <PostLikeDislike
+                  likesCount={likesCount}
+                  dislikesCount={dislikesCount}
+                  userReaction={userReaction}
+                  likeEndpoint={`${ENDPOINTS.POSTS}/${postId}/like`}
+                  dislikeEndpoint={`${ENDPOINTS.POSTS}/${postId}/dislike`}
+                />
+              </Flex>
 
-          <Group gap="sm">
-            <PostSave postId={postId} saved={saved} />
+              <Group gap="sm">
+                <PostSave postId={postId} saved={saved} />
 
-            <CopyLinkButton copyText={`http://localhost:3000/post/${postId}`} />
+                <CopyLinkButton
+                  copyText={`http://localhost:3000/post/${postId}`}
+                />
 
-            {externalUrl && (
-              <Button
-                variant="light"
-                size="sm"
-                rightSection={<ArrowSquareOutIcon size={16} />}
-                onClick={handleReadPostClick}
-              >
-                Read Post
-              </Button>
-            )}
-          </Group>
-        </Group>
+                {externalUrl && (
+                  <Button
+                    variant="light"
+                    size="sm"
+                    rightSection={<ArrowSquareOutIcon size={16} />}
+                    onClick={handleReadPostClick}
+                  >
+                    Read Post
+                  </Button>
+                )}
+              </Group>
+            </Group>
+          </>
+        )}
       </Paper>
 
       <div ref={commentsRef}>
-        <Comments postId={postId ?? ""} />
+        {isLoading ? (
+          <Paper p="md" mt="md">
+            <Skeleton height={30} width="50%" mb="lg" />
+            <Skeleton height={80} mb="md" />
+            <Skeleton height={80} mb="md" />
+            <Skeleton height={80} />
+          </Paper>
+        ) : (
+          <Comments postId={postId ?? ""} />
+        )}
       </div>
     </Container>
   );

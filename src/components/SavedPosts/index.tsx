@@ -17,11 +17,10 @@ export const SavedPosts: FC<SavedPostsProps> = () => {
 
   return (
     <Container size="lg" className={styles.container}>
+      <Title order={2} className={styles.sectionTitle}>
+        Saved posts
+      </Title>
       <Paper p="md">
-        <Title order={2} className={styles.sectionTitle}>
-          Saved posts
-        </Title>
-
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
           {isLoading
             ? [1, 2, 3].map((i) => (
