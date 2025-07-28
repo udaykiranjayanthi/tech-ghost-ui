@@ -1,4 +1,4 @@
-import type { UserData } from "./User";
+import type { UserData } from "./user.types";
 
 export type PostData = {
   postId: string;

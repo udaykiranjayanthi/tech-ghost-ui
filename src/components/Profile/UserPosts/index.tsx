@@ -2,7 +2,7 @@ import { RQ_KEYS } from "@/common/rqkeys";
 import ENDPOINTS from "@/common/endpoints";
 import { PostCard } from "@/components/Posts/PostCard";
 import { useApiQuery } from "@/services/hooks";
-import type { PostData } from "@/types";
+import type { Pagination, PostData } from "@/types";
 import { Box, Button, SimpleGrid, Skeleton, Tabs, Text } from "@mantine/core";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
@@ -15,18 +15,20 @@ interface UserPostsProps {
 
 const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
   // Fetch user's posts
-  const { data: userPosts, isLoading: isLoadingPosts } = useApiQuery<
-    PostData[]
-  >({
-    url: `${ENDPOINTS.POSTS}`,
-    queryKey: [RQ_KEYS.USER_POSTS, userId || ""],
-    params: {
-      authorId: userId,
-    },
-    options: {
-      enabled: !!userId,
-    },
-  });
+  const { data, isLoading: isLoadingPosts } = useApiQuery<Pagination<PostData>>(
+    {
+      url: `${ENDPOINTS.POSTS}`,
+      queryKey: [RQ_KEYS.USER_POSTS, userId || ""],
+      params: {
+        authorId: userId,
+      },
+      options: {
+        enabled: !!userId,
+      },
+    }
+  );
+
+  const { data: userPosts } = data ?? {};
 
   const showLoader = isLoadingPosts;
   const showPosts = !isLoadingPosts && userPosts && userPosts.length > 0;
