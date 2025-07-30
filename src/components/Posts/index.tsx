@@ -28,8 +28,6 @@ export const Posts: FC<PostsProps> = () => {
       },
     });
 
-  console.log(data);
-
   const posts = data?.pages?.flatMap((page) => page.data) ?? [];
 
   return (

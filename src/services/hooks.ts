@@ -71,7 +71,11 @@ type ApiInfiniteQueryParams<TData> = {
   initialPageParam?: any;
   options?: Omit<
     DefinedInitialDataInfiniteOptions<TData, Error>,
-    "queryKey" | "queryFn" | "initialPageParam"
+    | "queryKey"
+    | "queryFn"
+    | "initialPageParam"
+    | "getNextPageParam"
+    | "initialData"
   >;
 };
 

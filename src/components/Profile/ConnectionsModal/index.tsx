@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Modal,
   TextInput,
@@ -10,12 +10,14 @@ import {
   Loader,
   Center,
   Card,
+  Button,
+  Flex,
 } from "@mantine/core";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
-import { useApiQuery } from "@/services/hooks";
+import { useApiInfiniteQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import type { Pagination, UserData } from "@/types";
+import type { UserData } from "@/types";
 import { useDebouncedValue } from "@mantine/hooks";
 import { NavLink } from "react-router";
 import styles from "./styles.module.scss";
@@ -39,17 +41,11 @@ const ConnectionsModal = ({
 }: ConnectionsModalProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(searchQuery, 300);
-  const [filteredConnections, setFilteredConnections] = useState<
-    ConnectionData[]
-  >([]);
 
   // Get the appropriate title and placeholder based on connection type
   const modalTitle = type === "followers" ? "Followers" : "Following";
   const searchPlaceholder =
     type === "followers" ? "Search followers..." : "Search following...";
-  const emptyStateMessage =
-    type === "followers" ? "No followers yet" : "Not following anyone yet";
-  const noMatchesMessage = "No results for your search";
 
   // Determine the query key and endpoint based on connection type
   const queryKey =
@@ -57,38 +53,22 @@ const ConnectionsModal = ({
   const endpoint = `${ENDPOINTS.USERS}/${userId}/${type}`;
 
   // Fetch connections data
-  const { data, isLoading } = useApiQuery<Pagination<ConnectionData>>({
-    queryKey: [queryKey, userId],
-    url: endpoint,
-    options: {
-      enabled: opened && type !== null,
-    },
-  });
+  const limit = 2;
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useApiInfiniteQuery<ConnectionData>({
+      url: endpoint,
+      queryKey: [queryKey, userId],
+      initialPageParam: null,
+      params: {
+        limit,
+        search: debouncedQuery,
+      },
+      options: {
+        enabled: opened && type !== null,
+      },
+    });
 
-  const { data: connections } = data || {};
-
-  // Filter connections based on search query
-  useEffect(() => {
-    if (!connections) {
-      setFilteredConnections([]);
-      return;
-    }
-
-    if (!debouncedQuery) {
-      setFilteredConnections(connections);
-      return;
-    }
-
-    const query = debouncedQuery.toLowerCase();
-    const filtered = connections.filter(
-      (connection) =>
-        connection.firstName.toLowerCase().includes(query) ||
-        connection.lastName.toLowerCase().includes(query) ||
-        connection.username.toLowerCase().includes(query)
-    );
-
-    setFilteredConnections(filtered);
-  }, [connections, debouncedQuery]);
+  const connections = data?.pages?.flatMap((page) => page.data) ?? [];
 
   return (
     <Modal
@@ -107,17 +87,13 @@ const ConnectionsModal = ({
       />
 
       <ScrollArea h={400} scrollbarSize={6}>
-        {isLoading ? (
-          <Center h={200}>
-            <Loader />
-          </Center>
-        ) : filteredConnections.length === 0 ? (
+        {connections.length === 0 ? (
           <Text c="dimmed" ta="center" py="xl">
-            {connections?.length === 0 ? emptyStateMessage : noMatchesMessage}
+            No results
           </Text>
         ) : (
           <Stack gap="xs">
-            {filteredConnections.map((connection) => (
+            {connections.map((connection) => (
               <NavLink
                 to={`/profile/${connection.username}`}
                 key={connection.userId}
@@ -138,6 +114,23 @@ const ConnectionsModal = ({
                 </Card>
               </NavLink>
             ))}
+
+            {isFetchingNextPage && (
+              <Center h={200}>
+                <Loader />
+              </Center>
+            )}
+            {hasNextPage && (
+              <Flex justify="center">
+                <Button
+                  variant="outline"
+                  mt="md"
+                  onClick={() => fetchNextPage()}
+                >
+                  Load more
+                </Button>
+              </Flex>
+            )}
           </Stack>
         )}
       </ScrollArea>
