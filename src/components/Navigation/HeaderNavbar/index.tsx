@@ -12,6 +12,7 @@ import {
   Text,
   Menu,
   UnstyledButton,
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
@@ -46,7 +47,9 @@ export const HeaderNavbar: FC = () => {
       <div className={styles.inner}>
         <Group>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
-          <h2 className={styles.logo}>Daily Tech</h2>
+          <Title order={3} className={styles.logo}>
+            Daily Tech
+          </Title>
         </Group>
 
         <Group>

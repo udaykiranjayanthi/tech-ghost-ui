@@ -89,7 +89,7 @@ export const theme = createTheme({
   fontFamily: "Inter, sans-serif",
   fontFamilyMonospace: "Fira Code, monospace",
   headings: {
-    fontFamily: "Inter, sans-serif",
+    fontFamily: "Poppins, sans-serif",
     fontWeight: "600",
   },
   defaultRadius: "md",

@@ -1,7 +1,7 @@
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import { useApiMutation, useApiQuery } from "@/services/hooks";
-import type { Comment } from "@/types";
+import type { Comment, Pagination } from "@/types";
 import {
   Box,
   Button,
@@ -20,11 +20,13 @@ interface CommentsProps {
 }
 
 export const Comments: FC<CommentsProps> = ({ postId }) => {
-  const { data, refetch } = useApiQuery<Comment[]>({
+  const { data, refetch } = useApiQuery<Pagination<Comment>>({
     url: `${ENDPOINTS.POSTS}/${postId}/comments`,
     params: { parentCommentId: null },
     queryKey: [RQ_KEYS.COMMENTS, postId],
   });
+
+  const { data: comments = [] } = data || {};
 
   const { mutate: addComment } = useApiMutation({
     url: `${ENDPOINTS.POSTS}/${postId}/comments`,
@@ -66,8 +68,6 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
       }
     );
   };
-
-  const comments = data || [];
 
   return (
     <Paper p="md" className={styles.commentsContainer}>

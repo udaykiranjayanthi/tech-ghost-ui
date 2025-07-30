@@ -1,7 +1,7 @@
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import { useApiMutation, useApiQuery } from "@/services/hooks";
-import type { Comment } from "@/types";
+import type { Comment, Pagination } from "@/types";
 import { Box, Button, Collapse, Flex, TextInput } from "@mantine/core";
 import { useState, type FC } from "react";
 import CommentCard from "../CommentCard";
@@ -21,7 +21,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
   const [showReplies, setShowReplies] = useState(false);
   const [showReplyInput, setShowReplyInput] = useState(false);
 
-  const { data: replies, refetch } = useApiQuery<Comment[]>({
+  const { data, refetch } = useApiQuery<Pagination<Comment>>({
     url: `${ENDPOINTS.POSTS}/${comment.postId}/comments`,
     queryKey: [RQ_KEYS.COMMENTS, comment.postId, comment.commentId],
     params: { parentCommentId: comment.commentId },
@@ -29,6 +29,8 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
       enabled: showReplies,
     },
   });
+
+  const { data: replies = [] } = data || {};
 
   const { mutate: addReply } = useApiMutation({
     url: `${ENDPOINTS.POSTS}/${comment.postId}/comments`,

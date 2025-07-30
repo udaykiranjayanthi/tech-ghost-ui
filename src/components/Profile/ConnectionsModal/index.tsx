@@ -15,7 +15,7 @@ import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 import { useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import type { UserData } from "@/types";
+import type { Pagination, UserData } from "@/types";
 import { useDebouncedValue } from "@mantine/hooks";
 import { NavLink } from "react-router";
 import styles from "./styles.module.scss";
@@ -57,13 +57,15 @@ const ConnectionsModal = ({
   const endpoint = `${ENDPOINTS.USERS}/${userId}/${type}`;
 
   // Fetch connections data
-  const { data: connections, isLoading } = useApiQuery<ConnectionData[]>({
+  const { data, isLoading } = useApiQuery<Pagination<ConnectionData>>({
     queryKey: [queryKey, userId],
     url: endpoint,
     options: {
       enabled: opened && type !== null,
     },
   });
+
+  const { data: connections } = data || {};
 
   // Filter connections based on search query
   useEffect(() => {

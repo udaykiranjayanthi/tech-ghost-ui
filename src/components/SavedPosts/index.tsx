@@ -5,15 +5,17 @@ import styles from "./styles.module.scss";
 import { useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import type { PostData } from "@/types";
+import type { PostData, Pagination } from "@/types";
 
 interface SavedPostsProps {}
 
 export const SavedPosts: FC<SavedPostsProps> = () => {
-  const { data, isLoading } = useApiQuery<PostData[]>({
+  const { data, isLoading } = useApiQuery<Pagination<PostData>>({
     url: ENDPOINTS.SAVED_POSTS,
     queryKey: [RQ_KEYS.SAVED_POSTS],
   });
+
+  const { data: savedPosts } = data || {};
 
   return (
     <Container size="lg" className={styles.container}>
@@ -26,7 +28,9 @@ export const SavedPosts: FC<SavedPostsProps> = () => {
             ? [1, 2, 3].map((i) => (
                 <Skeleton key={i} height={322} radius="md" />
               ))
-            : data?.map((post) => <PostCard key={post.postId} {...post} />)}
+            : savedPosts?.map((post) => (
+                <PostCard key={post.postId} {...post} />
+              ))}
         </SimpleGrid>
       </Paper>
     </Container>
