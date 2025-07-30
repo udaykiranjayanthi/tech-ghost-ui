@@ -140,11 +140,22 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
                     {...field}
                     placeholder="Write a reply..."
                     className={styles.replyInput}
+                    variant="filled"
+                    size="md"
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSubmit(handleSubmitReply)();
+                      }
+                    }}
                   />
                 )}
               />
-              <Flex gap="xs">
-                <Button size="xs" onClick={() => toggleReplyInput()}>
+              <Flex gap="xs" justify="flex-end">
+                <Button
+                  size="xs"
+                  variant="transparent"
+                  onClick={() => toggleReplyInput()}
+                >
                   Cancel
                 </Button>
                 <Button

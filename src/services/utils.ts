@@ -8,7 +8,9 @@ export const displayAbsoluteDate = (date?: string) => {
   }).format(new Date(date));
 };
 
-export const displayDate = (inputDate: Date | string): string => {
+export const displayDate = (inputDate?: Date | string): string => {
+  if (!inputDate) return "-";
+
   const date = typeof inputDate === "string" ? new Date(inputDate) : inputDate;
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);

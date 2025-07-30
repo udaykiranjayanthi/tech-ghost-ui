@@ -83,12 +83,23 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
           render={({ field }) => (
             <TextInput
               {...field}
+              variant="filled"
+              size="md"
               placeholder="Add a comment..."
               className={styles.commentInput}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSubmit(handleSubmitComment)();
+                }
+              }}
             />
           )}
         />
-        <Button onClick={handleSubmit(handleSubmitComment)} disabled={!isValid}>
+        <Button
+          size="md"
+          onClick={handleSubmit(handleSubmitComment)}
+          disabled={!isValid}
+        >
           Post
         </Button>
       </Box>
