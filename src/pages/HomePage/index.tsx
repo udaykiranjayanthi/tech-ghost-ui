@@ -37,13 +37,13 @@ export const HomePage: FC<HomePageProps> = () => {
       </Tabs.List>
 
       <Tabs.Panel value="1">
-        <Posts title="Trending Posts" />
+        <Posts />
       </Tabs.Panel>
       <Tabs.Panel value="2">
-        <Posts title="Trending Posts" />
+        <Posts />
       </Tabs.Panel>
       <Tabs.Panel value="3">
-        <Posts title="Trending Posts" />
+        <Posts />
       </Tabs.Panel>
     </Tabs>
   );

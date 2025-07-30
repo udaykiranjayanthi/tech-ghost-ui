@@ -1,10 +1,13 @@
 import {
+  useInfiniteQuery,
   useMutation,
   useQuery,
+  type DefinedInitialDataInfiniteOptions,
   type UseMutationOptions,
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import axiosInstance from "./axios";
+import type { InfinitePagination } from "@/types";
 
 type ApiQueryParams<T, TParams = unknown> = {
   queryKey: (string | number)[];
@@ -57,6 +60,52 @@ export function useApiMutation<TData, TPayload>({
       });
       return response.data;
     },
+    ...options,
+  });
+}
+
+type ApiInfiniteQueryParams<TData> = {
+  queryKey: (string | number)[];
+  url: string;
+  params?: any;
+  initialPageParam?: any;
+  options?: Omit<
+    DefinedInitialDataInfiniteOptions<TData, Error>,
+    "queryKey" | "queryFn" | "initialPageParam"
+  >;
+};
+
+export function useApiInfiniteQuery<TData>({
+  queryKey,
+  url,
+  params,
+  initialPageParam,
+  options,
+}: ApiInfiniteQueryParams<InfinitePagination<TData>>) {
+  return useInfiniteQuery<InfinitePagination<TData>>({
+    queryKey,
+    queryFn: async ({ pageParam = null }: any) => {
+      console.log(pageParam);
+
+      const queryParams = {
+        ...params,
+        cursorCreatedAt: pageParam?.createdAt,
+        cursorId: pageParam?.id,
+      };
+      const response = await axiosInstance.get<InfinitePagination<TData>>(url, {
+        params: queryParams,
+      });
+      return response.data;
+    },
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.nextCursorCreatedAt || !lastPage.nextCursorId) return null;
+
+      return {
+        createdAt: lastPage.nextCursorCreatedAt,
+        id: lastPage.nextCursorId,
+      };
+    },
+    initialPageParam,
     ...options,
   });
 }
