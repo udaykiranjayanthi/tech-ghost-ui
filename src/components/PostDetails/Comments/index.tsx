@@ -1,11 +1,12 @@
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import { useApiMutation, useApiQuery } from "@/services/hooks";
-import type { Comment, Pagination } from "@/types";
+import { useApiInfiniteQuery, useApiMutation } from "@/services/hooks";
+import type { Comment } from "@/types";
 import {
   Box,
   Button,
   Divider,
+  Flex,
   Paper,
   Text,
   TextInput,
@@ -15,18 +16,25 @@ import type { FC } from "react";
 import CommentCard from "./CommentGroup";
 import styles from "./styles.module.scss";
 import { Controller, useForm } from "react-hook-form";
+import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
 interface CommentsProps {
   postId: string;
 }
 
 export const Comments: FC<CommentsProps> = ({ postId }) => {
-  const { data, refetch } = useApiQuery<Pagination<Comment>>({
-    url: `${ENDPOINTS.POSTS}/${postId}/comments`,
-    params: { parentCommentId: null },
-    queryKey: [RQ_KEYS.COMMENTS, postId],
-  });
+  const limit = 2;
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } =
+    useApiInfiniteQuery<Comment>({
+      url: `${ENDPOINTS.POSTS}/${postId}/comments`,
+      queryKey: [RQ_KEYS.COMMENTS, postId],
+      initialPageParam: null,
+      params: {
+        limit,
+        parentCommentId: null,
+      },
+    });
 
-  const { data: comments = [] } = data || {};
+  const comments = data?.pages?.flatMap((page) => page.data) ?? [];
 
   const { mutate: addComment } = useApiMutation({
     url: `${ENDPOINTS.POSTS}/${postId}/comments`,
@@ -71,9 +79,19 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
 
   return (
     <Paper p="md" className={styles.commentsContainer}>
-      <Title order={3} className={styles.commentsTitle}>
-        Comments ({comments.length})
-      </Title>
+      <Flex gap="xs" align="center" mb="md" justify="space-between">
+        <Title order={3} className={styles.commentsTitle} mb={0}>
+          Comments ({comments.length})
+        </Title>
+
+        <Button
+          variant="subtle"
+          leftSection={<ArrowCounterClockwiseIcon size={24} />}
+          onClick={() => refetch()}
+        >
+          Refresh
+        </Button>
+      </Flex>
 
       <Box className={styles.newCommentSection}>
         <Controller
@@ -107,10 +125,23 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
       <Divider my="md" />
 
       {comments.length > 0 ? (
-        <div className={styles.commentsList}>
-          {comments.map((comment) => (
-            <CommentCard key={comment.commentId} comment={comment} />
-          ))}
+        <div>
+          <div className={styles.commentsList}>
+            {comments.map((comment) => (
+              <CommentCard key={comment.commentId} comment={comment} />
+            ))}
+          </div>
+
+          {hasNextPage && (
+            <Flex justify="center" mt="md">
+              <Button
+                loading={isFetchingNextPage}
+                onClick={() => fetchNextPage()}
+              >
+                Load More
+              </Button>
+            </Flex>
+          )}
         </div>
       ) : (
         <Text c="dimmed" ta="center" py="xl">

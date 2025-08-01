@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router";
 import "./App.scss";
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import MainLayout from "./components/Layout/MainLayout";
 import { CreatePost } from "./pages/CreatePost";
 import { HomePage } from "./pages/HomePage";
@@ -13,6 +14,7 @@ import { createTheme, MantineProvider } from "@mantine/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import SavedPage from "./pages/SavedPage";
+import { Notifications } from "@mantine/notifications";
 
 export const theme = createTheme({
   primaryColor: "primary",
@@ -144,6 +146,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <MantineProvider theme={theme} defaultColorScheme="dark">
+        <Notifications position="bottom-right" />
         <RouterProvider router={router} />
       </MantineProvider>
     </QueryClientProvider>

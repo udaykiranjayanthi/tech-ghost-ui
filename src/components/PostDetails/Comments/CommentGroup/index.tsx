@@ -1,14 +1,15 @@
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import { useApiMutation, useApiQuery } from "@/services/hooks";
-import type { Comment, Pagination } from "@/types";
-import { Box, Button, Collapse, Flex, TextInput } from "@mantine/core";
+import { useApiInfiniteQuery, useApiMutation } from "@/services/hooks";
+import type { Comment } from "@/types";
+import { Box, Button, Collapse, Flex, Text, TextInput } from "@mantine/core";
 import { useState, type FC } from "react";
 import CommentCard from "../CommentCard";
 import styles from "./styles.module.scss";
 import { Controller, useForm } from "react-hook-form";
 import {
   ArrowBendUpLeftIcon,
+  ArrowCounterClockwiseIcon,
   CaretDownIcon,
   CaretUpIcon,
 } from "@phosphor-icons/react";
@@ -21,16 +22,22 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
   const [showReplies, setShowReplies] = useState(false);
   const [showReplyInput, setShowReplyInput] = useState(false);
 
-  const { data, refetch } = useApiQuery<Pagination<Comment>>({
-    url: `${ENDPOINTS.POSTS}/${comment.postId}/comments`,
-    queryKey: [RQ_KEYS.COMMENTS, comment.postId, comment.commentId],
-    params: { parentCommentId: comment.commentId },
-    options: {
-      enabled: showReplies,
-    },
-  });
+  const limit = 2;
+  const { data, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } =
+    useApiInfiniteQuery<Comment>({
+      url: `${ENDPOINTS.POSTS}/${comment.postId}/comments`,
+      queryKey: [RQ_KEYS.COMMENTS, comment.postId, comment.commentId],
+      initialPageParam: null,
+      params: {
+        limit,
+        parentCommentId: comment.commentId,
+      },
+      options: {
+        enabled: showReplies,
+      },
+    });
 
-  const { data: replies = [] } = data || {};
+  const replies = data?.pages?.flatMap((page) => page.data) ?? [];
 
   const { mutate: addReply } = useApiMutation({
     url: `${ENDPOINTS.POSTS}/${comment.postId}/comments`,
@@ -127,6 +134,17 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
                 {repliesCount === 1 ? "reply" : "replies"}
               </Button>
             )}
+
+            {showReplies && (
+              <Button
+                variant="subtle"
+                size="xs"
+                leftSection={<ArrowCounterClockwiseIcon size={20} />}
+                onClick={() => refetch()}
+              >
+                Refresh
+              </Button>
+            )}
           </Flex>
 
           {showReplyInput && (
@@ -171,11 +189,30 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
         </CommentCard>
 
         <Collapse in={showReplies}>
-          <div className={styles.repliesContainer}>
-            {replies?.map((reply) => (
-              <CommentCard key={reply.commentId} comment={reply} />
-            ))}
-          </div>
+          {replies.length > 0 ? (
+            <div>
+              <div className={styles.repliesContainer}>
+                {replies?.map((reply) => (
+                  <CommentCard key={reply.commentId} comment={reply} />
+                ))}
+              </div>
+
+              {hasNextPage && (
+                <Flex justify="center" mt="md">
+                  <Button
+                    loading={isFetchingNextPage}
+                    onClick={() => fetchNextPage()}
+                  >
+                    Load More
+                  </Button>
+                </Flex>
+              )}
+            </div>
+          ) : (
+            <Text c="dimmed" ta="center" py="xl">
+              No replies yet.
+            </Text>
+          )}
         </Collapse>
       </div>
     </>
