@@ -9,7 +9,7 @@ import { RQ_KEYS } from "@/common/rqkeys";
 import type { UserData } from "@/types";
 
 import { useGlobalStore } from "@/store";
-import { Box, Center, Drawer, Loader } from "@mantine/core";
+import { Box, Center, Drawer, Loader, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 const MainLayout: FC = () => {
@@ -21,6 +21,7 @@ const MainLayout: FC = () => {
   });
 
   const setUserDetails = useGlobalStore.use.setUserDetails();
+  const userDetails = useGlobalStore.use.userDetails?.();
 
   useEffect(() => {
     if (data) {
@@ -44,18 +45,22 @@ const MainLayout: FC = () => {
       <HeaderNavbar opened={opened} toggle={toggle} />
 
       <div className={styles.container}>
-        <Drawer
-          opened={opened}
-          onClose={toggle}
-          size="xs"
-          title="Menu"
-          padding="md"
-          hiddenFrom="sm"
-        >
-          <SideNavbar />
-        </Drawer>
+        <Drawer.Root opened={opened} onClose={toggle} hiddenFrom="md" size="xs">
+          <Drawer.Overlay />
+          <Drawer.Content>
+            <Stack h="100%" gap="0">
+              <Drawer.Header>
+                <Drawer.Title>{`Hi ${userDetails?.firstName}!`}</Drawer.Title>
+                <Drawer.CloseButton />
+              </Drawer.Header>
+              <Drawer.Body p="0" className={styles.drawerBody}>
+                <SideNavbar />
+              </Drawer.Body>
+            </Stack>
+          </Drawer.Content>
+        </Drawer.Root>
 
-        <Box visibleFrom="sm" className={styles.sidebar}>
+        <Box visibleFrom="md" className={styles.sidebar}>
           <SideNavbar />
         </Box>
 

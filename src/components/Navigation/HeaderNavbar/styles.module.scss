@@ -7,17 +7,16 @@
   padding-right: var(--mantine-spacing-md);
 }
 
+.logoGroup {
+  @media (min-width: var(--mantine-breakpoint-md)) {
+    width: 230px;
+  }
+}
+
 .logo {
   font-size: var(--mantine-font-size-lg);
   font-weight: 700;
   color: var(--text-color);
-}
-
-.inner {
-  height: 56px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 
 .link {
@@ -39,15 +38,16 @@
 }
 
 .search {
-  width: 400px;
+  min-width: 100px;
+  max-width: 600px;
 }
 
 .userButton {
   border-radius: var(--mantine-radius-sm);
-  padding: 2px;
+  padding: 4px 8px;
   transition: background-color 0.2s ease;
   cursor: pointer;
-  
+
   &:hover {
     background-color: light-dark(
       var(--mantine-color-gray-0),

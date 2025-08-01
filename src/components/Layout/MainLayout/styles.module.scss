@@ -15,3 +15,9 @@
   padding: var(--mantine-spacing-xl);
   overflow-y: scroll;
 }
+
+.drawerBody {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

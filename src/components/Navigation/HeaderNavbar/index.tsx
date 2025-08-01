@@ -13,6 +13,7 @@ import {
   Menu,
   UnstyledButton,
   Title,
+  Flex,
 } from "@mantine/core";
 import styles from "./styles.module.scss";
 import type { FC } from "react";
@@ -47,37 +48,38 @@ export const HeaderNavbar: FC<HeaderNavbarProps> = ({ opened, toggle }) => {
 
   return (
     <header className={styles.header}>
-      <div className={styles.inner}>
-        <Group>
-          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="sm" />
+      <Flex h="56px" justify="space-between" align="center" gap="md">
+        <Group className={styles.logoGroup}>
+          <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="md" />
           <Title order={3} className={styles.logo}>
             Daily Tech
           </Title>
         </Group>
 
-        <Group>
-          <Autocomplete
-            className={styles.search}
-            placeholder="Search"
-            leftSection={<MagnifyingGlassIcon size={16} />}
-            data={[
-              "React",
-              "Angular",
-              "Vue",
-              "Next.js",
-              "Riot.js",
-              "Svelte",
-              "Blitz.js",
-            ]}
-            visibleFrom="xs"
-          />
-          <Group ml={20} gap={5} className={styles.links} visibleFrom="sm">
+        <Autocomplete
+          className={styles.search}
+          placeholder="Search"
+          leftSection={<MagnifyingGlassIcon size={16} />}
+          data={[
+            "React",
+            "Angular",
+            "Vue",
+            "Next.js",
+            "Riot.js",
+            "Svelte",
+            "Blitz.js",
+          ]}
+          flex={1}
+        />
+
+        <Flex align="center" gap="md">
+          <Group gap={5} visibleFrom="md">
             {items}
           </Group>
-          <Group ml={20} gap={10} className={styles.links} visibleFrom="sm">
-            <NavLink to="/create-post">
-              <Button variant="outline">Create</Button>
-            </NavLink>
+          <Group gap={10}>
+            <Button variant="outline" onClick={() => navigate("/create-post")}>
+              Create
+            </Button>
             <Menu
               position="bottom-end"
               withArrow
@@ -87,13 +89,10 @@ export const HeaderNavbar: FC<HeaderNavbarProps> = ({ opened, toggle }) => {
             >
               <Menu.Target>
                 <UnstyledButton className={styles.userButton}>
-                  <Group
-                    ml={10}
-                    gap={5}
-                    className={styles.links}
-                    visibleFrom="sm"
-                  >
-                    <Text size="sm">Hi {userDetails?.firstName}!</Text>
+                  <Group gap={5}>
+                    <Text size="sm" visibleFrom="md">
+                      Hi {userDetails?.firstName}!
+                    </Text>
                     <Avatar
                       src={userDetails?.pictureUrl}
                       name={
@@ -122,8 +121,8 @@ export const HeaderNavbar: FC<HeaderNavbarProps> = ({ opened, toggle }) => {
               </Menu.Dropdown>
             </Menu>
           </Group>
-        </Group>
-      </div>
+        </Flex>
+      </Flex>
     </header>
   );
 };

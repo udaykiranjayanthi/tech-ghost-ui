@@ -22,7 +22,7 @@ export const SavedPosts: FC<SavedPostsProps> = () => {
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useApiInfiniteQuery<PostData>({
       url: ENDPOINTS.SAVED_POSTS,
-      queryKey: [RQ_KEYS.POSTS],
+      queryKey: [RQ_KEYS.SAVED_POSTS],
       initialPageParam: null,
       params: {
         limit,
