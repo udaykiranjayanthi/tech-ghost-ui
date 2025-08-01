@@ -7,7 +7,6 @@ import {
   Button,
   Divider,
   Flex,
-  Paper,
   Text,
   TextInput,
   Title,
@@ -78,7 +77,7 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
   };
 
   return (
-    <Paper p="md" className={styles.commentsContainer}>
+    <Box className={styles.commentsContainer}>
       <Flex gap="xs" align="center" mb="md" justify="space-between">
         <Title order={3} className={styles.commentsTitle} mb={0}>
           Comments ({comments.length})
@@ -148,6 +147,6 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
           No comments yet. Be the first to comment!
         </Text>
       )}
-    </Paper>
+    </Box>
   );
 };

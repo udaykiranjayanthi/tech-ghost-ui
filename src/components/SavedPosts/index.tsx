@@ -3,10 +3,10 @@ import {
   SimpleGrid,
   Container,
   Title,
-  Paper,
   Skeleton,
   Flex,
   Button,
+  Box,
 } from "@mantine/core";
 import { PostCard } from "../Posts/PostCard";
 import styles from "./styles.module.scss";
@@ -32,11 +32,11 @@ export const SavedPosts: FC<SavedPostsProps> = () => {
   const posts = data?.pages?.flatMap((page) => page.data) ?? [];
 
   return (
-    <Container size="lg" className={styles.container}>
+    <Container size="lg" p="0">
       <Title order={2} className={styles.sectionTitle}>
         Saved posts
       </Title>
-      <Paper p="md">
+      <Box>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
           {posts?.map((post) => (
             <PostCard key={post.postId} {...post} />
@@ -54,7 +54,7 @@ export const SavedPosts: FC<SavedPostsProps> = () => {
             </Button>
           </Flex>
         )}
-      </Paper>
+      </Box>
     </Container>
   );
 };

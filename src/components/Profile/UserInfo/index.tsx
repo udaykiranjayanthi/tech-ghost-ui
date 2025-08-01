@@ -4,11 +4,11 @@ import {
   Box,
   Button,
   Grid,
-  Paper,
   Stack,
   Text,
   Title,
   Skeleton,
+  Card,
 } from "@mantine/core";
 import { PencilIcon } from "@phosphor-icons/react";
 import { useState, type FC } from "react";
@@ -43,7 +43,7 @@ const UserInfo: FC<UserInfoProps> = ({
   } = userDetails || {};
 
   return (
-    <Paper p="lg" className={styles.profileCard} withBorder>
+    <Card p="lg">
       <Title order={3} mb="md" className={styles.sectionTitle}>
         Profile Information
       </Title>
@@ -166,7 +166,7 @@ const UserInfo: FC<UserInfoProps> = ({
           userDetails={userDetails}
         />
       )}
-    </Paper>
+    </Card>
   );
 };
 

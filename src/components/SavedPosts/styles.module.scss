@@ -1,10 +1,5 @@
-.container {
-  padding: 0;
-}
-
 .sectionTitle {
-  margin-bottom: 16px;
-  padding: 0 var(--mantine-spacing-md);
+  margin-bottom: 30px;
   font-weight: 600;
   position: relative;
   color: var(--mantine-color-text);
@@ -13,7 +8,7 @@
     content: "";
     position: absolute;
     bottom: -8px;
-    left: var(--mantine-spacing-md);
+    left: 0;
     width: 60px;
     height: 3px;
     background-color: var(--mantine-primary-color-filled);

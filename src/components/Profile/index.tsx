@@ -1,5 +1,5 @@
 import { useGlobalStore } from "@/store";
-import { Container, Title } from "@mantine/core";
+import { Container, Title, Box, Button, Group, Text } from "@mantine/core";
 import { type FC } from "react";
 import UserInfo from "./UserInfo";
 import UserPosts from "./UserPosts";
@@ -10,10 +10,13 @@ import { useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import UserMetrics from "./UserMetrics";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
+import { useNavigate } from "react-router";
 
 interface ProfileProps {}
 
 const Profile: FC<ProfileProps> = () => {
+  const navigate = useNavigate();
   const { username = "" } = useParams<{ username?: string }>();
   const currentUserDetails =
     useGlobalStore.use.userDetails?.() ?? ({} as UserData);
@@ -29,7 +32,7 @@ const Profile: FC<ProfileProps> = () => {
 
   if (!isLoading && !userDetails) {
     return (
-      <Container size="lg" className={styles.container}>
+      <Container size="lg" p="0">
         <Title order={1} className={styles.pageTitle}>
           User Not Found
         </Title>
@@ -37,12 +40,25 @@ const Profile: FC<ProfileProps> = () => {
     );
   }
 
-  return (
-    <Container size="lg" className={styles.container}>
-      <Title order={1} className={styles.pageTitle}>
-        {isCurrentUser ? "My Profile" : `${userDetails?.firstName}'s Profile`}
-      </Title>
+  const handleBackClick = () => {
+    navigate(-1);
+  };
 
+  return (
+    <Container size="lg" p="0">
+      <Box mb="md">
+        <Button
+          onClick={handleBackClick}
+          variant="light"
+          size="sm"
+          className={styles.backButton}
+        >
+          <Group gap="xs">
+            <ArrowLeftIcon size={24} />
+            <Text>Go back</Text>
+          </Group>
+        </Button>
+      </Box>
       <UserInfo
         userDetails={userDetails}
         isCurrentUser={isCurrentUser}

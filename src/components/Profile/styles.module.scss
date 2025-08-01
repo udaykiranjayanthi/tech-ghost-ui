@@ -1,8 +1,3 @@
-.container {
-  padding-top: 32px;
-  padding-bottom: 64px;
-}
-
 .pageTitle {
   margin-bottom: 24px;
   color: var(--mantine-color-text);
@@ -48,13 +43,6 @@
   &:hover {
     transform: translateY(-4px);
   }
-}
-
-.postsSection {
-  background-color: light-dark(
-    var(--mantine-color-white),
-    var(--mantine-color-dark-7)
-  );
 }
 
 @media (max-width: 768px) {

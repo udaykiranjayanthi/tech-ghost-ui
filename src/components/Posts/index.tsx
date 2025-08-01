@@ -2,13 +2,12 @@ import type { FC } from "react";
 import {
   SimpleGrid,
   Container,
-  Paper,
   Skeleton,
   Button,
   Flex,
+  Box,
 } from "@mantine/core";
 import { PostCard } from "./PostCard";
-import styles from "./styles.module.scss";
 import { useApiInfiniteQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
@@ -31,8 +30,8 @@ export const Posts: FC<PostsProps> = () => {
   const posts = data?.pages?.flatMap((page) => page.data) ?? [];
 
   return (
-    <Container size="lg" className={styles.container}>
-      <Paper p="md">
+    <Container size="lg" p="0">
+      <Box>
         <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
           {posts?.map((post) => (
             <PostCard key={post.postId} {...post} />
@@ -50,7 +49,7 @@ export const Posts: FC<PostsProps> = () => {
             </Button>
           </Flex>
         )}
-      </Paper>
+      </Box>
     </Container>
   );
 };

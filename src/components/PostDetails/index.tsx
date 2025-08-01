@@ -81,53 +81,50 @@ export const PostDetails: FC<PostDetailsProps> = () => {
   const isAuthor = userId === author?.userId;
 
   return (
-    <Container size="lg" className={styles.container}>
-      <Box className={styles.backButtonContainer}>
-        <Group gap="xs" justify="space-between">
-          <Button
-            onClick={handleBackClick}
-            variant="transparent"
-            size="sm"
-            className={styles.backButton}
-          >
-            <Group gap="xs">
-              <ArrowLeftIcon size={24} />
-              <Text>Go back</Text>
-            </Group>
-          </Button>
-          <Group gap="sm">
-            {isLoading ? (
-              <Skeleton height={36} width={100} radius="md" />
-            ) : (
-              <>
-                {isAuthor && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    rightSection={<PencilIcon size={16} />}
-                    onClick={() => navigate(`/post/${postId}/edit`)}
-                  >
-                    Edit Post
-                  </Button>
-                )}
-                {externalUrl && (
-                  <Button
-                    variant="light"
-                    size="sm"
-                    mr="md"
-                    rightSection={<ArrowSquareOutIcon size={16} />}
-                    onClick={handleReadPostClick}
-                  >
-                    Read Post
-                  </Button>
-                )}
-              </>
-            )}
+    <Container size="lg" p="0">
+      <Group gap="xs" mb="md" justify="space-between">
+        <Button
+          onClick={handleBackClick}
+          variant="light"
+          size="sm"
+          className={styles.backButton}
+        >
+          <Group gap="xs">
+            <ArrowLeftIcon size={24} />
+            <Text>Go back</Text>
           </Group>
+        </Button>
+        <Group gap="sm">
+          {isLoading ? (
+            <Skeleton height={36} width={100} radius="md" />
+          ) : (
+            <>
+              {isAuthor && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  rightSection={<PencilIcon size={16} />}
+                  onClick={() => navigate(`/post/${postId}/edit`)}
+                >
+                  Edit Post
+                </Button>
+              )}
+              {externalUrl && (
+                <Button
+                  variant="light"
+                  size="sm"
+                  rightSection={<ArrowSquareOutIcon size={16} />}
+                  onClick={handleReadPostClick}
+                >
+                  Read Post
+                </Button>
+              )}
+            </>
+          )}
         </Group>
-      </Box>
+      </Group>
 
-      <Paper p="md" className={styles.postCard}>
+      <Box className={styles.postCard}>
         {isLoading ? (
           <>
             {/* Title skeleton */}
@@ -258,7 +255,7 @@ export const PostDetails: FC<PostDetailsProps> = () => {
             </Group>
           </>
         )}
-      </Paper>
+      </Box>
 
       <div ref={commentsRef}>
         {isLoading ? (

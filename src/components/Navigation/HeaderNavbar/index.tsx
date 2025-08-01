@@ -14,7 +14,6 @@ import {
   UnstyledButton,
   Title,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import styles from "./styles.module.scss";
 import type { FC } from "react";
 import { NavLink, useNavigate } from "react-router";
@@ -25,8 +24,12 @@ const links = [
   { link: "/pricing", label: "Pricing" },
 ];
 
-export const HeaderNavbar: FC = () => {
-  const [opened, { toggle }] = useDisclosure(false);
+interface HeaderNavbarProps {
+  opened: boolean;
+  toggle: () => void;
+}
+
+export const HeaderNavbar: FC<HeaderNavbarProps> = ({ opened, toggle }) => {
   const userDetails = useGlobalStore.use.userDetails?.();
 
   const navigate = useNavigate();

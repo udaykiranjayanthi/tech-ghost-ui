@@ -1,6 +1,6 @@
 import { useState, type FC } from "react";
 import { Posts } from "@/components/Posts";
-import { FloatingIndicator, Tabs } from "@mantine/core";
+import { Container, FloatingIndicator, Tabs } from "@mantine/core";
 import styles from "./styles.module.scss";
 
 interface HomePageProps {}
@@ -17,34 +17,36 @@ export const HomePage: FC<HomePageProps> = () => {
   };
 
   return (
-    <Tabs variant="none" value={value} onChange={setValue}>
-      <Tabs.List ref={setRootRef} className={styles.list}>
-        <Tabs.Tab value="1" ref={setControlRef("1")} className={styles.tab}>
-          For you
-        </Tabs.Tab>
-        <Tabs.Tab value="2" ref={setControlRef("2")} className={styles.tab}>
-          Trending
-        </Tabs.Tab>
-        <Tabs.Tab value="3" ref={setControlRef("3")} className={styles.tab}>
-          Community
-        </Tabs.Tab>
+    <Container size="lg" p="0">
+      <Tabs variant="none" value={value} onChange={setValue}>
+        <Tabs.List ref={setRootRef} className={styles.list}>
+          <Tabs.Tab value="1" ref={setControlRef("1")} className={styles.tab}>
+            For you
+          </Tabs.Tab>
+          <Tabs.Tab value="2" ref={setControlRef("2")} className={styles.tab}>
+            Trending
+          </Tabs.Tab>
+          <Tabs.Tab value="3" ref={setControlRef("3")} className={styles.tab}>
+            Community
+          </Tabs.Tab>
 
-        <FloatingIndicator
-          target={value ? controlsRefs[value] : null}
-          parent={rootRef}
-          className={styles.indicator}
-        />
-      </Tabs.List>
+          <FloatingIndicator
+            target={value ? controlsRefs[value] : null}
+            parent={rootRef}
+            className={styles.indicator}
+          />
+        </Tabs.List>
 
-      <Tabs.Panel value="1">
-        <Posts />
-      </Tabs.Panel>
-      <Tabs.Panel value="2">
-        <Posts />
-      </Tabs.Panel>
-      <Tabs.Panel value="3">
-        <Posts />
-      </Tabs.Panel>
-    </Tabs>
+        <Tabs.Panel value="1">
+          <Posts />
+        </Tabs.Panel>
+        <Tabs.Panel value="2">
+          <Posts />
+        </Tabs.Panel>
+        <Tabs.Panel value="3">
+          <Posts />
+        </Tabs.Panel>
+      </Tabs>
+    </Container>
   );
 };

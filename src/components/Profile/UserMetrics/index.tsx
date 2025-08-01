@@ -1,13 +1,5 @@
 import type { UserDetailsData } from "@/types";
-import {
-  Card,
-  Group,
-  Paper,
-  SimpleGrid,
-  Skeleton,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Card, Group, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
 import { type FC, useState } from "react";
 import styles from "./styles.module.scss";
 import ConnectionsModal, { type ConnectionType } from "../ConnectionsModal";
@@ -47,7 +39,7 @@ const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
   ];
 
   return (
-    <Paper p="lg" className={styles.analyticsCard} withBorder>
+    <Card p="lg" mt="md">
       <Title order={3} mb="md">
         User Activity
       </Title>
@@ -86,7 +78,7 @@ const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
           type={modalType}
         />
       )}
-    </Paper>
+    </Card>
   );
 };
 

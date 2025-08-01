@@ -3,7 +3,6 @@ import {
   TextInput,
   Textarea,
   Button,
-  Paper,
   Title,
   Group,
   Container,
@@ -175,16 +174,16 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleBackClick = () => {
     navigate(-1);
   };
 
   return (
-    <Container size="lg" className={styles.container}>
-      <Box className={styles.backButtonContainer}>
+    <Container size="lg" p="0">
+      <Box mb="md">
         <Button
-          onClick={handleCancel}
-          variant="transparent"
+          onClick={handleBackClick}
+          variant="light"
           size="sm"
           className={styles.backButton}
         >
@@ -195,7 +194,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
         </Button>
       </Box>
 
-      <Paper p="md" className={styles.formContainer}>
+      <Box>
         <Title order={2} className={styles.formTitle}>
           {isCreate ? "Create New Post" : "Edit Post"}
         </Title>
@@ -328,7 +327,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
           <Divider my="md" />
 
           <Group justify="flex-end" mt="md">
-            <Button variant="outline" onClick={handleCancel}>
+            <Button variant="outline" onClick={handleBackClick}>
               Cancel
             </Button>
             <Button
@@ -339,7 +338,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
             </Button>
           </Group>
         </div>
-      </Paper>
+      </Box>
     </Container>
   );
 };

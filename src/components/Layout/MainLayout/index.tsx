@@ -9,9 +9,12 @@ import { RQ_KEYS } from "@/common/rqkeys";
 import type { UserData } from "@/types";
 
 import { useGlobalStore } from "@/store";
-import { Center, Loader } from "@mantine/core";
+import { Box, Center, Drawer, Loader } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
 
 const MainLayout: FC = () => {
+  const [opened, { toggle }] = useDisclosure();
+
   const { data, isLoading } = useApiQuery<UserData>({
     url: ENDPOINTS.CURRENT_USER,
     queryKey: [RQ_KEYS.CURRENT_USER],
@@ -38,10 +41,24 @@ const MainLayout: FC = () => {
       <head>
         <title>Daily Tech</title>
       </head>
-      <HeaderNavbar />
+      <HeaderNavbar opened={opened} toggle={toggle} />
 
       <div className={styles.container}>
-        <SideNavbar />
+        <Drawer
+          opened={opened}
+          onClose={toggle}
+          size="xs"
+          title="Menu"
+          padding="md"
+          hiddenFrom="sm"
+        >
+          <SideNavbar />
+        </Drawer>
+
+        <Box visibleFrom="sm" className={styles.sidebar}>
+          <SideNavbar />
+        </Box>
+
         <main className={styles.main}>
           <Outlet />
         </main>
