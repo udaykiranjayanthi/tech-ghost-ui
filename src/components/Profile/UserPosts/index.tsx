@@ -1,9 +1,17 @@
 import { RQ_KEYS } from "@/common/rqkeys";
 import ENDPOINTS from "@/common/endpoints";
 import { PostCard } from "@/components/Posts/PostCard";
-import { useApiQuery } from "@/services/hooks";
-import type { Pagination, PostData } from "@/types";
-import { Box, Button, SimpleGrid, Skeleton, Tabs, Text } from "@mantine/core";
+import { useApiInfiniteQuery } from "@/services/hooks";
+import type { PostData } from "@/types";
+import {
+  Box,
+  Button,
+  Flex,
+  SimpleGrid,
+  Skeleton,
+  Tabs,
+  Text,
+} from "@mantine/core";
 import { type FC } from "react";
 import styles from "./styles.module.scss";
 import { SquaresFourIcon } from "@phosphor-icons/react";
@@ -15,27 +23,27 @@ interface UserPostsProps {
 
 const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
   // Fetch user's posts
-  const { data, isLoading: isLoadingPosts } = useApiQuery<Pagination<PostData>>(
-    {
-      url: `${ENDPOINTS.POSTS}`,
+  const limit = 2;
+  const { data, isFetchingNextPage, isPending, fetchNextPage, hasNextPage } =
+    useApiInfiniteQuery<PostData>({
+      url: ENDPOINTS.POSTS,
       queryKey: [RQ_KEYS.USER_POSTS, userId || ""],
+      initialPageParam: null,
       params: {
         authorId: userId,
+        limit,
       },
       options: {
         enabled: !!userId,
       },
-    }
-  );
+    });
 
-  const { data: userPosts } = data ?? {};
+  const userPosts = data?.pages?.flatMap((page) => page.data) ?? [];
 
-  const showLoader = isLoadingPosts;
-  const showPosts = !isLoadingPosts && userPosts && userPosts.length > 0;
-  const showNoPosts =
-    !isLoadingPosts && userPosts?.length === 0 && !isCurrentUser;
+  const showPosts = userPosts && userPosts.length > 0;
+  const showNoPosts = !isPending && userPosts?.length === 0 && !isCurrentUser;
   const showNoPostsCreatePost =
-    !isLoadingPosts && userPosts?.length === 0 && isCurrentUser;
+    !isPending && userPosts?.length === 0 && isCurrentUser;
 
   return (
     <Tabs defaultValue="posts" className={styles.postsSection}>
@@ -46,13 +54,6 @@ const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
       </Tabs.List>
 
       <Tabs.Panel value="posts" pt="md" pb="md">
-        {showLoader && (
-          <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
-            {[1, 2, 3].map((i) => (
-              <Skeleton key={i} height={322} radius="md" />
-            ))}
-          </SimpleGrid>
-        )}
         {showPosts && (
           <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
             {userPosts.map((post) => (
@@ -70,8 +71,21 @@ const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
                 author={post.author}
               />
             ))}
+            {isFetchingNextPage &&
+              Array.from({ length: limit }).map((_, i) => (
+                <Skeleton key={i} height={322} radius="md" />
+              ))}
           </SimpleGrid>
         )}
+
+        {hasNextPage && (
+          <Flex justify="center">
+            <Button variant="outline" mt="md" onClick={() => fetchNextPage()}>
+              Load more
+            </Button>
+          </Flex>
+        )}
+
         {showNoPosts && (
           <Box py="xl" ta="center">
             <Text size="lg" c="dimmed">
@@ -79,6 +93,7 @@ const UserPosts: FC<UserPostsProps> = ({ userId, isCurrentUser }) => {
             </Text>
           </Box>
         )}
+
         {showNoPostsCreatePost && (
           <Box py="xl" ta="center">
             <Text size="lg" c="dimmed">
