@@ -27,6 +27,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
           onChange={(e) => setMessage(e.target.value)}
           style={{ flex: 1 }}
           variant="filled"
+          autoFocus
         />
         <ActionIcon
           type="submit"

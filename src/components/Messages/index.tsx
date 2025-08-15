@@ -29,7 +29,7 @@ export const Messages: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [users, setUsers] = useState<User[]>(dummyUsers);
-  const [selectedUserId, setSelectedUserId] = useState<string>();
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const { userId } = useGlobalStore.use.userDetails?.() ?? {};
@@ -60,9 +60,9 @@ export const Messages: React.FC = () => {
     };
   }, []);
 
-  const handleUserSelect = (userId: string) => {
+  const handleUserSelect = (userId: string | null) => {
     setSelectedUserId(userId);
-    socket?.emit("join_chat", userId);
+    // socket?.emit("join_chat", userId);
   };
 
   const handleSendMessage = (text: string) => {

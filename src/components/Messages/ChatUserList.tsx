@@ -6,8 +6,8 @@ import styles from "./styles.module.scss";
 
 interface ChatUserListProps {
   users: User[];
-  selectedUserId?: string;
-  onUserSelect: (userId: string) => void;
+  selectedUserId?: string | null;
+  onUserSelect: (userId: string | null) => void;
 }
 
 export const ChatUserList: React.FC<ChatUserListProps> = ({
@@ -15,6 +15,13 @@ export const ChatUserList: React.FC<ChatUserListProps> = ({
   selectedUserId,
   onUserSelect,
 }) => {
+  const handleUserSelect = (userId: string) => {
+    if (selectedUserId === userId) {
+      onUserSelect(null);
+    } else {
+      onUserSelect(userId);
+    }
+  };
   return (
     <ScrollArea className={styles.userList}>
       <Stack gap="xs">
@@ -22,7 +29,7 @@ export const ChatUserList: React.FC<ChatUserListProps> = ({
           <Card
             key={user.userId}
             withBorder={selectedUserId === user.userId}
-            onClick={() => onUserSelect(user.userId)}
+            onClick={() => handleUserSelect(user.userId)}
             className={styles.userCard}
           >
             <Group>
