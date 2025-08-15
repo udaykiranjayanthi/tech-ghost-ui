@@ -20,9 +20,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
       }`}
     >
       <Paper className={classes.message} p="xs">
-        <Text size="sm">{message.text}</Text>
+        <Text size="sm">{message.message}</Text>
         <Text size="xs" c="dimmed" ta={isMessageOwn ? "right" : "left"}>
-          {displayDate(message.timestamp)}
+          {displayDate(message.createdAt)}
         </Text>
       </Paper>
     </div>

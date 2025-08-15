@@ -13,9 +13,9 @@ export interface User {
 }
 
 export interface Message {
-  id: string;
+  messageId: string;
   senderId: string;
   receiverId: string;
-  text: string;
-  timestamp?: string;
+  message: string;
+  createdAt?: string;
 }

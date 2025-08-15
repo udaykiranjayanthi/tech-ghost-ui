@@ -50,7 +50,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       <ScrollArea viewportRef={viewport} className={styles.messageArea}>
         <Stack gap="md" p="md">
           {messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
+            <ChatMessage key={message.messageId} message={message} />
           ))}
         </Stack>
       </ScrollArea>

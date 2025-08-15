@@ -51,6 +51,10 @@ export const Messages: React.FC = () => {
       setUsers(updatedUsers);
     });
 
+    newSocket.on("messageHistory", (messages: Message[]) => {
+      setMessages(messages);
+    });
+
     newSocket.on("receiveMessage", (message: Message) => {
       setMessages((prev) => [...prev, message]);
     });
@@ -60,19 +64,26 @@ export const Messages: React.FC = () => {
     };
   }, []);
 
-  const handleUserSelect = (userId: string | null) => {
-    setSelectedUserId(userId);
-    // socket?.emit("join_chat", userId);
+  const handleUserSelect = (selectedId: string | null) => {
+    setSelectedUserId(selectedId);
+    if (selectedId) {
+      socket?.emit("getMessageHistory", {
+        userId1: userId,
+        userId2: selectedId,
+      });
+    } else {
+      setMessages([]);
+    }
   };
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = (message: string) => {
     if (socket && selectedUserId) {
-      const message: Partial<Message> = {
+      const payload: Partial<Message> = {
         senderId: userId,
         receiverId: selectedUserId,
-        text,
+        message,
       };
-      socket.emit("sendMessage", message);
+      socket.emit("sendMessage", payload);
     }
   };
 
