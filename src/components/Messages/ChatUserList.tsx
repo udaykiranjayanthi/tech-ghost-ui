@@ -16,7 +16,7 @@ export const ChatUserList: React.FC<ChatUserListProps> = ({
   onUserSelect,
 }) => {
   return (
-    <ScrollArea>
+    <ScrollArea className={styles.userList}>
       <Stack gap="xs">
         {users.map((user) => (
           <Card

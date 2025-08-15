@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Flex, Title } from "@mantine/core";
+import { Container, Flex } from "@mantine/core";
 import { io, Socket } from "socket.io-client";
 import { useSearchParams } from "react-router";
 import { ChatUserList } from "./ChatUserList";
@@ -80,25 +80,17 @@ export const Messages: React.FC = () => {
 
   return (
     <Container size="lg" p="0" h="100%" className={styles.container}>
-      <Title order={2} className={styles.sectionTitle}>
-        Messages
-      </Title>
-
-      <Flex flex={1} gap="md">
-        <Box miw="350px" flex={0}>
-          <ChatUserList
-            users={users}
-            selectedUserId={selectedUserId}
-            onUserSelect={handleUserSelect}
-          />
-        </Box>
-        <Box flex={1}>
-          <ChatWindow
-            selectedUser={selectedUser}
-            messages={messages}
-            onSendMessage={handleSendMessage}
-          />
-        </Box>
+      <Flex flex={1} gap="md" mih="0">
+        <ChatUserList
+          users={users}
+          selectedUserId={selectedUserId}
+          onUserSelect={handleUserSelect}
+        />
+        <ChatWindow
+          selectedUser={selectedUser}
+          messages={messages}
+          onSendMessage={handleSendMessage}
+        />
       </Flex>
     </Container>
   );

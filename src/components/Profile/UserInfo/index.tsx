@@ -11,7 +11,7 @@ import {
   Card,
   Group,
 } from "@mantine/core";
-import { PencilIcon, ChatCircleText } from "@phosphor-icons/react";
+import { PencilIcon, ChatCircleTextIcon } from "@phosphor-icons/react";
 import { useState, type FC } from "react";
 import { useNavigate } from "react-router";
 import styles from "./styles.module.scss";
@@ -85,10 +85,10 @@ const UserInfo: FC<UserInfoProps> = ({
                         userId={userId || ""}
                         following={following}
                       />
-                      {userId && (
+                      {following && (
                         <Button
                           variant="light"
-                          leftSection={<ChatCircleText size={20} />}
+                          leftSection={<ChatCircleTextIcon size={20} />}
                           onClick={() => navigate(`/messages?userId=${userId}`)}
                         >
                           Message
