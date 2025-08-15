@@ -29,7 +29,7 @@ const MainLayout: FC = () => {
     }
   }, [data, setUserDetails]);
 
-  if (isLoading) {
+  if (isLoading || !userDetails) {
     return (
       <Center h="100vh">
         <Loader />

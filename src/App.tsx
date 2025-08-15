@@ -15,6 +15,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import SavedPage from "./pages/SavedPage";
 import { Notifications } from "@mantine/notifications";
+import MessagesPage from "./pages/MessagesPage";
 
 export const theme = createTheme({
   primaryColor: "primary",
@@ -129,6 +130,7 @@ export const router = createBrowserRouter([
       { path: "post/:postId/edit", element: <CreatePost /> },
       { path: "profile/:username", element: <ProfilePage /> },
       { path: "saved", element: <SavedPage /> },
+      { path: "messages", element: <MessagesPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },

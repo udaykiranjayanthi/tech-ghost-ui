@@ -1,0 +1,75 @@
+.sectionTitle {
+  margin-bottom: 30px;
+  font-weight: 600;
+  position: relative;
+  color: var(--mantine-color-text);
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background-color: var(--mantine-primary-color-filled);
+  }
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.userCard {
+  cursor: pointer;
+}
+
+.chatWindow {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatHeader {
+  padding: 1rem;
+  box-shadow: var(--mantine-shadow-md);
+  border-bottom: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.messageArea {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.messageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 70%;
+
+  &.own {
+    align-items: flex-end;
+    align-self: flex-end;
+
+    .message {
+      background-color: var(--mantine-primary-color-filled);
+    }
+  }
+}
+
+.message {
+  background-color: var(--mantine-color-gray-7);
+  border-radius: 8px;
+  max-width: 100%;
+}
+
+.chatFooter {
+  padding: 1rem;
+  border-top: 1px solid
+    light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+}
+
+.chatInput {
+  width: 100%;
+}

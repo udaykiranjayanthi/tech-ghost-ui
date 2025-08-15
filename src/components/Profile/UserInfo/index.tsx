@@ -9,9 +9,11 @@ import {
   Title,
   Skeleton,
   Card,
+  Group,
 } from "@mantine/core";
-import { PencilIcon } from "@phosphor-icons/react";
+import { PencilIcon, ChatCircleText } from "@phosphor-icons/react";
 import { useState, type FC } from "react";
+import { useNavigate } from "react-router";
 import styles from "./styles.module.scss";
 import EditProfileModal from "../EditProfileModal";
 import FollowButton from "../FollowButton";
@@ -28,6 +30,7 @@ const UserInfo: FC<UserInfoProps> = ({
   isLoading,
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const {
     userId,
@@ -76,7 +79,23 @@ const UserInfo: FC<UserInfoProps> = ({
                     Edit Profile
                   </Button>
                 ) : (
-                  <FollowButton userId={userId || ""} following={following} />
+                  <Box>
+                    <Group gap="sm" justify="center">
+                      <FollowButton
+                        userId={userId || ""}
+                        following={following}
+                      />
+                      {userId && (
+                        <Button
+                          variant="light"
+                          leftSection={<ChatCircleText size={20} />}
+                          onClick={() => navigate(`/messages?userId=${userId}`)}
+                        >
+                          Message
+                        </Button>
+                      )}
+                    </Group>
+                  </Box>
                 )}
               </>
             )}
