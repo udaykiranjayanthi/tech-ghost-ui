@@ -1,38 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Container, Flex } from "@mantine/core";
 import { io, Socket } from "socket.io-client";
 import { useSearchParams } from "react-router";
 import { ChatUserList } from "./ChatUserList";
 import { ChatWindow } from "./ChatWindow";
-import type { Message, User } from "./types";
+import type { Message, Conversation } from "./types";
 import styles from "./styles.module.scss";
 import { useGlobalStore } from "@/store";
-
-const dummyUsers = [
-  {
-    userId: "b9bfe8db-ee22-46f4-a85d-69597cb905a8",
-    username: "user_ec6029e0",
-    email: "n160099@rguktn.ac.in",
-    pictureUrl:
-      "https://lh3.googleusercontent.com/a/ACg8ocKQAma5yJN08ctV5WANtd6KM6xxWxXsjpqXY51jOE6XztBz32M=s96-c",
-    firstName: "UDAYKIRAN",
-    lastName: "JAYANTHI",
-
-    lastMessage: "Hello",
-    lastMessageTime: "2025-08-15T09:35:49.479637Z",
-    createdAt: "2025-08-15T09:35:49.479637Z",
-    updatedAt: "2025-08-15T09:35:49.479637Z",
-  },
-];
+import { useApiQuery } from "@/services/hooks";
+import ENDPOINTS from "@/common/endpoints";
+import { RQ_KEYS } from "@/common/rqkeys";
+import type { UserData } from "@/types";
 
 export const Messages: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [users, setUsers] = useState<User[]>(dummyUsers);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [usersDetails, setUsersDetails] = useState<Record<string, UserData>>(
+    {}
+  );
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const { userId } = useGlobalStore.use.userDetails?.() ?? {};
+
+  const userIds = useMemo(() => {
+    return conversations.map((conv) => conv.userId);
+  }, [conversations]);
+
+  const { data: usersData } = useApiQuery<UserData[]>({
+    url: ENDPOINTS.USERS_DATA,
+    queryKey: [RQ_KEYS.USERS_DATA, userIds.join(",")],
+    params: { userIds: userIds.join(",") },
+    options: {
+      enabled: !!userIds.length,
+    },
+  });
+
+  useEffect(() => {
+    if (usersData) {
+      const users = usersData.reduce((acc, user) => {
+        acc[user.userId] = user;
+        return acc;
+      }, {} as Record<string, UserData>);
+      setUsersDetails(users);
+    }
+  }, [usersData]);
 
   useEffect(() => {
     const chatUserId = searchParams.get("chatUserId");
@@ -47,9 +60,14 @@ export const Messages: React.FC = () => {
 
     newSocket.emit("registerUser", userId);
 
-    newSocket.on("users", (updatedUsers: User[]) => {
-      setUsers(updatedUsers);
-    });
+    newSocket.emit("getRecentConversations", userId);
+
+    newSocket.on(
+      "recentConversations",
+      (recentConversations: Conversation[]) => {
+        setConversations(recentConversations);
+      }
+    );
 
     newSocket.on("messageHistory", (messages: Message[]) => {
       setMessages(messages);
@@ -87,13 +105,14 @@ export const Messages: React.FC = () => {
     }
   };
 
-  const selectedUser = users.find((user) => user.userId === selectedUserId);
+  const selectedUser = usersDetails[selectedUserId ?? ""];
 
   return (
     <Container size="lg" p="0" h="100%" className={styles.container}>
       <Flex flex={1} gap="md" mih="0">
         <ChatUserList
-          users={users}
+          conversations={conversations}
+          usersDetails={usersDetails}
           selectedUserId={selectedUserId}
           onUserSelect={handleUserSelect}
         />
