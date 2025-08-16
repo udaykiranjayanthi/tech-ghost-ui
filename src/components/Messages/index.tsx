@@ -84,7 +84,10 @@ export const Messages: React.FC = () => {
 
         if (conversationIndex === -1) {
           // Create new conversation if it doesn't exist
-          return [...prev, { ...message, userId: otherUserId }];
+          return [
+            ...prev,
+            { ...message, userId: otherUserId, isUserOnline: true },
+          ];
         }
 
         // Update existing conversation
@@ -92,6 +95,7 @@ export const Messages: React.FC = () => {
         updatedConversations[conversationIndex] = {
           ...message,
           userId: otherUserId,
+          isUserOnline: true,
         };
         return updatedConversations;
       });

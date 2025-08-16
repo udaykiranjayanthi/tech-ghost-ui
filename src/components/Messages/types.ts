@@ -8,4 +8,5 @@ export interface Message {
 
 export interface Conversation extends Message {
   userId: string;
+  isUserOnline: boolean;
 }

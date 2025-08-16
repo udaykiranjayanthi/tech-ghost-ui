@@ -32,11 +32,19 @@ export const ChatUserCard = ({
       className={`${styles.userCard} ${isSelected ? styles.selected : ""}`}
     >
       <Group>
-        <Avatar
-          src={userDetails.pictureUrl}
-          name={userDetails.firstName + " " + userDetails.lastName}
-          color="initials"
-        />
+        <div className={styles.avatarContainer}>
+          <Avatar
+            src={userDetails.pictureUrl}
+            name={userDetails.firstName + " " + userDetails.lastName}
+            color="initials"
+            className={styles.avatar}
+          />
+          <div
+            className={styles.avatarOnlineIndicator}
+            data-online={conversation.isUserOnline}
+          />
+        </div>
+
         <div style={{ flex: 1 }}>
           <Group justify="space-between">
             <Text size="sm" fw={500}>

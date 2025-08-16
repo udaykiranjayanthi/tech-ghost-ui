@@ -26,6 +26,26 @@
   }
 }
 
+.avatarContainer {
+  position: relative;
+}
+
+.avatarOnlineIndicator {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--mantine-color-green-light-color);
+  box-shadow: var(--mantine-shadow-xs);
+
+  &[data-online="false"] {
+    display: none;
+  }
+}
+
 .chatWindow {
   flex: 1;
   display: flex;

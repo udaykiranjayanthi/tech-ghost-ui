@@ -75,6 +75,7 @@ export const ChatUserList: React.FC<ChatUserListProps> = ({
                 messageId: "new",
                 senderId: "",
                 receiverId: "",
+                isUserOnline: false,
               }}
               userDetails={usersDetails[selectedUserId!]}
               isSelected={true}
