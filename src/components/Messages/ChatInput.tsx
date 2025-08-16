@@ -32,7 +32,6 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
         <ActionIcon
           type="submit"
           variant="filled"
-          color="blue"
           size="lg"
           disabled={!message.trim()}
         >

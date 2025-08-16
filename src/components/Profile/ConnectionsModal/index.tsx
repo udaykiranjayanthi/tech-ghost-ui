@@ -101,7 +101,13 @@ const ConnectionsModal = ({
               >
                 <Card className={styles.connectionCard} p="xs">
                   <Group wrap="nowrap">
-                    <Avatar src={connection.pictureUrl} radius="xl" size="md" />
+                    <Avatar
+                      src={connection.pictureUrl}
+                      radius="xl"
+                      size="md"
+                      name={connection.firstName + " " + connection.lastName}
+                      color="initials"
+                    />
                     <div style={{ flex: 1 }}>
                       <Text size="sm" fw={500}>
                         {connection.firstName} {connection.lastName}

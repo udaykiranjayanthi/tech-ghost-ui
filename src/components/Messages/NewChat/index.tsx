@@ -29,7 +29,7 @@ const NewChat = ({ opened, onClose }: NewChatProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedQuery] = useDebouncedValue(searchQuery, 300);
 
-  // Fetch connections data
+  // Fetch users data
   const limit = 2;
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage } =
     useApiInfiniteQuery<UserData>({
@@ -45,7 +45,7 @@ const NewChat = ({ opened, onClose }: NewChatProps) => {
       },
     });
 
-  const connections = data?.pages?.flatMap((page) => page.data) ?? [];
+  const users = data?.pages?.flatMap((page) => page.data) ?? [];
 
   return (
     <Modal
@@ -73,27 +73,33 @@ const NewChat = ({ opened, onClose }: NewChatProps) => {
           }
         }}
       >
-        {connections.length === 0 ? (
+        {users.length === 0 ? (
           <Text c="dimmed" ta="center" py="xl">
             No results
           </Text>
         ) : (
           <Stack gap="xs">
-            {connections.map((connection) => (
+            {users.map((user) => (
               <NavLink
-                to={`/messages/${connection.userId}`}
-                key={connection.userId}
+                to={`/messages/${user.userId}`}
+                key={user.userId}
                 onClick={() => onClose()}
               >
                 <Card className={styles.connectionCard} p="xs">
                   <Group wrap="nowrap">
-                    <Avatar src={connection.pictureUrl} radius="xl" size="md" />
+                    <Avatar
+                      src={user.pictureUrl}
+                      radius="xl"
+                      size="md"
+                      name={user.firstName + " " + user.lastName}
+                      color="initials"
+                    />
                     <div style={{ flex: 1 }}>
                       <Text size="sm" fw={500}>
-                        {connection.firstName} {connection.lastName}
+                        {user.firstName} {user.lastName}
                       </Text>
                       <Text size="xs" c="dimmed">
-                        @{connection.username}
+                        @{user.username}
                       </Text>
                     </div>
                   </Group>

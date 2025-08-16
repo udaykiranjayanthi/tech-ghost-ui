@@ -85,15 +85,13 @@ const UserInfo: FC<UserInfoProps> = ({
                         userId={userId || ""}
                         following={following}
                       />
-                      {following && (
-                        <Button
-                          variant="light"
-                          leftSection={<ChatCircleTextIcon size={20} />}
-                          onClick={() => navigate(`/messages?userId=${userId}`)}
-                        >
-                          Message
-                        </Button>
-                      )}
+                      <Button
+                        variant="light"
+                        leftSection={<ChatCircleTextIcon size={20} />}
+                        onClick={() => navigate(`/messages/${userId}`)}
+                      >
+                        Message
+                      </Button>
                     </Group>
                   </Box>
                 )}

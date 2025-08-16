@@ -43,7 +43,6 @@ const FollowButton: FC<FollowButtonProps> = ({ userId, following }) => {
       onClick={handleFollowToggle}
       loading={isFollowPending}
       variant={isFollowing ? "outline" : "filled"}
-      color={isFollowing ? "gray" : "blue"}
       leftSection={
         isFollowing ? <UserMinusIcon size={16} /> : <UserPlusIcon size={16} />
       }
