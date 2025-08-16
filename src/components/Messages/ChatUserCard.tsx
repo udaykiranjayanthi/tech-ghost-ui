@@ -3,6 +3,7 @@ import type { Conversation } from "./types";
 import type { UserData } from "../../types/user.types";
 import { displayDate } from "@/services/utils";
 import styles from "./styles.module.scss";
+import { useGlobalStore } from "@/store";
 
 interface ChatUserCardProps {
   conversation: Conversation;
@@ -17,9 +18,13 @@ export const ChatUserCard = ({
   isSelected,
   onSelect,
 }: ChatUserCardProps) => {
+  const { userId } = useGlobalStore.use.userDetails?.() ?? {};
+
   if (!userDetails) {
     return <Skeleton height={70} width="100%" />;
   }
+
+  const isUser = conversation.userId === userId;
 
   return (
     <Card
@@ -36,6 +41,7 @@ export const ChatUserCard = ({
           <Group justify="space-between">
             <Text size="sm" fw={500}>
               {userDetails.firstName + " " + userDetails.lastName}
+              {isUser && " (You)"}
             </Text>
             {conversation.createdAt && (
               <Text size="xs" c="dimmed">

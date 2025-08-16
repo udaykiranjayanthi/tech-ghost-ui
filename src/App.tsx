@@ -131,6 +131,7 @@ export const router = createBrowserRouter([
       { path: "profile/:username", element: <ProfilePage /> },
       { path: "saved", element: <SavedPage /> },
       { path: "messages", element: <MessagesPage /> },
+      { path: "messages/:chatUserId", element: <MessagesPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },

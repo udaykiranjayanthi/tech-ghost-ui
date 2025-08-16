@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { Card, Center, ScrollArea, Stack, Text } from "@mantine/core";
-import type { Message, User } from "./types";
+import type { Message } from "./types";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import styles from "./styles.module.scss";
+import type { UserData } from "@/types";
 
 interface ChatWindowProps {
-  selectedUser?: User;
+  selectedUser?: UserData;
   messages: Message[];
   onSendMessage: (message: string) => void;
 }
@@ -19,13 +20,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   const viewport = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (viewport.current) {
-      viewport.current.scrollTo({
+    if (viewport.current && messages.length > 0) {
+      // Add a small delay to ensure the component is fully rendered
+      viewport.current?.scrollTo({
         top: viewport.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }, [messages]);
+  }, [messages, selectedUser]);
 
   if (!selectedUser) {
     return (

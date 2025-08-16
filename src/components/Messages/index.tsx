@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Container, Flex } from "@mantine/core";
 import { io, Socket } from "socket.io-client";
-import { useSearchParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { ChatUserList } from "./ChatUserList";
 import { ChatWindow } from "./ChatWindow";
 import type { Message, Conversation } from "./types";
@@ -13,20 +13,24 @@ import { RQ_KEYS } from "@/common/rqkeys";
 import type { UserData } from "@/types";
 
 export const Messages: React.FC = () => {
-  const [searchParams] = useSearchParams();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [usersDetails, setUsersDetails] = useState<Record<string, UserData>>(
     {}
   );
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const { userId } = useGlobalStore.use.userDetails?.() ?? {};
+  const { chatUserId = "" } = useParams<{ chatUserId?: string }>();
+  const navigate = useNavigate();
 
   const userIds = useMemo(() => {
-    return conversations.map((conv) => conv.userId);
-  }, [conversations]);
+    const ids = conversations.map((conv) => conv.userId);
+    if (chatUserId && !ids.includes(chatUserId)) {
+      ids.push(chatUserId);
+    }
+    return ids;
+  }, [conversations, chatUserId]);
 
   const { data: usersData } = useApiQuery<UserData[]>({
     url: ENDPOINTS.USERS_DATA,
@@ -46,13 +50,6 @@ export const Messages: React.FC = () => {
       setUsersDetails(users);
     }
   }, [usersData]);
-
-  useEffect(() => {
-    const chatUserId = searchParams.get("chatUserId");
-    if (chatUserId) {
-      handleUserSelect(chatUserId);
-    }
-  }, [searchParams]);
 
   useEffect(() => {
     const newSocket = io("http://localhost:5000");
@@ -82,30 +79,36 @@ export const Messages: React.FC = () => {
     };
   }, []);
 
-  const handleUserSelect = (selectedId: string | null) => {
-    setSelectedUserId(selectedId);
-    if (selectedId) {
-      socket?.emit("getMessageHistory", {
+  useEffect(() => {
+    if (chatUserId && socket) {
+      console.log("chatUserId", chatUserId);
+      socket.emit("getMessageHistory", {
         userId1: userId,
-        userId2: selectedId,
+        userId2: chatUserId,
       });
+    }
+  }, [chatUserId, socket]);
+
+  const handleUserSelect = (selectedId: string | null) => {
+    if (selectedId) {
+      navigate(`/messages/${selectedId}`);
     } else {
-      setMessages([]);
+      navigate(`/messages`);
     }
   };
 
   const handleSendMessage = (message: string) => {
-    if (socket && selectedUserId) {
+    if (socket && chatUserId) {
       const payload: Partial<Message> = {
         senderId: userId,
-        receiverId: selectedUserId,
+        receiverId: chatUserId,
         message,
       };
       socket.emit("sendMessage", payload);
     }
   };
 
-  const selectedUser = usersDetails[selectedUserId ?? ""];
+  const selectedUser = usersDetails[chatUserId ?? ""];
 
   return (
     <Container size="lg" p="0" h="100%" className={styles.container}>
@@ -113,7 +116,7 @@ export const Messages: React.FC = () => {
         <ChatUserList
           conversations={conversations}
           usersDetails={usersDetails}
-          selectedUserId={selectedUserId}
+          selectedUserId={chatUserId}
           onUserSelect={handleUserSelect}
         />
         <ChatWindow
