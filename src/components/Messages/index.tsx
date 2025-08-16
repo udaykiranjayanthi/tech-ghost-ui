@@ -75,6 +75,26 @@ export const Messages: React.FC = () => {
 
     newSocket.on("receiveMessage", (message: Message) => {
       setMessages((prev) => [...prev, message]);
+      setConversations((prev) => {
+        const otherUserId =
+          message.senderId === userId ? message.receiverId : message.senderId;
+        const conversationIndex = prev.findIndex(
+          (conv) => conv.userId === otherUserId
+        );
+
+        if (conversationIndex === -1) {
+          // Create new conversation if it doesn't exist
+          return [...prev, { ...message, userId: otherUserId }];
+        }
+
+        // Update existing conversation
+        const updatedConversations = [...prev];
+        updatedConversations[conversationIndex] = {
+          ...message,
+          userId: otherUserId,
+        };
+        return updatedConversations;
+      });
     });
 
     return () => {

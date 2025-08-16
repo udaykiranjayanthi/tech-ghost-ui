@@ -40,7 +40,11 @@ export const ChatUserList: React.FC<ChatUserListProps> = ({
   }, [conversations, debouncedQuery, usersDetails]);
 
   const handleUserSelect = (userId: string) => {
-    onUserSelect(userId);
+    if (userId === selectedUserId) {
+      onUserSelect(null);
+    } else {
+      onUserSelect(userId);
+    }
   };
 
   const showNewChatUser = useMemo(() => {
