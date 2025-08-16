@@ -64,7 +64,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
           align="center"
         >
           {message.isRead && isMessageOwn && (
-            <Text size="xs" c="dimmed">
+            <Text size="xs" c="dimmed" fw={500}>
               Seen
             </Text>
           )}

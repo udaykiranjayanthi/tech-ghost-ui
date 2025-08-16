@@ -45,14 +45,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
   return (
     <Card className={styles.chatWindow}>
-      <Card.Section className={styles.chatHeader}>
+      <Card.Section className={styles.chatHeader} bg="gray.8">
         <Text fw={500}>
           {selectedUser?.firstName} {selectedUser?.lastName}
         </Text>
       </Card.Section>
 
       <ScrollArea viewportRef={viewport} className={styles.messageArea}>
-        <Stack gap="md" p="md">
+        <Stack gap="xs" p="md">
           {messages.map((message) => (
             <ChatMessage
               key={message.messageId}
