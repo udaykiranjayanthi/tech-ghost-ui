@@ -1,6 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Container, Flex, Button } from "@mantine/core";
-import { UserPlusIcon } from "@phosphor-icons/react";
+import {
+  Container,
+  Flex,
+  Button,
+  Center,
+  Text,
+  Card,
+  Stack,
+  Box,
+} from "@mantine/core";
+import { CloudXIcon, UserPlusIcon } from "@phosphor-icons/react";
 import { io, Socket } from "socket.io-client";
 import { useNavigate, useParams } from "react-router";
 import { ChatUserList } from "./ChatUserList";
@@ -16,6 +25,7 @@ import type { UserData } from "@/types";
 
 export const Messages: React.FC = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [connectionError, setConnectionError] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [usersDetails, setUsersDetails] = useState<Record<string, UserData>>(
     {}
@@ -55,12 +65,27 @@ export const Messages: React.FC = () => {
   }, [usersData]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5000");
+    const newSocket = io("http://localhost:5000", {
+      auth: {
+        token: `Bearer ${localStorage.getItem("auth_token")}`,
+      },
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+      setConnectionError(true);
+    });
+
+    newSocket.on("connect", () => {
+      console.log("Socket connected");
+      setConnectionError(false);
+    });
+
     setSocket(newSocket);
 
-    newSocket.emit("registerUser", userId);
+    newSocket.emit("registerUser");
 
-    newSocket.emit("getRecentConversations", userId);
+    newSocket.emit("getRecentConversations");
 
     newSocket.on(
       "recentConversations",
@@ -110,8 +135,7 @@ export const Messages: React.FC = () => {
     if (chatUserId && socket) {
       console.log("chatUserId", chatUserId);
       socket.emit("getMessageHistory", {
-        userId1: userId,
-        userId2: chatUserId,
+        userId: chatUserId,
       });
     }
   }, [chatUserId, socket]);
@@ -136,6 +160,25 @@ export const Messages: React.FC = () => {
   };
 
   const selectedUser = usersDetails[chatUserId ?? ""];
+
+  if (connectionError) {
+    return (
+      <Container size="lg" p="0" h="100%" className={styles.container}>
+        <Card shadow="sm" p="xl" radius="md" h="100%">
+          <Center h="100%">
+            <Stack align="center">
+              <Box c="dimmed">
+                <CloudXIcon size={64} />
+              </Box>
+              <Text ta="center" c="red.6">
+                Error connecting to the chat server. Please try again later.
+              </Text>
+            </Stack>
+          </Center>
+        </Card>
+      </Container>
+    );
+  }
 
   return (
     <Container size="lg" p="0" h="100%" className={styles.container}>
