@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextInput, ActionIcon, Group } from "@mantine/core";
+import { Textarea, ActionIcon, Group } from "@mantine/core";
 import { PaperPlaneRightIcon } from "@phosphor-icons/react";
 import classes from "./styles.module.scss";
 
@@ -18,16 +18,30 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (message.trim()) {
+        onSendMessage(message.trim());
+        setMessage("");
+      }
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className={classes.chatInput}>
-      <Group gap="xs">
-        <TextInput
-          placeholder="Type a message..."
+      <Group gap="xs" align="flex-end">
+        <Textarea
+          placeholder="Type a message... (Shift+Enter for new line)"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={handleKeyDown}
           style={{ flex: 1 }}
           variant="filled"
           autoFocus
+          autosize
+          maxRows={4}
+          minRows={1}
         />
         <ActionIcon
           type="submit"
