@@ -126,6 +126,28 @@ export const Messages: React.FC = () => {
       });
     });
 
+    newSocket.on("readReceipt", (message: Message) => {
+      setMessages((prev) => {
+        const updatedMessages = [...prev];
+        const messageIndex = updatedMessages.findIndex(
+          (msg) => msg.messageId === message.messageId
+        );
+        if (messageIndex !== -1) {
+          const existingMessage = updatedMessages[messageIndex];
+          // Only update if the read status or timestamp has actually changed
+          if (existingMessage.isRead !== message.isRead) {
+            updatedMessages[messageIndex] = {
+              ...existingMessage,
+              isRead: message.isRead,
+              readAt: message.readAt,
+            };
+            return updatedMessages;
+          }
+        }
+        return prev; // Return original state if no changes needed
+      });
+    });
+
     return () => {
       newSocket.close();
     };
@@ -133,7 +155,6 @@ export const Messages: React.FC = () => {
 
   useEffect(() => {
     if (chatUserId && socket) {
-      console.log("chatUserId", chatUserId);
       socket.emit("getMessageHistory", {
         userId: chatUserId,
       });
@@ -156,6 +177,14 @@ export const Messages: React.FC = () => {
         message,
       };
       socket.emit("sendMessage", payload);
+    }
+  };
+
+  const handleSendReadReceipt = (messageId: string) => {
+    if (socket && messageId) {
+      socket.emit("updateReadReceipt", {
+        messageId,
+      });
     }
   };
 
@@ -204,6 +233,7 @@ export const Messages: React.FC = () => {
           selectedUser={selectedUser}
           messages={messages}
           onSendMessage={handleSendMessage}
+          onMessageRead={handleSendReadReceipt}
         />
       </Flex>
       <NewChat opened={newChatOpened} onClose={() => setNewChatOpened(false)} />

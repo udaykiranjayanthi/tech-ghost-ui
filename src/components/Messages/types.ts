@@ -4,6 +4,8 @@ export interface Message {
   receiverId: string;
   message: string;
   createdAt?: string;
+  isRead?: boolean;
+  readAt?: string;
 }
 
 export interface Conversation extends Message {

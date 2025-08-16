@@ -10,22 +10,23 @@ interface ChatWindowProps {
   selectedUser?: UserData;
   messages: Message[];
   onSendMessage: (message: string) => void;
+  onMessageRead: (messageId: string) => void;
 }
 
 export const ChatWindow: React.FC<ChatWindowProps> = ({
   selectedUser,
   messages,
   onSendMessage,
+  onMessageRead,
 }) => {
   const viewport = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (viewport.current && messages.length > 0) {
-      // Scroll to the bottom of the viewport when new messages are received
-      // This ensures that the latest messages are always visible
-      viewport.current?.scrollTo({
+      // First scroll instantly to bottom
+      viewport.current.scrollTo({
         top: viewport.current.scrollHeight,
-        behavior: "smooth",
+        behavior: "instant",
       });
     }
   }, [messages, selectedUser]);
@@ -53,7 +54,11 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       <ScrollArea viewportRef={viewport} className={styles.messageArea}>
         <Stack gap="md" p="md">
           {messages.map((message) => (
-            <ChatMessage key={message.messageId} message={message} />
+            <ChatMessage
+              key={message.messageId}
+              message={message}
+              onMessageRead={onMessageRead}
+            />
           ))}
         </Stack>
       </ScrollArea>
