@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Card, Collapse, ScrollArea, Stack, Text } from "@mantine/core";
+import { useLocation } from "react-router";
 import styles from "./styles.module.scss";
 
 interface Props {
@@ -13,8 +14,18 @@ interface State {
   showDetails: boolean;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
-  constructor(props: Props) {
+// Wrapper component to get location and pass it to ErrorBoundary
+const ErrorBoundaryWithLocation: React.FC<Props> = (props) => {
+  const location = useLocation();
+  return <ErrorBoundaryClass {...props} pathname={location.pathname} />;
+};
+
+interface ErrorBoundaryProps extends Props {
+  pathname: string;
+}
+
+class ErrorBoundaryClass extends React.Component<ErrorBoundaryProps, State> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
       hasError: false,
@@ -35,6 +46,18 @@ export class ErrorBoundary extends React.Component<Props, State> {
     });
     // You can also log the error to an error reporting service here
     console.error("Error caught by ErrorBoundary:", error, errorInfo);
+  }
+
+  componentDidUpdate(prevProps: ErrorBoundaryProps) {
+    // Clear error state when route changes
+    if (this.props.pathname !== prevProps.pathname && this.state.hasError) {
+      this.setState({
+        hasError: false,
+        error: null,
+        errorInfo: null,
+        showDetails: false,
+      });
+    }
   }
 
   toggleDetails = () => {
@@ -98,3 +121,5 @@ export class ErrorBoundary extends React.Component<Props, State> {
     return this.props.children;
   }
 }
+
+export { ErrorBoundaryWithLocation as ErrorBoundary };
