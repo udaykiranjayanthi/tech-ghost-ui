@@ -10,4 +10,5 @@ export const RQ_KEYS = {
   USER_FOLLOWING: "user_following",
   SAVED_POSTS: "saved_posts",
   USERS_DATA: "users_data",
+  SEARCH_USERS: "search_users",
 };

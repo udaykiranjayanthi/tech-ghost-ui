@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Container, Flex } from "@mantine/core";
+import { Container, Flex, Button } from "@mantine/core";
+import { UserPlusIcon } from "@phosphor-icons/react";
 import { io, Socket } from "socket.io-client";
 import { useNavigate, useParams } from "react-router";
 import { ChatUserList } from "./ChatUserList";
 import { ChatWindow } from "./ChatWindow";
+import NewChat from "./NewChat";
 import type { Message, Conversation } from "./types";
 import styles from "./styles.module.scss";
 import { useGlobalStore } from "@/store";
@@ -19,6 +21,7 @@ export const Messages: React.FC = () => {
     {}
   );
   const [messages, setMessages] = useState<Message[]>([]);
+  const [newChatOpened, setNewChatOpened] = useState(false);
 
   const { userId } = useGlobalStore.use.userDetails?.() ?? {};
   const { chatUserId = "" } = useParams<{ chatUserId?: string }>();
@@ -112,19 +115,31 @@ export const Messages: React.FC = () => {
 
   return (
     <Container size="lg" p="0" h="100%" className={styles.container}>
-      <Flex flex={1} gap="md" mih="0">
-        <ChatUserList
-          conversations={conversations}
-          usersDetails={usersDetails}
-          selectedUserId={chatUserId}
-          onUserSelect={handleUserSelect}
-        />
+      <Flex gap="md" h="100%">
+        <div className={styles.chatListContainer}>
+          <Button
+            leftSection={<UserPlusIcon size={20} />}
+            variant="light"
+            onClick={() => setNewChatOpened(true)}
+            mb="md"
+            fullWidth
+          >
+            New Chat
+          </Button>
+          <ChatUserList
+            conversations={conversations}
+            usersDetails={usersDetails}
+            selectedUserId={chatUserId}
+            onUserSelect={handleUserSelect}
+          />
+        </div>
         <ChatWindow
           selectedUser={selectedUser}
           messages={messages}
           onSendMessage={handleSendMessage}
         />
       </Flex>
+      <NewChat opened={newChatOpened} onClose={() => setNewChatOpened(false)} />
     </Container>
   );
 };
