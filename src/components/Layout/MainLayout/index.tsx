@@ -1,5 +1,6 @@
 import { type FC, useEffect } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useLocation } from "react-router";
+import { ErrorBoundary } from "../../ErrorBoundary";
 import { HeaderNavbar } from "../../Navigation/HeaderNavbar";
 import { SideNavbar } from "../../Navigation/SideNavbar";
 import styles from "./styles.module.scss";
@@ -14,6 +15,7 @@ import { useDisclosure } from "@mantine/hooks";
 
 const MainLayout: FC = () => {
   const [opened, { toggle }] = useDisclosure();
+  const location = useLocation();
 
   const { data, isLoading } = useApiQuery<UserData>({
     url: ENDPOINTS.CURRENT_USER,
@@ -39,9 +41,6 @@ const MainLayout: FC = () => {
 
   return (
     <div>
-      <head>
-        <title>Daily Tech</title>
-      </head>
       <HeaderNavbar opened={opened} toggle={toggle} />
 
       <div className={styles.container}>
@@ -65,7 +64,9 @@ const MainLayout: FC = () => {
         </Box>
 
         <main className={styles.main}>
-          <Outlet />
+          <ErrorBoundary key={location.pathname}>
+            <Outlet />
+          </ErrorBoundary>
         </main>
       </div>
     </div>

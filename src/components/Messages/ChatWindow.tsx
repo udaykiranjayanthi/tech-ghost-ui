@@ -21,7 +21,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
   useEffect(() => {
     if (viewport.current && messages.length > 0) {
-      // Add a small delay to ensure the component is fully rendered
+      // Scroll to the bottom of the viewport when new messages are received
+      // This ensures that the latest messages are always visible
       viewport.current?.scrollTo({
         top: viewport.current.scrollHeight,
         behavior: "smooth",
