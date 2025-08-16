@@ -1,5 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { Card, Center, ScrollArea, Stack, Text } from "@mantine/core";
+import {
+  Avatar,
+  Card,
+  Center,
+  Group,
+  ScrollArea,
+  Stack,
+  Text,
+} from "@mantine/core";
 import type { Message } from "./types";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
@@ -46,9 +54,23 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   return (
     <Card className={styles.chatWindow}>
       <Card.Section className={styles.chatHeader} bg="gray.8">
-        <Text fw={500}>
-          {selectedUser?.firstName} {selectedUser?.lastName}
-        </Text>
+        <Group wrap="nowrap">
+          <Avatar
+            src={selectedUser.pictureUrl}
+            radius="xl"
+            size="md"
+            name={selectedUser.firstName + " " + selectedUser.lastName}
+            color="initials"
+          />
+          <div style={{ flex: 1 }}>
+            <Text size="sm" fw={500}>
+              {selectedUser.firstName} {selectedUser.lastName}
+            </Text>
+            <Text size="xs" c="dimmed">
+              @{selectedUser.username}
+            </Text>
+          </div>
+        </Group>
       </Card.Section>
 
       <ScrollArea viewportRef={viewport} className={styles.messageArea}>
