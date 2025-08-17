@@ -1,10 +1,5 @@
+import { UserCircleIcon, SignOutIcon } from "@phosphor-icons/react";
 import {
-  MagnifyingGlassIcon,
-  UserCircleIcon,
-  SignOutIcon,
-} from "@phosphor-icons/react";
-import {
-  Autocomplete,
   Avatar,
   Burger,
   Button,
@@ -19,6 +14,7 @@ import styles from "./styles.module.scss";
 import type { FC } from "react";
 import { NavLink, useNavigate } from "react-router";
 import { useGlobalStore } from "@/store";
+import Search from "../Search";
 
 const links = [
   { link: "/about", label: "Features" },
@@ -51,26 +47,16 @@ export const HeaderNavbar: FC<HeaderNavbarProps> = ({ opened, toggle }) => {
       <Flex h="56px" justify="space-between" align="center" gap="md">
         <Group className={styles.logoGroup}>
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="md" />
-          <Title order={3} className={styles.logo}>
-            Daily Tech
-          </Title>
+          <NavLink to="/">
+            <Title order={3} className={styles.logo}>
+              Daily Tech
+            </Title>
+          </NavLink>
         </Group>
 
-        <Autocomplete
-          className={styles.search}
-          placeholder="Search"
-          leftSection={<MagnifyingGlassIcon size={16} />}
-          data={[
-            "React",
-            "Angular",
-            "Vue",
-            "Next.js",
-            "Riot.js",
-            "Svelte",
-            "Blitz.js",
-          ]}
-          flex={1}
-        />
+        <div className={styles.search}>
+          <Search />
+        </div>
 
         <Flex align="center" gap="md">
           <Group gap={5} visibleFrom="md">

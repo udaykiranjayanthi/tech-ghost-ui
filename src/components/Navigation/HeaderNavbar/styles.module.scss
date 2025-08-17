@@ -8,8 +8,11 @@
 }
 
 .logoGroup {
-  @media (min-width: var(--mantine-breakpoint-md)) {
-    width: 230px;
+  min-width: 0;
+
+  @media (min-width: 62em) {
+    //md
+    min-width: 220px;
   }
 }
 
@@ -38,6 +41,7 @@
 }
 
 .search {
+  flex: 1;
   min-width: 100px;
   max-width: 600px;
 }
