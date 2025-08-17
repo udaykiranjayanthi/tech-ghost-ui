@@ -59,6 +59,39 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
     },
   });
 
+  // validationRules.ts
+  const validationRules = {
+    firstName: {
+      required: "First name is required",
+      maxLength: {
+        value: 50,
+        message: "First name must not exceed 50 characters",
+      },
+    },
+    lastName: {
+      required: "Last name is required",
+      maxLength: {
+        value: 50,
+        message: "Last name must not exceed 50 characters",
+      },
+    },
+    headline: {
+      maxLength: {
+        value: 100,
+        message: "Headline must not exceed 100 characters",
+      },
+    },
+    bio: {
+      maxLength: { value: 500, message: "Bio must not exceed 500 characters" },
+    },
+    location: {
+      maxLength: {
+        value: 100,
+        message: "Location must not exceed 100 characters",
+      },
+    },
+  };
+
   useEffect(() => {
     if (!isOpen && userDetails) {
       reset({
@@ -118,7 +151,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
             <Controller
               control={control}
               name="firstName"
-              rules={{ required: "First name is required" }}
+              rules={validationRules.firstName}
               render={({ field }) => (
                 <TextInput
                   {...field}
@@ -131,7 +164,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
             <Controller
               control={control}
               name="lastName"
-              rules={{ required: "Last name is required" }}
+              rules={validationRules.lastName}
               render={({ field }) => (
                 <TextInput
                   {...field}
@@ -145,7 +178,6 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           <Controller
             control={control}
             name="username"
-            rules={{ required: "Username is required" }}
             render={({ field }) => (
               <TextInput
                 {...field}
@@ -159,11 +191,13 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           <Controller
             control={control}
             name="headline"
+            rules={validationRules.headline}
             render={({ field }) => (
               <TextInput
                 {...field}
                 label="Headline"
                 placeholder="Software Engineer, Designer, etc."
+                error={errors.headline?.message}
               />
             )}
           />
@@ -171,11 +205,13 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           <Controller
             control={control}
             name="location"
+            rules={validationRules.location}
             render={({ field }) => (
               <TextInput
                 {...field}
                 label="Location"
                 placeholder="City, Country"
+                error={errors.location?.message}
               />
             )}
           />
@@ -183,12 +219,14 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           <Controller
             control={control}
             name="bio"
+            rules={validationRules.bio}
             render={({ field }) => (
               <Textarea
                 {...field}
                 label="Bio"
                 placeholder="Tell us about yourself"
                 minRows={3}
+                error={errors.bio?.message}
               />
             )}
           />

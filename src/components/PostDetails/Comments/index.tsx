@@ -44,16 +44,16 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
     control,
     handleSubmit,
     reset,
-    formState: { isValid },
+    formState: { isValid, isDirty, errors },
   } = useForm({
     defaultValues: {
       content: "",
     },
+    mode: "onChange",
   });
 
   const rules = {
     content: {
-      required: "Required",
       maxLength: { value: 1000, message: "Max 1000 characters" },
     },
   };
@@ -109,13 +109,14 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
                   handleSubmit(handleSubmitComment)();
                 }
               }}
+              error={errors.content?.message}
             />
           )}
         />
         <Button
           size="md"
           onClick={handleSubmit(handleSubmitComment)}
-          disabled={!isValid}
+          disabled={!isValid || !isDirty}
         >
           Post
         </Button>

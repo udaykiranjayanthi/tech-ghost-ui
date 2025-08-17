@@ -48,16 +48,16 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
     control,
     handleSubmit,
     reset,
-    formState: { isValid },
+    formState: { isValid, isDirty, errors },
   } = useForm({
     defaultValues: {
       content: "",
     },
+    mode: "onChange",
   });
 
   const rules = {
     content: {
-      required: "Required",
       maxLength: { value: 1000, message: "Max 1000 characters" },
     },
   };
@@ -165,6 +165,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
                         handleSubmit(handleSubmitReply)();
                       }
                     }}
+                    error={errors.content?.message}
                   />
                 )}
               />
@@ -179,7 +180,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
                 <Button
                   size="xs"
                   onClick={handleSubmit(handleSubmitReply)}
-                  disabled={!isValid}
+                  disabled={!isValid || !isDirty}
                 >
                   Reply
                 </Button>

@@ -228,6 +228,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
                 {...field}
                 className={styles.formField}
                 rightSection={<ImageIcon size={20} opacity={0.5} />}
+                error={errors.thumbnailUrl?.message}
               />
             )}
           />
@@ -244,6 +245,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
                 rows={3}
                 {...field}
                 className={styles.formField}
+                error={errors.tldr?.message}
               />
             )}
           />
@@ -261,6 +263,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
                 resize="vertical"
                 {...field}
                 className={styles.formField}
+                error={errors.content?.message}
               />
             )}
           />
@@ -291,6 +294,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
                   required
                   {...field}
                   className={styles.formField}
+                  error={errors.externalUrl?.message}
                 />
               )}
             />
