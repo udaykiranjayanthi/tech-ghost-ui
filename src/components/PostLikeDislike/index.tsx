@@ -3,6 +3,7 @@ import { ThumbsDownIcon, ThumbsUpIcon } from "@phosphor-icons/react";
 import { useEffect, useState, type FC } from "react";
 import styles from "./styles.module.scss";
 import { useApiMutation } from "@/services/hooks";
+import { handleError } from "@/services/utils";
 
 type PostLikeDislikeProps = {
   likesCount: number;
@@ -34,51 +35,61 @@ const PostLikeDislike: FC<PostLikeDislikeProps> = ({
   const { mutate: likePost } = useApiMutation({
     url: likeEndpoint,
     method: "post",
-    options: {
-      onSuccess: () => {
-        if (reaction === "DISLIKE") {
-          setDislikes((prev) => prev - 1);
-          setLikes((prev) => prev + 1);
-          setReaction("LIKE");
-        } else if (reaction === "LIKE") {
-          setLikes((prev) => prev - 1);
-          setReaction(null);
-        } else {
-          setLikes((prev) => prev + 1);
-          setReaction("LIKE");
-        }
-      },
-    },
   });
 
   const { mutate: dislikePost } = useApiMutation({
     url: dislikeEndpoint,
     method: "post",
-    options: {
-      onSuccess: () => {
-        if (reaction === "LIKE") {
-          setLikes((prev) => prev - 1);
-          setDislikes((prev) => prev + 1);
-          setReaction("DISLIKE");
-        } else if (reaction === "DISLIKE") {
-          setDislikes((prev) => prev - 1);
-          setReaction(null);
-        } else {
-          setDislikes((prev) => prev + 1);
-          setReaction("DISLIKE");
-        }
-      },
-    },
   });
 
   const handleLike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    likePost({});
+    likePost(
+      {},
+      {
+        onSuccess: () => {
+          if (reaction === "DISLIKE") {
+            setDislikes((prev) => prev - 1);
+            setLikes((prev) => prev + 1);
+            setReaction("LIKE");
+          } else if (reaction === "LIKE") {
+            setLikes((prev) => prev - 1);
+            setReaction(null);
+          } else {
+            setLikes((prev) => prev + 1);
+            setReaction("LIKE");
+          }
+        },
+        onError: (error) => {
+          handleError({ error, useFallback: true });
+        },
+      }
+    );
   };
 
   const handleDislike = (e: React.MouseEvent) => {
     e.stopPropagation();
-    dislikePost({});
+    dislikePost(
+      {},
+      {
+        onSuccess: () => {
+          if (reaction === "LIKE") {
+            setLikes((prev) => prev - 1);
+            setDislikes((prev) => prev + 1);
+            setReaction("DISLIKE");
+          } else if (reaction === "DISLIKE") {
+            setDislikes((prev) => prev - 1);
+            setReaction(null);
+          } else {
+            setDislikes((prev) => prev + 1);
+            setReaction("DISLIKE");
+          }
+        },
+        onError: (error) => {
+          handleError({ error, useFallback: true });
+        },
+      }
+    );
   };
 
   return (

@@ -12,3 +12,10 @@ export type InfinitePagination<T> = {
   nextCursorCreatedAt: string;
   nextCursorId: string;
 };
+
+export interface ErrorResponse {
+  errorCode: string;
+  message: string;
+  timestamp: Date;
+  fieldErrors: Record<string, string>;
+}

@@ -1,5 +1,6 @@
 import ENDPOINTS from "@/common/endpoints";
 import { useApiMutation } from "@/services/hooks";
+import { handleError } from "@/services/utils";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { BookmarkSimpleIcon } from "@phosphor-icons/react";
 import { useEffect, useState, type FC } from "react";
@@ -19,16 +20,21 @@ const PostSave: FC<PostSaveProps> = ({ postId, saved = false }) => {
   const { mutate: savePost } = useApiMutation({
     url: `${ENDPOINTS.POSTS}/${postId}/save`,
     method: "post",
-    options: {
-      onSuccess: () => {
-        setIsSaved((prev) => !prev);
-      },
-    },
   });
 
   const handleSaveClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    savePost({});
+    savePost(
+      {},
+      {
+        onSuccess: () => {
+          setIsSaved((prev) => !prev);
+        },
+        onError: (error) => {
+          handleError({ error, useFallback: true });
+        },
+      }
+    );
   };
 
   return (

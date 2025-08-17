@@ -1,3 +1,8 @@
+import type { ErrorResponse } from "@/types";
+import { notifications } from "@mantine/notifications";
+import { WarningCircleIcon } from "@phosphor-icons/react";
+import type { AxiosError } from "axios";
+
 export const displayAbsoluteDate = (date?: string) => {
   if (!date) return "-";
 
@@ -34,4 +39,27 @@ export const displayDate = (inputDate?: Date | string): string => {
   }
 
   return date.toLocaleDateString(undefined, options); // uses user locale
+};
+
+export const handleError = ({
+  error,
+  useFallback = false,
+}: {
+  error?: AxiosError<ErrorResponse>;
+  useFallback?: boolean;
+}) => {
+  const fallbackErrorMessage = "Something went wrong";
+  const errorMessage = error?.response?.data?.message ?? fallbackErrorMessage;
+
+  notifications.show({
+    position: "top-center",
+    withCloseButton: true,
+    autoClose: 5000,
+    title: "Error",
+    message: useFallback ? fallbackErrorMessage : errorMessage,
+    color: "red",
+    icon: <WarningCircleIcon size={36} />,
+    className: "my-notification-class",
+    loading: false,
+  });
 };

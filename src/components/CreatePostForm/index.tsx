@@ -22,6 +22,7 @@ import { useApiMutation, useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import type { PostDetailsData } from "@/types";
+import { handleError } from "@/services/utils";
 
 interface CreatePostFormProps {}
 
@@ -160,7 +161,9 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
         { payload: formData },
         {
           onSuccess: () => navigate("/"),
-          onError: () => console.log("Error creating post"),
+          onError: (error) => {
+            handleError({ error });
+          },
         }
       );
     } else {
@@ -168,7 +171,9 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
         { payload: formData },
         {
           onSuccess: () => navigate("/"),
-          onError: () => console.log("Error updating post"),
+          onError: (error) => {
+            handleError({ error });
+          },
         }
       );
     }

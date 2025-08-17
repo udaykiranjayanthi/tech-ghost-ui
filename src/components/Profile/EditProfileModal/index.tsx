@@ -14,6 +14,7 @@ import { useEffect, type FC } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { RQ_KEYS } from "@/common/rqkeys";
 import type { UserDetailsData } from "@/types";
+import { handleError } from "@/services/utils";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -131,6 +132,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
           onClose();
         },
         onError: (error) => {
+          handleError({ error });
           console.error("Error updating profile:", error);
         },
       }

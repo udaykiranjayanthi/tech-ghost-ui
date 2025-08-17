@@ -13,6 +13,7 @@ import {
   CaretDownIcon,
   CaretUpIcon,
 } from "@phosphor-icons/react";
+import { handleError } from "@/services/utils";
 
 type CommentGroupProps = {
   comment: Comment;
@@ -95,7 +96,7 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
           refetch();
         },
         onError: (error) => {
-          console.error("Error adding reply:", error);
+          handleError({ error });
         },
       }
     );

@@ -1,5 +1,6 @@
 import ENDPOINTS from "@/common/endpoints";
 import { useApiMutation } from "@/services/hooks";
+import { handleError } from "@/services/utils";
 import { Button } from "@mantine/core";
 import { UserPlusIcon, UserMinusIcon } from "@phosphor-icons/react";
 import { useEffect, useState, type FC } from "react";
@@ -29,10 +30,7 @@ const FollowButton: FC<FollowButtonProps> = ({ userId, following }) => {
           setIsFollowing((prev) => !prev);
         },
         onError: (error) => {
-          console.error(
-            `Error ${isFollowing ? "unfollowinssg" : "following"} user:`,
-            error
-          );
+          handleError({ error });
         },
       }
     );

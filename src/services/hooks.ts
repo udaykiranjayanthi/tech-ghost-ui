@@ -7,7 +7,8 @@ import {
   type UseQueryOptions,
 } from "@tanstack/react-query";
 import axiosInstance from "./axios";
-import type { InfinitePagination } from "@/types";
+import type { ErrorResponse, InfinitePagination } from "@/types";
+import type { AxiosError } from "axios";
 
 type ApiQueryParams<T, TParams = unknown> = {
   queryKey: (string | number)[];
@@ -50,7 +51,7 @@ export function useApiMutation<TData, TPayload>({
   method = "post",
   options,
 }: ApiMutationParams<TData, TPayload>) {
-  return useMutation<TData, Error, Variables<TPayload>>({
+  return useMutation<TData, AxiosError<ErrorResponse>, Variables<TPayload>>({
     mutationFn: async (variables?: Variables<TPayload>) => {
       const response = await axiosInstance.request<TData>({
         url,

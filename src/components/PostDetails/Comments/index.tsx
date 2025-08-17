@@ -16,6 +16,7 @@ import CommentCard from "./CommentGroup";
 import styles from "./styles.module.scss";
 import { Controller, useForm } from "react-hook-form";
 import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
+import { handleError } from "@/services/utils";
 interface CommentsProps {
   postId: string;
 }
@@ -70,7 +71,7 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
           refetch();
         },
         onError: (error) => {
-          console.error("Error adding comment:", error);
+          handleError({ error });
         },
       }
     );
