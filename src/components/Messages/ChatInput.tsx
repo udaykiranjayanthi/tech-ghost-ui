@@ -40,7 +40,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
           variant="filled"
           autoFocus
           autosize
-          maxRows={4}
+          maxRows={8}
           minRows={1}
         />
         <ActionIcon

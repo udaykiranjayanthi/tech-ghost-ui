@@ -99,29 +99,37 @@ export const Messages: React.FC = () => {
     });
 
     newSocket.on("receiveMessage", (message: Message) => {
-      setMessages((prev) => [...prev, message]);
+      const otherUserId =
+        message.senderId === userId ? message.receiverId : message.senderId;
+
+      console.log("otherUserId", otherUserId);
+
+      if (otherUserId === chatUserId) {
+        setMessages((prev) => [...prev, message]);
+      }
+
       setConversations((prev) => {
-        const otherUserId =
-          message.senderId === userId ? message.receiverId : message.senderId;
         const conversationIndex = prev.findIndex(
           (conv) => conv.userId === otherUserId
         );
 
         if (conversationIndex === -1) {
-          // Create new conversation if it doesn't exist
+          // Create new conversation if it doesn't exist and prepend
           return [
-            ...prev,
             { ...message, userId: otherUserId, isUserOnline: true },
+            ...prev,
           ];
         }
 
-        // Update existing conversation
+        // Update existing conversation and reorder such that recent messages comes on top
         const updatedConversations = [...prev];
-        updatedConversations[conversationIndex] = {
+        updatedConversations.splice(conversationIndex, 1);
+
+        updatedConversations.unshift({
           ...message,
           userId: otherUserId,
           isUserOnline: true,
-        };
+        });
         return updatedConversations;
       });
     });
@@ -189,6 +197,8 @@ export const Messages: React.FC = () => {
   };
 
   const selectedUser = usersDetails[chatUserId ?? ""];
+
+  console.log("conversations", conversations);
 
   if (connectionError) {
     return (

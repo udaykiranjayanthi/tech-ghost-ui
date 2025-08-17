@@ -66,7 +66,7 @@ const Search = () => {
     >
       <Combobox.Target>
         <TextInput
-          placeholder="Search posts"
+          placeholder="Search by post titles"
           value={searchQuery}
           leftSection={<MagnifyingGlassIcon size={16} />}
           rightSection={isLoading ? <Loader size="xs" /> : null}
