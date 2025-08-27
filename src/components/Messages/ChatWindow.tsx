@@ -1,24 +1,27 @@
 import React, { useEffect, useRef } from "react";
 import {
   Avatar,
+  Button,
   Card,
   Center,
+  Flex,
   Group,
   ScrollArea,
   Stack,
   Text,
 } from "@mantine/core";
-import type { Message } from "./types";
 import { ChatMessage } from "./ChatMessage";
 import { ChatInput } from "./ChatInput";
 import styles from "./styles.module.scss";
 import type { UserData } from "@/types";
+import type { MessagesPaginationState } from "./types";
 
 interface ChatWindowProps {
   selectedUser?: UserData;
-  messages: Message[];
+  messages: MessagesPaginationState;
   onSendMessage: (message: string) => void;
   onMessageRead: (messageId: string) => void;
+  loadMessages: ({ loadMore }: { loadMore?: boolean }) => void;
 }
 
 export const ChatWindow: React.FC<ChatWindowProps> = ({
@@ -26,18 +29,19 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   messages,
   onSendMessage,
   onMessageRead,
+  loadMessages,
 }) => {
   const viewport = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (viewport.current && messages.length > 0) {
+    if (viewport.current && messages.data.length > 0) {
       // First scroll instantly to bottom
       viewport.current.scrollTo({
         top: viewport.current.scrollHeight,
         behavior: "instant",
       });
     }
-  }, [messages, selectedUser]);
+  }, [selectedUser]);
 
   if (!selectedUser) {
     return (
@@ -75,7 +79,18 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
       <ScrollArea viewportRef={viewport} className={styles.messageArea}>
         <Stack gap="xs" p="md">
-          {messages.map((message) => (
+          {messages.hasNext && (
+            <Flex justify="center">
+              <Button
+                variant="light"
+                size="xs"
+                onClick={() => loadMessages({ loadMore: true })}
+              >
+                Load More
+              </Button>
+            </Flex>
+          )}
+          {messages.data.map((message) => (
             <ChatMessage
               key={message.messageId}
               message={message}

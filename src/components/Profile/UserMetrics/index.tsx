@@ -1,5 +1,5 @@
 import type { UserDetailsData } from "@/types";
-import { Card, Group, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
+import { Card, Group, SimpleGrid, Skeleton, Text } from "@mantine/core";
 import { type FC, useState } from "react";
 import styles from "./styles.module.scss";
 import ConnectionsModal, { type ConnectionType } from "../ConnectionsModal";
@@ -40,10 +40,6 @@ const UserMetrics: FC<UserMetricsProps> = ({ userDetails, isLoading }) => {
 
   return (
     <Card p="lg" mt="md">
-      <Title order={3} mb="md">
-        User Activity
-      </Title>
-
       <SimpleGrid cols={{ base: 3 }}>
         {statCards.map((stat) => (
           <div key={stat.title}>

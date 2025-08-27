@@ -24,6 +24,13 @@
       var(--mantine-color-dark-5)
     );
   }
+
+  .userName {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 12rem;
+  }
 }
 
 .avatarContainer {

@@ -10,27 +10,38 @@ import {
   Box,
 } from "@mantine/core";
 import { CloudXIcon, UserPlusIcon } from "@phosphor-icons/react";
-import { io, Socket } from "socket.io-client";
 import { useNavigate, useParams } from "react-router";
 import { ChatUserList } from "./ChatUserList";
 import { ChatWindow } from "./ChatWindow";
 import NewChat from "./NewChat";
-import type { Message, Conversation } from "./types";
+import type {
+  Message,
+  Conversation,
+  MessagesPaginationState,
+  AcknowledgementResponse,
+} from "./types";
 import styles from "./styles.module.scss";
 import { useGlobalStore } from "@/store";
 import { useApiQuery } from "@/services/hooks";
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import type { UserData } from "@/types";
+import type { Pagination, UserData } from "@/types";
+import { socket } from "@/services/socket";
 
 export const Messages: React.FC = () => {
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socketConnected, setSocketConnected] = useState(false);
   const [connectionError, setConnectionError] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [usersDetails, setUsersDetails] = useState<Record<string, UserData>>(
     {}
   );
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessagesPaginationState>({
+    data: [],
+    nextCursorCreatedAt: "",
+    nextCursorId: "",
+    hasNext: true,
+    isLoading: false,
+  });
   const [newChatOpened, setNewChatOpened] = useState(false);
 
   const { userId } = useGlobalStore.use.userDetails?.() ?? {};
@@ -64,48 +75,105 @@ export const Messages: React.FC = () => {
     }
   }, [usersData]);
 
-  useEffect(() => {
-    const newSocket = io("http://localhost:5000", {
-      auth: {
-        token: `Bearer ${localStorage.getItem("auth_token")}`,
-      },
-    });
+  const loadMessages = ({ loadMore = false }: { loadMore?: boolean }) => {
+    if (
+      messages.isLoading ||
+      (!messages.hasNext && loadMore) ||
+      !socketConnected
+    )
+      return;
 
-    newSocket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error);
+    setMessages((prev) => ({
+      ...prev,
+      isLoading: true,
+    }));
+
+    socket.emit(
+      "getMessageHistory",
+      {
+        userId: chatUserId,
+        limit: 5,
+        ...(loadMore && {
+          nextCursorCreatedAt: messages.nextCursorCreatedAt,
+          nextCursorId: messages.nextCursorId,
+        }),
+      },
+      (response: AcknowledgementResponse<Pagination<Message>>) => {
+        try {
+          if (response.success) {
+            const { data, nextCursorCreatedAt, nextCursorId } = response.data;
+            const newData = data.reverse();
+
+            if (loadMore) {
+              setMessages((prev) => ({
+                data: [...newData, ...prev.data],
+                nextCursorCreatedAt,
+                nextCursorId,
+                hasNext: !!nextCursorCreatedAt,
+                isLoading: false,
+              }));
+            } else {
+              setMessages(() => ({
+                data: newData,
+                nextCursorCreatedAt,
+                nextCursorId,
+                hasNext: !!nextCursorCreatedAt,
+                isLoading: false,
+              }));
+            }
+          } else {
+            console.error("Error loading messages:", response.error);
+          }
+        } catch (error) {
+          console.error("Error processing messages:", error);
+        } finally {
+          setMessages((prev) => ({
+            ...prev,
+            isLoading: false,
+          }));
+        }
+      }
+    );
+  };
+
+  // Handle socket connection
+  useEffect(() => {
+    socket.connect();
+
+    socket.on("connect_error", () => {
+      setSocketConnected(false);
       setConnectionError(true);
     });
 
-    newSocket.on("connect", () => {
-      console.log("Socket connected");
+    socket.on("connect", () => {
+      setSocketConnected(true);
       setConnectionError(false);
     });
 
-    setSocket(newSocket);
+    socket.emit("registerUser");
 
-    newSocket.emit("registerUser");
+    socket.emit("getRecentConversations");
 
-    newSocket.emit("getRecentConversations");
+    return () => {
+      socket.close();
+    };
+  }, []);
 
-    newSocket.on(
-      "recentConversations",
-      (recentConversations: Conversation[]) => {
-        setConversations(recentConversations);
-      }
-    );
-
-    newSocket.on("messageHistory", (messages: Message[]) => {
-      setMessages(messages);
+  // Add socket event listeners
+  useEffect(() => {
+    socket.on("recentConversations", (recentConversations: Conversation[]) => {
+      setConversations(recentConversations);
     });
 
-    newSocket.on("receiveMessage", (message: Message) => {
+    socket.on("receiveMessage", (message: Message) => {
       const otherUserId =
         message.senderId === userId ? message.receiverId : message.senderId;
 
-      console.log("otherUserId", otherUserId);
-
       if (otherUserId === chatUserId) {
-        setMessages((prev) => [...prev, message]);
+        setMessages((prev) => ({
+          ...prev,
+          data: [...prev.data, message],
+        }));
       }
 
       setConversations((prev) => {
@@ -134,9 +202,9 @@ export const Messages: React.FC = () => {
       });
     });
 
-    newSocket.on("readReceipt", (message: Message) => {
+    socket.on("readReceipt", (message: Message) => {
       setMessages((prev) => {
-        const updatedMessages = [...prev];
+        const updatedMessages = [...prev.data];
         const messageIndex = updatedMessages.findIndex(
           (msg) => msg.messageId === message.messageId
         );
@@ -149,7 +217,10 @@ export const Messages: React.FC = () => {
               isRead: message.isRead,
               readAt: message.readAt,
             };
-            return updatedMessages;
+            return {
+              ...prev,
+              data: updatedMessages,
+            };
           }
         }
         return prev; // Return original state if no changes needed
@@ -157,19 +228,26 @@ export const Messages: React.FC = () => {
     });
 
     return () => {
-      newSocket.close();
+      socket.off("recentConversations");
+      socket.off("receiveMessage");
+      socket.off("readReceipt");
     };
-  }, []);
+  }, [chatUserId]);
 
   useEffect(() => {
-    if (chatUserId && socket) {
-      socket.emit("getMessageHistory", {
-        userId: chatUserId,
-      });
+    if (chatUserId && socketConnected) {
+      loadMessages({});
     }
-  }, [chatUserId, socket]);
+  }, [chatUserId, socketConnected]);
 
   const handleUserSelect = (selectedId: string | null) => {
+    setMessages({
+      data: [],
+      nextCursorCreatedAt: "",
+      nextCursorId: "",
+      hasNext: true,
+      isLoading: false,
+    });
     if (selectedId) {
       navigate(`/messages/${selectedId}`);
     } else {
@@ -197,8 +275,6 @@ export const Messages: React.FC = () => {
   };
 
   const selectedUser = usersDetails[chatUserId ?? ""];
-
-  console.log("conversations", conversations);
 
   if (connectionError) {
     return (
@@ -244,6 +320,7 @@ export const Messages: React.FC = () => {
           messages={messages}
           onSendMessage={handleSendMessage}
           onMessageRead={handleSendReadReceipt}
+          loadMessages={loadMessages}
         />
       </Flex>
       <NewChat opened={newChatOpened} onClose={() => setNewChatOpened(false)} />

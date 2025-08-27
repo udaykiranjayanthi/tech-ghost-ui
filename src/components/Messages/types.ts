@@ -12,3 +12,21 @@ export interface Conversation extends Message {
   userId: string;
   isUserOnline: boolean;
 }
+
+export interface NextCursor {
+  cursor: string;
+}
+
+export interface MessagesPaginationState {
+  data: Message[];
+  nextCursorCreatedAt: string;
+  nextCursorId: string;
+  hasNext: boolean;
+  isLoading: boolean;
+}
+
+export interface AcknowledgementResponse<T> {
+  success: boolean;
+  data: T;
+  error: string;
+}

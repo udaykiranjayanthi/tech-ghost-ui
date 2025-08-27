@@ -47,7 +47,7 @@ export const ChatUserCard = ({
 
         <div style={{ flex: 1 }}>
           <Group justify="space-between">
-            <Text size="sm" fw={500}>
+            <Text size="sm" fw={500} className={styles.userName}>
               {userDetails.firstName + " " + userDetails.lastName}
               {isUser && " (You)"}
             </Text>
