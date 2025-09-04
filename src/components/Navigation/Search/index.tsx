@@ -31,6 +31,9 @@ const Search = () => {
       search: debouncedSearchQuery,
       limit,
     },
+    options: {
+      enabled: !!debouncedSearchQuery,
+    },
   });
 
   const posts = useMemo(
@@ -55,6 +58,22 @@ const Search = () => {
       </Combobox.Option>
     ));
   }, [posts]);
+
+  const renderOptions = () => {
+    if (isLoading) {
+      return <Combobox.Empty>Loading...</Combobox.Empty>;
+    }
+
+    if (!searchQuery) {
+      return <Combobox.Empty>Start typing to search</Combobox.Empty>;
+    }
+
+    if (!options.length) {
+      return <Combobox.Empty>No results found</Combobox.Empty>;
+    }
+
+    return options;
+  };
 
   return (
     <Combobox
@@ -82,13 +101,7 @@ const Search = () => {
       </Combobox.Target>
 
       <Combobox.Dropdown>
-        <Combobox.Options>
-          {options.length === 0 ? (
-            <Combobox.Empty>Nothing found</Combobox.Empty>
-          ) : (
-            options
-          )}
-        </Combobox.Options>
+        <Combobox.Options>{renderOptions()}</Combobox.Options>
       </Combobox.Dropdown>
     </Combobox>
   );

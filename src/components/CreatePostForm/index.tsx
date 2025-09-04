@@ -25,6 +25,7 @@ import type { PostDetailsData } from "@/types";
 import { handleError } from "@/services/utils";
 import { notifications } from "@mantine/notifications";
 import { WarningCircleIcon } from "@phosphor-icons/react";
+import { AUTO_CLOSE_TIME } from "@/common/constants";
 
 interface CreatePostFormProps {}
 
@@ -179,7 +180,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
       notifications.show({
         position: "top-center",
         withCloseButton: true,
-        autoClose: 3000,
+        autoClose: AUTO_CLOSE_TIME,
         title: "Duplicate Hashtag",
         message: `Hashtag #${newTag} is already added`,
         color: "yellow",
@@ -193,7 +194,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
       notifications.show({
         position: "top-center",
         withCloseButton: true,
-        autoClose: 3000,
+        autoClose: AUTO_CLOSE_TIME,
         title: "Validation Error",
         message: "Hashtags must not exceed 30 characters",
         color: "red",
@@ -207,7 +208,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
       notifications.show({
         position: "top-center",
         withCloseButton: true,
-        autoClose: 3000,
+        autoClose: AUTO_CLOSE_TIME,
         title: "Maximum Hashtags Reached",
         message: "You can add a maximum of 10 hashtags",
         color: "red",
@@ -239,7 +240,7 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
       notifications.show({
         position: "top-center",
         withCloseButton: true,
-        autoClose: 5000,
+        autoClose: AUTO_CLOSE_TIME,
         title: "Invalid Hashtags",
         message: `Some hashtags have invalid format: ${invalidHashtags.join(
           ", "

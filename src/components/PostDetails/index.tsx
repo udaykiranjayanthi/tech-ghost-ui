@@ -1,7 +1,8 @@
 import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
-import { useApiQuery } from "@/services/hooks";
-import { displayDate } from "@/services/utils";
+import { useApiMutation, useApiQuery } from "@/services/hooks";
+import { displayDate, handleError } from "@/services/utils";
+import { notifications } from "@mantine/notifications";
 import type { PostDetailsData } from "@/types";
 import {
   Avatar,
@@ -22,6 +23,8 @@ import {
   ArrowLeftIcon,
   ArrowSquareOutIcon,
   PencilIcon,
+  TrashIcon,
+  CheckCircleIcon,
 } from "@phosphor-icons/react";
 import { useEffect, useRef, type FC } from "react";
 import { NavLink, useLocation, useNavigate, useParams } from "react-router";
@@ -31,6 +34,7 @@ import { Comments } from "./Comments";
 import styles from "./styles.module.scss";
 import CopyLinkButton from "../CopyLinkButton";
 import { useGlobalStore } from "@/store";
+import { AUTO_CLOSE_TIME } from "@/common/constants";
 
 interface PostDetailsProps {}
 
@@ -42,6 +46,11 @@ export const PostDetails: FC<PostDetailsProps> = () => {
   const { data, isLoading } = useApiQuery<PostDetailsData>({
     url: `${ENDPOINTS.POSTS}/${postId}`,
     queryKey: [RQ_KEYS.POST_DETAILS, postId],
+  });
+
+  const { mutate: deletePost, isPending: isDeleting } = useApiMutation({
+    url: `${ENDPOINTS.POSTS}/${postId}`,
+    method: "delete",
   });
 
   const location = useLocation();
@@ -78,6 +87,29 @@ export const PostDetails: FC<PostDetailsProps> = () => {
     }
   };
 
+  const handleDeletePost = () => {
+    deletePost(
+      {},
+      {
+        onSuccess: () => {
+          notifications.show({
+            position: "top-center",
+            withCloseButton: true,
+            autoClose: AUTO_CLOSE_TIME,
+            title: "Success",
+            message: "Post deleted successfully",
+            color: "green",
+            icon: <CheckCircleIcon size={24} />,
+          });
+          navigate("/");
+        },
+        onError: (error) => {
+          handleError({ error });
+        },
+      }
+    );
+  };
+
   const isAuthor = userId === author?.userId;
 
   return (
@@ -100,14 +132,26 @@ export const PostDetails: FC<PostDetailsProps> = () => {
           ) : (
             <>
               {isAuthor && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  rightSection={<PencilIcon size={16} />}
-                  onClick={() => navigate(`/post/${postId}/edit`)}
-                >
-                  Edit Post
-                </Button>
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    rightSection={<PencilIcon size={16} />}
+                    onClick={() => navigate(`/post/${postId}/edit`)}
+                  >
+                    Edit Post
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    color="red"
+                    rightSection={<TrashIcon size={16} />}
+                    onClick={handleDeletePost}
+                    loading={isDeleting}
+                  >
+                    Delete Post
+                  </Button>
+                </>
               )}
               {externalUrl && (
                 <Button

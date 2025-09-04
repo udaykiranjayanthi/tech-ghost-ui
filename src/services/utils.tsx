@@ -2,6 +2,7 @@ import type { ErrorResponse } from "@/types";
 import { notifications } from "@mantine/notifications";
 import { WarningCircleIcon } from "@phosphor-icons/react";
 import type { AxiosError } from "axios";
+import { AUTO_CLOSE_TIME } from "@/common/constants";
 
 export const displayAbsoluteDate = (date?: string) => {
   if (!date) return "-";
@@ -54,7 +55,7 @@ export const handleError = ({
   notifications.show({
     position: "top-center",
     withCloseButton: true,
-    autoClose: 5000,
+    autoClose: AUTO_CLOSE_TIME,
     title: "Error",
     message: useFallback ? fallbackErrorMessage : errorMessage,
     color: "red",
