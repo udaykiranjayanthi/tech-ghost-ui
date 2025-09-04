@@ -23,6 +23,8 @@ import ENDPOINTS from "@/common/endpoints";
 import { RQ_KEYS } from "@/common/rqkeys";
 import type { PostDetailsData } from "@/types";
 import { handleError } from "@/services/utils";
+import { notifications } from "@mantine/notifications";
+import { WarningCircleIcon } from "@phosphor-icons/react";
 
 interface CreatePostFormProps {}
 
@@ -113,18 +115,47 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
   const rules = {
     title: {
       required: "Title is required",
+      maxLength: {
+        value: 200,
+        message: "Title must not exceed 200 characters",
+      },
     },
     thumbnailUrl: {
       required: "Thumbnail URL is required",
+      maxLength: {
+        value: 500,
+        message: "Thumbnail URL must not exceed 500 characters",
+      },
+      pattern: {
+        value: /^(https?:\/\/).+/,
+        message:
+          "Thumbnail URL must be a valid URL starting with http or https",
+      },
     },
     tldr: {
       required: "TLDR is required",
+      maxLength: {
+        value: 300,
+        message: "TL;DR must not exceed 300 characters",
+      },
     },
     content: {
       required: "Content is required",
+      maxLength: {
+        value: 10000,
+        message: "Content must not exceed 10,000 characters",
+      },
     },
     externalUrl: {
       required: "External URL is required",
+      maxLength: {
+        value: 500,
+        message: "External URL must not exceed 500 characters",
+      },
+      pattern: {
+        value: /^(https?:\/\/).+/,
+        message: "External URL must be a valid URL starting with http or https",
+      },
     },
   };
 
@@ -132,13 +163,61 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
   const includeExternalLink = watch("includeExternalLink");
 
   const handleAddHashtag = (tag: string) => {
+    // Validate hashtag format (alphanumeric/underscore and max 30 characters)
     const newTag = tag
       .trim()
       .toLowerCase()
-      .replace(/[^a-z0-9]/g, "");
-    if (newTag && !selectedHashtags.includes(newTag)) {
-      setSelectedHashtags([...selectedHashtags, newTag]);
+      .replace(/[^a-z0-9_]/g, "");
+
+    // Check if hashtag is valid
+    if (!newTag) {
+      return;
     }
+
+    // Check if hashtag is already added
+    if (selectedHashtags.includes(newTag)) {
+      notifications.show({
+        position: "top-center",
+        withCloseButton: true,
+        autoClose: 3000,
+        title: "Duplicate Hashtag",
+        message: `Hashtag #${newTag} is already added`,
+        color: "yellow",
+        icon: <WarningCircleIcon size={24} />,
+      });
+      return;
+    }
+
+    // Validate hashtag length
+    if (newTag.length > 30) {
+      notifications.show({
+        position: "top-center",
+        withCloseButton: true,
+        autoClose: 3000,
+        title: "Validation Error",
+        message: "Hashtags must not exceed 30 characters",
+        color: "red",
+        icon: <WarningCircleIcon size={24} />,
+      });
+      return;
+    }
+
+    // Validate maximum number of hashtags (10)
+    if (selectedHashtags.length >= 10) {
+      notifications.show({
+        position: "top-center",
+        withCloseButton: true,
+        autoClose: 3000,
+        title: "Maximum Hashtags Reached",
+        message: "You can add a maximum of 10 hashtags",
+        color: "red",
+        icon: <WarningCircleIcon size={24} />,
+      });
+      return;
+    }
+
+    // Add the hashtag
+    setSelectedHashtags([...selectedHashtags, newTag]);
   };
 
   useEffect(() => {
@@ -150,6 +229,27 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
   };
 
   const onFormSubmit = async (data: PostFormValues) => {
+    // Validate hashtags format before submitting
+    const invalidHashtags = selectedHashtags.filter((tag) => {
+      // Check if hashtag matches the pattern (alphanumeric/underscore and max 30 characters)
+      return !tag.match(/^[a-zA-Z0-9_]{1,30}$/);
+    });
+
+    if (invalidHashtags.length > 0) {
+      notifications.show({
+        position: "top-center",
+        withCloseButton: true,
+        autoClose: 5000,
+        title: "Invalid Hashtags",
+        message: `Some hashtags have invalid format: ${invalidHashtags.join(
+          ", "
+        )}`,
+        color: "red",
+        icon: <WarningCircleIcon size={24} />,
+      });
+      return;
+    }
+
     // Include hashtags in the form data
     const formData = {
       ...data,
@@ -290,13 +390,13 @@ export const CreatePostForm: FC<CreatePostFormProps> = () => {
           {includeExternalLink && (
             <Controller
               control={control}
-              rules={rules.externalUrl}
+              rules={includeExternalLink ? rules.externalUrl : {}}
               name="externalUrl"
               render={({ field }) => (
                 <TextInput
                   label="External URL"
                   placeholder="Enter the URL of the external article"
-                  required
+                  required={includeExternalLink}
                   {...field}
                   className={styles.formField}
                   error={errors.externalUrl?.message}
