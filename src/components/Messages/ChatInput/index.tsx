@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Textarea, ActionIcon, Group } from "@mantine/core";
 import { PaperPlaneRightIcon } from "@phosphor-icons/react";
-import classes from "./styles.module.scss";
+import styles from "./styles.module.scss";
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -29,7 +29,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className={classes.chatInput}>
+    <form onSubmit={handleSubmit} className={styles.chatInput}>
       <Group gap="xs" align="flex-end">
         <Textarea
           placeholder="Type a message... (Shift+Enter for new line)"

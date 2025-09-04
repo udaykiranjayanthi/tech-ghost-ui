@@ -1,6 +1,6 @@
 import { Avatar, Card, Group, Text, Skeleton } from "@mantine/core";
-import type { Conversation } from "./types";
-import type { UserData } from "../../types/user.types";
+import type { Conversation } from "../types";
+import type { UserData } from "@/types";
 import { displayDate } from "@/services/utils";
 import styles from "./styles.module.scss";
 import { useGlobalStore } from "@/store";
@@ -37,7 +37,6 @@ export const ChatUserCard = ({
             src={userDetails.pictureUrl}
             name={userDetails.firstName + " " + userDetails.lastName}
             color="initials"
-            className={styles.avatar}
           />
           <div
             className={styles.avatarOnlineIndicator}

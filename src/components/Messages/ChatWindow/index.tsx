@@ -10,11 +10,11 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { ChatMessage } from "./ChatMessage";
-import { ChatInput } from "./ChatInput";
+import { ChatMessage } from "../ChatMessage";
+import { ChatInput } from "../ChatInput";
 import styles from "./styles.module.scss";
 import type { UserData } from "@/types";
-import type { MessagesPaginationState } from "./types";
+import type { MessagesPaginationState } from "../types";
 
 interface ChatWindowProps {
   selectedUser?: UserData;

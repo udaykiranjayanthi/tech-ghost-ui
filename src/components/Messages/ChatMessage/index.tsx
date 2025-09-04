@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Group, Paper, Text } from "@mantine/core";
-import type { Message } from "./types";
-import classes from "./styles.module.scss";
+import type { Message } from "../types";
+import styles from "./styles.module.scss";
 import { displayDate } from "@/services/utils";
 import { useGlobalStore } from "@/store";
 
@@ -51,11 +51,9 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
   return (
     <div
       ref={ref}
-      className={`${classes.messageContainer} ${
-        isMessageOwn ? classes.own : ""
-      }`}
+      className={`${styles.messageContainer} ${isMessageOwn ? styles.own : ""}`}
     >
-      <Paper className={classes.message} p="xs">
+      <Paper className={styles.message} p="xs">
         <Text size="sm">{message.message}</Text>
 
         <Group

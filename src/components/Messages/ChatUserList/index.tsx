@@ -2,8 +2,8 @@ import React, { useMemo, useState } from "react";
 import { ScrollArea, Stack, TextInput, Text } from "@mantine/core";
 import type { UserData } from "@/types";
 import styles from "./styles.module.scss";
-import type { Conversation } from "./types";
-import { ChatUserCard } from "./ChatUserCard";
+import type { Conversation } from "../types";
+import { ChatUserCard } from "../ChatUserCard";
 import { useDebouncedValue } from "@mantine/hooks";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
