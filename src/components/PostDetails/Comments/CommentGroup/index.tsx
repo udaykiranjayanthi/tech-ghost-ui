@@ -3,7 +3,7 @@ import { RQ_KEYS } from "@/common/rqkeys";
 import { useApiInfiniteQuery, useApiMutation } from "@/services/hooks";
 import type { Comment } from "@/types";
 import { Box, Button, Collapse, Flex, Text, TextInput } from "@mantine/core";
-import { useState, type FC } from "react";
+import { useEffect, useState, type FC } from "react";
 import CommentCard from "../CommentCard";
 import styles from "./styles.module.scss";
 import { Controller, useForm } from "react-hook-form";
@@ -17,9 +17,13 @@ import { handleError } from "@/services/utils";
 
 type CommentGroupProps = {
   comment: Comment;
+  refreshCommentsAndReplies: () => void;
 };
 
-const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
+const CommentGroup: FC<CommentGroupProps> = ({
+  comment,
+  refreshCommentsAndReplies,
+}) => {
   const [showReplies, setShowReplies] = useState(false);
   const [showReplyInput, setShowReplyInput] = useState(false);
 
@@ -39,6 +43,14 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
     });
 
   const replies = data?.pages?.flatMap((page) => page.data) ?? [];
+
+  const repliesCount = replies?.length ?? comment.repliesCount;
+
+  useEffect(() => {
+    if (repliesCount === 0) {
+      setShowReplies(false);
+    }
+  }, [repliesCount]);
 
   const { mutate: addReply } = useApiMutation({
     url: `${ENDPOINTS.POSTS}/${comment.postId}/comments`,
@@ -102,12 +114,13 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
     );
   };
 
-  const repliesCount = replies?.length || comment.repliesCount;
-
   return (
     <>
       <div key={comment.commentId} className={styles.commentWrapper}>
-        <CommentCard comment={comment}>
+        <CommentCard
+          comment={comment}
+          refreshCommentsAndReplies={refreshCommentsAndReplies}
+        >
           <Flex mt="md" gap="xs" align="center">
             <Button
               variant="subtle"
@@ -195,7 +208,11 @@ const CommentGroup: FC<CommentGroupProps> = ({ comment }) => {
             <div>
               <div className={styles.repliesContainer}>
                 {replies?.map((reply) => (
-                  <CommentCard key={reply.commentId} comment={reply} />
+                  <CommentCard
+                    key={reply.commentId}
+                    comment={reply}
+                    refreshCommentsAndReplies={refreshCommentsAndReplies}
+                  />
                 ))}
               </div>
 

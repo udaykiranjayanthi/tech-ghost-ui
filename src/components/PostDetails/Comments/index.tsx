@@ -12,16 +12,19 @@ import {
   Title,
 } from "@mantine/core";
 import type { FC } from "react";
-import CommentCard from "./CommentGroup";
+import CommentGroup from "./CommentGroup";
 import styles from "./styles.module.scss";
 import { Controller, useForm } from "react-hook-form";
 import { ArrowCounterClockwiseIcon } from "@phosphor-icons/react";
 import { handleError } from "@/services/utils";
+import { useQueryClient } from "@tanstack/react-query";
 interface CommentsProps {
   postId: string;
 }
 
 export const Comments: FC<CommentsProps> = ({ postId }) => {
+  const queryClient = useQueryClient();
+
   const limit = 2;
   const { data, isFetchingNextPage, fetchNextPage, hasNextPage, refetch } =
     useApiInfiniteQuery<Comment>({
@@ -59,6 +62,12 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
     },
   };
 
+  const refreshCommentsAndReplies = () => {
+    queryClient.invalidateQueries({
+      queryKey: [RQ_KEYS.COMMENTS, postId],
+    });
+  };
+
   const handleSubmitComment = (data: { content: string }) => {
     const { content } = data;
     if (content.trim() === "") return;
@@ -87,7 +96,7 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
         <Button
           variant="subtle"
           leftSection={<ArrowCounterClockwiseIcon size={24} />}
-          onClick={() => refetch()}
+          onClick={refreshCommentsAndReplies}
         >
           Refresh
         </Button>
@@ -129,7 +138,11 @@ export const Comments: FC<CommentsProps> = ({ postId }) => {
         <div>
           <div className={styles.commentsList}>
             {comments.map((comment) => (
-              <CommentCard key={comment.commentId} comment={comment} />
+              <CommentGroup
+                key={comment.commentId}
+                comment={comment}
+                refreshCommentsAndReplies={refreshCommentsAndReplies}
+              />
             ))}
           </div>
 
