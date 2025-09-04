@@ -49,7 +49,7 @@ export const HeaderNavbar: FC<HeaderNavbarProps> = ({ opened, toggle }) => {
           <Burger opened={opened} onClick={toggle} size="sm" hiddenFrom="md" />
           <NavLink to="/">
             <Title order={3} className={styles.logo}>
-              Daily Tech
+              Tech Ghost
             </Title>
           </NavLink>
         </Group>

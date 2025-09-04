@@ -1,11 +1,17 @@
+// Get environment variables
+const API_BASE_URL = process.env.API_BASE_URL;
+const AUTH_URL = process.env.AUTH_URL;
+const MESSAGING_WS_URL = process.env.MESSAGING_WS_URL;
+
 const ENDPOINTS = {
-  POSTS: "http://localhost:8080/api/v1/posts",
-  CURRENT_USER: "http://localhost:8080/api/v1/users/me",
-  USERS: "http://localhost:8080/api/v1/users/profile",
-  USERS_DATA: "http://localhost:8080/api/v1/users/profile/users",
-  SEARCH_USERS: "http://localhost:8080/api/v1/users/search",
-  SAVED_POSTS: "http://localhost:8080/api/v1/users/saved-posts",
-  LOGIN: "http://localhost:8080/oauth2/authorization/google",
+  POSTS: `${API_BASE_URL}/posts`,
+  CURRENT_USER: `${API_BASE_URL}/users/me`,
+  USERS: `${API_BASE_URL}/users/profile`,
+  USERS_DATA: `${API_BASE_URL}/users/profile/users`,
+  SEARCH_USERS: `${API_BASE_URL}/users/search`,
+  SAVED_POSTS: `${API_BASE_URL}/users/saved-posts`,
+  LOGIN: `${AUTH_URL}/google`,
+  MESSAGING_WS: MESSAGING_WS_URL,
 };
 
 export default ENDPOINTS;

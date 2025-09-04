@@ -90,8 +90,6 @@ export function useApiInfiniteQuery<TData>({
   return useInfiniteQuery<InfinitePagination<TData>>({
     queryKey,
     queryFn: async ({ pageParam = null }: any) => {
-      console.log(pageParam);
-
       const queryParams = {
         ...params,
         cursorCreatedAt: pageParam?.createdAt,

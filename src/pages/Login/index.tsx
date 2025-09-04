@@ -25,7 +25,7 @@ export const Login = () => {
       <Container size="lg" className={styles.contentContainer}>
         <div className={styles.content}>
           <div className={styles.leftSection}>
-            <Title className={styles.title}>Daily Tech</Title>
+            <Title className={styles.title}>Tech Ghost</Title>
 
             <Text className={styles.caption} mb="md">
               Your <span className={styles.gradientText}>daily dose</span> of
@@ -55,7 +55,7 @@ export const Login = () => {
           <div className={styles.rightSection}>
             <Image
               src="/landing-graphic.svg"
-              alt="Daily Dev"
+              alt="Tech Ghost Banner"
               className={styles.graphic}
             />
           </div>

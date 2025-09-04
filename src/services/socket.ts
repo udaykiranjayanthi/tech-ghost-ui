@@ -1,6 +1,7 @@
+import ENDPOINTS from "@/common/endpoints";
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:5000", {
+export const socket = io(ENDPOINTS.MESSAGING_WS, {
   auth: {
     token: `Bearer ${localStorage.getItem("auth_token")}`,
   },
